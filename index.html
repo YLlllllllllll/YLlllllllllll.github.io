@@ -5,66 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>个人技术实验室</title>
   <style>
-    /* 基础样式和粒子效果样式 */
+    /* Basic styles and particle background setup */
     body, html {
       margin: 0;
       padding: 0;
       width: 100%;
       height: 100%;
-      overflow: hidden;
+      overflow: hidden; /* Prevents scrollbars caused by particles extending slightly */
       background-color: #000;
       user-select: none;
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none;
-      -webkit-tap-highlight-color: transparent;
-      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent; /* Prevents tap highlight on touch devices */
+      -webkit-touch-callout: none; /* Disables callout menu on touch devices */
     }
 
     #particles-js {
       position: absolute;
       width: 100%;
       height: 100%;
-      z-index: 1;
+      z-index: 1; /* Places particles behind content */
     }
 
-    /* 新增布局样式 */
-    .nav-container {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      padding: 20px;
-      z-index: 3;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(10px);
-    }
-
-    .nav-links {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-    }
-
-    .nav-links a {
-      color: #fff;
-      text-decoration: none;
-      font-size: 18px;
-      transition: color 0.3s;
-    }
-
-    .nav-links a:hover {
-      color: #4a9eff;
-    }
+    /* Removed .nav-container, .nav-links, .nav-links a, .nav-links a:hover styles */
+    /* ... existing code ... */
 
     #content {
       position: relative;
-      z-index: 2;
-      padding-top: 100px;
+      z-index: 2; /* Ensures content is above particles */
+      /* padding-top: 100px; Removed padding previously needed for the navbar */
       height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       color: #fff;
+      padding-top: 50px; /* Add some top padding for spacing */
     }
 
     .hero-section {
@@ -75,26 +51,27 @@
     .hero-title {
       font-size: 48px;
       margin-bottom: 20px;
-      /* 马里奥风格的红色渐变 */
+      /* Mario-style red gradient text effect */
       background: linear-gradient(45deg, #ff1a1a, #ff4d4d);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 20px rgba(255, 26, 26, 0.5);
+      -webkit-background-clip: text; /* Clips the background to the text shape */
+      -webkit-text-fill-color: transparent; /* Makes the text color transparent to show the gradient */
+      text-shadow: 0 0 20px rgba(255, 26, 26, 0.5); /* Adds a subtle glow */
       display: flex;
       align-items: flex-end;
       justify-content: center;
       gap: 15px;
     }
 
-    /* STYLE FOR TITLE LINK */
+    /* Style for the hero title link */
     a.hero-title-link {
-      text-decoration: none; /* Remove underline */
-      color: inherit; /* Inherit color (allows gradient to show) */
-      display: inline-block; /* Ensure it behaves like a block for layout */
+      text-decoration: none; /* Removes the default underline */
+      color: inherit; /* Inherits text color (needed for gradient) */
+      display: inline-block;
     }
 
     .services-grid {
       display: grid;
+      /* Creates 3 equal columns */
       grid-template-columns: repeat(3, 1fr);
       gap: 30px;
       max-width: 1200px;
@@ -103,17 +80,18 @@
     }
 
     .service-card {
+      /* Semi-transparent background with blur effect */
       background: rgba(255, 255, 255, 0.1);
       border-radius: 15px;
       padding: 30px;
-      backdrop-filter: blur(5px);
+      backdrop-filter: blur(5px); /* Blurs content behind the card */
       transition: transform 0.3s;
       cursor: pointer;
       color: #fff;
     }
 
     .service-card:hover {
-      transform: translateY(-10px);
+      transform: translateY(-10px); /* Lifts the card slightly on hover */
     }
 
     .service-icon {
@@ -122,6 +100,7 @@
       color: #4a9eff;
     }
 
+    /* Simple bouncing arrow animation to indicate scrollability */
     .scroll-indicator {
       position: absolute;
       bottom: 30px;
@@ -133,37 +112,33 @@
 
     @keyframes bounce {
       0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0);
+        transform: translateY(0) translateX(-50%); /* Maintain horizontal centering */
       }
       40% {
-        transform: translateY(-30px);
+        transform: translateY(-30px) translateX(-50%);
       }
       60% {
-        transform: translateY(-15px);
+        transform: translateY(-15px) translateX(-50%);
       }
     }
   </style>
+  <!-- Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- Prefetch hints for potentially linked pages -->
   <link rel="prefetch" href="HTML5_Client/index.html">
-  <!-- 如果 Cloudflare Tunnel 设置好了，也可以尝试为 Tunnel URL 添加 prefetch -->
+  <!-- If Cloudflare Tunnel is set up, prefetch hints can be added -->
   <!-- <link rel="prefetch" href="https://llm.cheng.com/"> -->
   <!-- <link rel="prefetch" href="https://sd.cheng.com/"> -->
 </head>
 <body>
   <div id="particles-js"></div>
-  
-  <nav class="nav-container">
-    <div class="nav-links">
-      
-      
-      
-      
-      
-    </div>
-  </nav>
+
+  <!-- Removed <nav> element -->
+  <!-- ... existing code ... -->
 
   <div id="content">
     <div class="hero-section">
+      <!-- Link wraps the heading for better accessibility -->
       <a href="HTML5_Client/index.html" class="hero-title-link">
         <h1 class="hero-title">
           Let's-a go!
@@ -172,6 +147,7 @@
     </div>
 
     <div class="services-grid">
+      <!-- Service Card 1: Local LLM -->
       <div class="service-card" onclick="window.location.href='http://localhost:3000/'">
         <div class="service-icon">
           <i class="fas fa-robot"></i>
@@ -180,6 +156,7 @@
         <p>基于开源模型的本地部署聊天系统</p>
       </div>
 
+      <!-- Service Card 2: AI Image Generation -->
       <div class="service-card" onclick="window.location.href='http://127.0.0.1:7860/'">
         <div class="service-icon">
           <i class="fas fa-paint-brush"></i>
@@ -188,6 +165,7 @@
         <p>本地部署的 Stable Diffusion 创意工坊</p>
       </div>
 
+      <!-- Service Card 3: Finance -->
       <div class="service-card" onclick="window.location.href='/finance'">
         <div class="service-icon">
           <i class="fas fa-chart-line"></i>
@@ -196,6 +174,7 @@
         <p>实时股票数据与市场分析</p>
       </div>
 
+      <!-- Service Card 4: Ticket Helper -->
       <div class="service-card" onclick="window.location.href='/ticket-script'">
         <div class="service-icon">
           <i class="fas fa-ticket-alt"></i>
@@ -210,164 +189,137 @@
     </div>
   </div>
 
-  <!-- 引入 particles.js 库 -->
+  <!-- particles.js library -->
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
   <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // 核心配置对象
+    // particles.js configuration object
     const particleConfig = {
       "particles": {
         "number": {
-          "value": 60,               // 基础粒子数量（减少初始负载）
-          "max": 350, 
+          "value": 60,               // Base number of particles
+          "max": 350,                // Maximum particle limit (for cleanup)
           "density": {
-            "enable": true,          // 根据屏幕尺寸自动调整密度
-            "value_area": 800        // 每800像素区域生成1个粒子
+            "enable": true,          // Enable density scaling based on screen size
+            "value_area": 800        // Area (in pixels) used for density calculation
           }
         },
-        "color": {
-          "value": "#ffffff",  // 保持固定颜色值
-          "random": false      // 必须关闭随机颜色
-        },
-        "shape": { "type": "circle" },   // 粒子形状（圆形）
+        "color": { "value": "#ffffff" }, // Particle color
+        "shape": { "type": "circle" },   // Particle shape
         "opacity": {
-          "value": 0.6,              // 初始透明度
-          "random": false,           // 禁用随机透明度
-          "anim": {
-            "enable": false,          // 启用透明度动画
-            "speed": 0.001,            // 透明度变化速度（值越大消失越快）
-            "opacity_min": 0,        // 完全透明时自动移除粒子
-            "sync": false            // 异步动画更自然
-          }
+          "value": 0.6,              // Initial particle opacity
+          "random": false,
+          "anim": { "enable": false } // Opacity animation disabled
         },
         "size": {
-          "value": 2,                // 基础尺寸（更小初始尺寸）
+          "value": 2,                // Base particle size
           "random": {
-            "enable": true,          // 启用尺寸随机
-            "minimumValue": 1        // 最小尺寸为1px
+            "enable": true,
+            "minimumValue": 1        // Minimum particle size
           },
-          "anim": {
-            "enable": false,          // 闪烁禁止
-            "speed": 40,             // 尺寸缩减速度（值越大缩小越快）
-            "size_min": 0,           // 缩小至0时自动移除
-            "sync": false            // 异步动画避免同步消失
-          }
+          "anim": { "enable": false } // Size animation disabled
         },
         "line_linked": {
-          "enable": true,            // 启用粒子连线
-          "distance": 150,           // 连线最大距离
-          "color": "#ffffff",        // 连线颜色
-          "opacity": 0.3,            // 降低连线可见度（减少视觉干扰）
-          "width": 1                 // 连线粗细
+          "enable": true,            // Enable lines between particles
+          "distance": 150,           // Max distance for lines to connect
+          "color": "#ffffff",
+          "opacity": 0.3,            // Line opacity
+          "width": 1
         },
         "move": {
-          "enable": true,            // 启用粒子运动
-          "speed": 1.5,              // 基础移动速度（值越大扩散越快）
-          "direction": "top",       // 无固定运动方向
-          "random": true,            // 启用随机方向
-          "straight": false,         // 禁用直线运动（曲线更自然）
-          "out_mode": "destroy",         // 移出视窗后重置位置
-          "bounce": false,           // 禁用边缘反弹
-          "attract": { 
-          "enable": false          // 禁用全局引力
-          }
+          "enable": true,
+          "speed": 1.5,              // Particle movement speed
+          "direction": "none",       // Movement direction (randomized)
+          "random": true,
+          "straight": false,
+          "out_mode": "destroy",     // Particles are destroyed when leaving the canvas (replaced by life cycle)
+          "bounce": false,
+          "attract": { "enable": false }
         },
+        // Particle lifecycle configuration (added for better control)
         "life": {
-          "enable": true,      // 启用生命周期
-          "duration": 0.8,     // 最大存活时间0.8秒
-          "count": 0          // 仅允许重生1次
+            "enable": true,       // Enable particle lifespan
+            "duration": 0.8,      // Max lifespan in seconds (adjust as needed)
+            "count": 0            // Particles disappear after duration, 0 means infinite respawn
         }
       },
       "interactivity": {
-        "detect_on": "window",       // 检测整个窗口的交互
+        "detect_on": "window",       // Detect interactions on the window
         "events": {
           "onhover": {
-            "enable": true,          // 启用悬停效果
-            "mode": "grab",          // 抓取模式（吸引周边粒子）
-            "parallax": { 
-              "enable": true,        // 启用视差效果
-              "force": 150           // 悬停作用力（值越小影响范围越小）
+            "enable": true,
+            "mode": "grab",          // Grab mode on hover (attracts nearby particles)
+            "parallax": {
+              "enable": true,
+              "force": 150           // Strength of the grab effect
             }
           },
           "onclick": {
-            "enable": true,          // 启用点击效果
-            "mode": "push",          // 推动模式（生成新粒子）
-            "count": 4               // 每次点击触发4次生成
+            "enable": true,
+            "mode": "push",          // Push mode on click (adds new particles)
+            "count": 4               // Number of particles pushed per click
           },
-          "resize": true             // 窗口缩放时自动适配
+          "resize": true             // Reinitialize particles on window resize
         },
         "modes": {
           "grab": {
-            "distance": 180,         // 抓取作用距离
-            "line_linked": { 
-              "opacity": 0.5         // 悬停时连线透明度
-            },
-            "duration": 1.2          // 悬停影响持续时间（秒）
+            "distance": 180,         // Interaction distance for grab
+            "line_linked": { "opacity": 0.5 },
+            "duration": 1.2          // Duration of the grab effect
           },
           "push": {
-            "particles_nb": 4, // 每次最多新增 5 个
-            "remove": true,          // 推动时移除旧粒子
-            "quantity": 3,           // 每次点击生成4组粒子
-            "distance": 200,         // 推动作用距离（值越大扩散范围越大）
-            "speed": 20               // 推动速度（值越大扩散越快）
+            "particles_nb": 4,       // Number of particles to push
+            "remove": true,          // Whether to remove particles while pushing
+            "quantity": 3,           // How many groups of particles are pushed
+            "distance": 200,
+            "speed": 20
           },
-          "repulse": {
-            "distance": 380,         // 排斥作用距离
-            "duration": 3          // 排斥持续时间（秒）
+          "repulse": {               // Repulse mode configuration (not currently enabled in events)
+            "distance": 380,
+            "duration": 3
           }
         }
       },
-      "retina_detect": true,         // 自动适配视网膜屏
-      "config_demo": false           // 禁用演示模式
+      "retina_detect": true,         // Enable high-DPI display support
+      "config_demo": false           // Disable the config demo panel
     };
 
-    // 初始化粒子系统
+    // Function to initialize or re-initialize the particle system
     function initParticles() {
-      
+      // Destroys existing instance if it exists, before creating a new one
+      if (window.pJSDom && window.pJSDom[0] && window.pJSDom[0].pJS) {
+           window.pJSDom[0].pJS.fn.vendors.destroypJS();
+           window.pJSDom = []; // Clear the old reference
+      }
       particlesJS('particles-js', particleConfig);
-      
-      // 优雅地清理多余粒子
-      setInterval(() => {
-        if (window.pJSDom && window.pJSDom[0].pJS.particles.array.length > particleConfig.particles.number.max) {
-          const pJS = window.pJSDom[0].pJS;
-          const excess = pJS.particles.array.length - particleConfig.particles.number.max;
-          
-          // 给多余的粒子添加淡出效果
-          pJS.particles.array.slice(0, excess).forEach(particle => {
-            // 标记要删除的粒子
-            particle.fadeOut = true;
-            // 保存原始不透明度用于动画
-            particle.originalOpacity = particle.opacity;
-          });
-        }
 
-        // 处理标记为淡出的粒子
-        const pJS = window.pJSDom[0].pJS;
-        pJS.particles.array = pJS.particles.array.filter(particle => {
-          if (particle.fadeOut) {
-            // 逐渐降低不透明度
-            particle.opacity -= particle.originalOpacity * 0.1;
-            // 当不透明度足够低时移除粒子
-            if (particle.opacity <= 0.05) {
-              return false;
-            }
+      // Periodic cleanup: If particle count exceeds max, gently remove excess
+      // This is a custom addition to handle potential particle buildup from clicks
+      setInterval(() => {
+        if (window.pJSDom && window.pJSDom[0] && window.pJSDom[0].pJS && window.pJSDom[0].pJS.particles && window.pJSDom[0].pJS.particles.array) {
+          const pJS = window.pJSDom[0].pJS;
+          const currentCount = pJS.particles.array.length;
+          const maxCount = particleConfig.particles.number.max;
+
+          if (currentCount > maxCount) {
+            const excess = currentCount - maxCount;
+            // Remove oldest particles first to maintain visual consistency
+            pJS.particles.array.splice(0, excess);
           }
-          return true;
-        });
-      }, 100); // 更频繁地检查，使动画更流畅
+        }
+      }, 2000); // Check every 2 seconds
     }
-    // 窗口大小变化时重置粒子（300ms防抖）
+
+    // Debounced resize handler: Re-initialize particles after resize events settle
     let resizeTimer;
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(initParticles, 300);
+      resizeTimer = setTimeout(initParticles, 300); // Wait 300ms after last resize event
     });
 
-    // 页面加载完成后初始化
+    // Initial particle setup on page load
     initParticles();
-
-    // REMOVED OLD MARIO JUMP CONTROL JS
 
   });
   </script>
