@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>个人技术实验室</title>
+  <link rel="icon" type="image/webp" href="mario_favicon.webp">
   <style>
     /* Basic styles and particle background setup */
     body, html {
@@ -51,15 +52,44 @@
     .hero-title {
       font-size: 48px;
       margin-bottom: 20px;
-      /* Mario-style red gradient text effect */
-      background: linear-gradient(45deg, #ff1a1a, #ff4d4d);
-      -webkit-background-clip: text; /* Clips the background to the text shape */
-      -webkit-text-fill-color: transparent; /* Makes the text color transparent to show the gradient */
-      text-shadow: 0 0 20px rgba(255, 26, 26, 0.5); /* Adds a subtle glow */
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      gap: 15px;
+      display: inline-block;
+      padding: 18px 48px;
+      border-radius: 32px;
+      background: linear-gradient(135deg, rgba(30,30,30,0.95) 60%, rgba(0,0,0,0.2) 100%);
+      box-shadow:
+        0 4px 24px 0 rgba(0,0,0,0.45), /* 外部阴影 */
+        0 1.5px 0 0 #fff3 inset,        /* 顶部高光 */
+        0 -2px 8px 0 #ff1a1a44 inset;   /* 底部内红光 */
+      border: 2.5px solid rgba(255,255,255,0.18);
+      outline: 2.5px solid rgba(255,26,26,0.18);
+      outline-offset: 2px;
+      position: relative;
+      overflow: hidden;
+      /* 文字渐变 */
+      background-clip: padding-box;
+      color: #fff;
+      text-shadow:
+        0 2px 8px #ff1a1a88,
+        0 0 0.5px #fff,
+        0 0 18px #000a;
+    }
+
+    .hero-title::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 32px;
+      pointer-events: none;
+      background: linear-gradient(120deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.04) 60%, rgba(0,0,0,0.12) 100%);
+      z-index: 1;
+    }
+
+    .hero-title span {
+      position: relative;
+      z-index: 2;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: #ff2222;
     }
 
     /* Style for the hero title link */
@@ -141,7 +171,7 @@
       <!-- Link wraps the heading for better accessibility -->
       <a href="HTML5_Client/index.html" class="hero-title-link">
         <h1 class="hero-title">
-          Let's-a go!
+          <span>Let's-a go!</span>
         </h1>
       </a>
     </div>
