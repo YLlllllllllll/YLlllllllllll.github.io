@@ -1,7 +1,7 @@
 /**
- * Hyperspace + celestial bodies background.
- * Warp technique inspired by classic open canvas starfields
- * (WarpSpeed.js / JS1K warp demos); bodies drawn procedurally.
+ * DSP-inspired deep-space backdrop.
+ * Scale model: distant stars / systems barely move (ly-scale);
+ * only local debris drifts. Mouse = look; boost = cruise, not "zoom past suns".
  */
 (() => {
   const canvas = document.getElementById("hyperspace");
@@ -10,535 +10,672 @@
   const ctx = canvas.getContext("2d", { alpha: false });
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  const STAR_COUNT = 720;
-  const DEPTH = 1000;
+  // —— scale constants (feel, not physics) ——
+  // Distant field stars: fixed on a sky sphere (parallax only from look)
+  const FIELD = 1400;
+  // Cruise: how fast the sky drifts under boost (very small)
+  const CRUISE_YAW = 0.00035; // rad / frame at cruise
+  const WARP_YAW = 0.0022;
+  // Local debris depth in "AU-ish" units; stars are in "ly"
+  const LOCAL_NEAR = 8;
+  const LOCAL_FAR = 120;
 
-  let width = 0;
-  let height = 0;
-  let cx = 0;
-  let cy = 0;
-  let targetX = 0;
-  let targetY = 0;
-  let speed = 0.55;
-  let targetSpeed = 0.55;
+  let W = 0;
+  let H = 0;
+  let dpr = 1;
+  let lookX = 0; // -1..1 from pointer
+  let lookY = 0;
+  let smoothLookX = 0;
+  let smoothLookY = 0;
+  let heading = 0.35; // galactic cruise heading (rad)
+  let pitch = -0.08;
   let boost = false;
-  let stars = [];
-  let bodies = [];
-  let meteors = [];
-  let raf = 0;
+  let throttle = 0; // 0..1 smoothed
   let time = 0;
-  let meteorCooldown = 90;
+  let raf = 0;
 
-  function map(value, a1, a2, b1, b2) {
-    return b1 + ((value - a1) * (b2 - b1)) / (a2 - a1);
-  }
+  /** @type {{th:number,ph:number,mag:number,r:number,g:number,b:number,flare:boolean}[]} */
+  let field = [];
+  /** @type {object[]} */
+  let systems = [];
+  /** @type {object[]} */
+  let debris = [];
+  /** @type {object[]} */
+  let meteors = [];
+  let meteorCD = 180;
+
+  const hudVel = document.getElementById("hud-vel");
+  const hudRange = document.getElementById("hud-range");
 
   function rand(a, b) {
     return a + Math.random() * (b - a);
   }
 
-  function resetStar(star, randomZ) {
-    star.x = (Math.random() - 0.5) * width * 1.4;
-    star.y = (Math.random() - 0.5) * height * 1.4;
-    star.z = randomZ ? Math.random() * DEPTH : DEPTH;
-    star.pz = star.z;
-    const tint = Math.random();
-    if (tint > 0.82) {
-      star.r = 240; star.g = 193; star.b = 75;
-    } else if (tint > 0.65) {
-      star.r = 170; star.g = 210; star.b = 255;
-    } else {
-      star.r = 244; star.g = 239; star.b = 228;
-    }
+  function clamp(v, a, b) {
+    return Math.max(a, Math.min(b, v));
   }
 
-  function initStars() {
-    stars = Array.from({ length: STAR_COUNT }, () => {
-      const star = {};
-      resetStar(star, true);
-      return star;
-    });
-  }
-
-  function placeBody(type, opts = {}) {
+  // Spherical → screen (camera look + cruise heading)
+  function projectSky(theta, phi, parallax = 1) {
+    const th = theta + heading * 0.15 + smoothLookX * 0.55 * parallax;
+    const ph = phi + pitch * 0.4 + smoothLookY * 0.4 * parallax;
+    // equal-area-ish wrap into view frustum
+    const x = ((th % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+    const nx = (x / (Math.PI * 2) - 0.5) * 2; // -1..1 wraps
+    // remap wrapped sky to screen with soft cylinder projection
+    let u = Math.sin(th) * Math.cos(ph);
+    let v = Math.sin(ph);
+    let depth = Math.cos(th) * Math.cos(ph); // forward hemisphere > 0
     return {
-      type,
-      x: opts.x ?? (Math.random() - 0.5) * width * 2.2,
-      y: opts.y ?? (Math.random() - 0.5) * height * 2.2,
-      z: opts.z ?? rand(220, DEPTH * 0.95),
-      pz: 0,
-      scale: opts.scale ?? 1,
-      spin: Math.random() * Math.PI * 2,
-      spinSpeed: opts.spinSpeed ?? rand(-0.02, 0.02),
-      orbitR: opts.orbitR ?? 0,
-      orbitA: Math.random() * Math.PI * 2,
-      orbitSpeed: opts.orbitSpeed ?? 0,
-      seed: Math.random() * 1000,
-      ...opts,
+      x: W * 0.5 + u * W * 0.62,
+      y: H * 0.5 + v * H * 0.72,
+      forward: depth,
+      visible: depth > -0.15,
     };
   }
 
-  function initBodies() {
-    bodies = [
-      placeBody("blackhole", {
-        x: width * 0.28, y: -height * 0.08, z: 520, scale: 1.15, spinSpeed: 0.018,
-      }),
-      placeBody("star", {
-        x: -width * 0.35, y: height * 0.12, z: 640, scale: 1.35,
-        hue: [255, 196, 90],
-      }),
-      placeBody("star", {
-        x: width * 0.42, y: height * 0.32, z: 780, scale: 0.7,
-        hue: [255, 140, 110],
-      }),
-      placeBody("star", {
-        x: -width * 0.15, y: -height * 0.35, z: 860, scale: 0.55,
-        hue: [180, 210, 255],
-      }),
-      placeBody("neutron", {
-        x: width * 0.1, y: height * 0.22, z: 480, scale: 0.85, spinSpeed: 0.08,
-      }),
-      placeBody("neutron", {
-        x: -width * 0.4, y: -height * 0.2, z: 700, scale: 0.55, spinSpeed: -0.11,
-      }),
-      placeBody("satellite", {
-        x: width * 0.2, y: -height * 0.25, z: 420, scale: 0.9,
-        orbitR: 55, orbitSpeed: 0.012,
-      }),
-      placeBody("satellite", {
-        x: -width * 0.22, y: height * 0.18, z: 560, scale: 0.7,
-        orbitR: 40, orbitSpeed: -0.016,
-      }),
-      placeBody("asteroid", { scale: 1.1, spinSpeed: 0.03 }),
-      placeBody("asteroid", { scale: 0.75, spinSpeed: -0.04 }),
-      placeBody("asteroid", { scale: 0.95, spinSpeed: 0.025 }),
-      placeBody("asteroid", { scale: 0.55, spinSpeed: -0.05 }),
-      placeBody("asteroid", { scale: 1.3, spinSpeed: 0.02 }),
-    ];
-    for (const b of bodies) b.pz = b.z;
+  function initField() {
+    field = [];
+    for (let i = 0; i < FIELD; i++) {
+      const tint = Math.random();
+      let r, g, b;
+      if (tint > 0.9) {
+        r = 255; g = 210; b = 140; // warm
+      } else if (tint > 0.75) {
+        r = 170; g = 200; b = 255; // cool
+      } else if (tint > 0.97) {
+        r = 255; g = 160; b = 160;
+      } else {
+        r = 230; g = 235; b = 245;
+      }
+      field.push({
+        th: rand(0, Math.PI * 2),
+        ph: rand(-1.1, 1.1),
+        mag: Math.pow(Math.random(), 2.2), // more faint than bright
+        r, g, b,
+        flare: Math.random() > 0.985,
+      });
+    }
   }
 
-  function spawnMeteor() {
-    const fromLeft = Math.random() > 0.5;
-    meteors.push({
-      x: fromLeft ? -width * 0.6 : width * 0.6,
-      y: rand(-height * 0.4, height * 0.4),
-      z: rand(180, 420),
-      pz: 0,
-      vx: fromLeft ? rand(4, 9) : rand(-9, -4),
-      vy: rand(-1.5, 1.5),
-      vz: rand(-2, -0.5),
-      life: rand(70, 130),
-      size: rand(1.2, 2.4),
-    });
+  function initSystems() {
+    // Named landmarks — distances in light-years (display + angular size)
+    systems = [
+      {
+        id: "sol-analogue",
+        label: "G-type primary",
+        kind: "star",
+        th: 0.55, ph: -0.12,
+        distLy: 4.2,
+        radius: 1.0,
+        hue: [255, 214, 140],
+      },
+      {
+        id: "blue-giant",
+        label: "B-type giant",
+        kind: "star",
+        th: 2.4, ph: 0.22,
+        distLy: 18,
+        radius: 3.2,
+        hue: [180, 210, 255],
+      },
+      {
+        id: "red-dwarf",
+        label: "K-dwarf",
+        kind: "star",
+        th: 4.1, ph: -0.35,
+        distLy: 9.5,
+        radius: 0.55,
+        hue: [255, 150, 110],
+      },
+      {
+        id: "bh-1",
+        label: "Stellar BH",
+        kind: "blackhole",
+        th: 1.2, ph: 0.08,
+        distLy: 32,
+        radius: 1.4,
+        spin: 0,
+      },
+      {
+        id: "psr",
+        label: "Millisecond pulsar",
+        kind: "neutron",
+        th: 5.0, ph: 0.18,
+        distLy: 24,
+        radius: 0.4,
+        spin: 0,
+        spinRate: 0.045,
+      },
+      {
+        id: "psr-2",
+        label: "Radio pulsar",
+        kind: "neutron",
+        th: 3.3, ph: -0.28,
+        distLy: 41,
+        radius: 0.35,
+        spin: 1.2,
+        spinRate: -0.03,
+      },
+    ];
+  }
+
+  function initDebris() {
+    debris = [];
+    for (let i = 0; i < 28; i++) {
+      debris.push({
+        kind: Math.random() > 0.82 ? "sat" : "rock",
+        x: rand(-80, 80),
+        y: rand(-50, 50),
+        z: rand(LOCAL_NEAR, LOCAL_FAR),
+        spin: rand(0, Math.PI * 2),
+        spinRate: rand(-0.01, 0.01),
+        size: rand(0.6, 1.8),
+        seed: Math.random() * 100,
+      });
+    }
+  }
+
+  function angularSize(distLy, radius) {
+    // DSP-like compressed scale: closer systems read as small disks, far as points
+    // size px ≈ k * radius / dist
+    return clamp((radius / distLy) * 92, 1.2, 78);
   }
 
   function resize() {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    width = window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = Math.floor(width * dpr);
-    canvas.height = Math.floor(height * dpr);
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = Math.floor(W * dpr);
+    canvas.height = Math.floor(H * dpr);
+    canvas.style.width = `${W}px`;
+    canvas.style.height = `${H}px`;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    cx = width * 0.5;
-    cy = height * 0.5;
-    targetX = cx;
-    targetY = cy;
-    initStars();
-    initBodies();
-    meteors = [];
+    if (!field.length) initField();
+    if (!systems.length) initSystems();
+    if (!debris.length) initDebris();
   }
 
-  function project(x, y, z) {
-    const k = DEPTH / Math.max(z, 1);
-    return {
-      x: x * k + cx + (targetX - cx) * 0.35,
-      y: y * k + cy + (targetY - cy) * 0.35,
-      k,
-    };
+  function drawNebula() {
+    // soft DSP-like color washes — fixed to look direction slightly
+    const gx = W * 0.5 + smoothLookX * 40;
+    const gy = H * 0.5 + smoothLookY * 30;
+    const a = ctx.createRadialGradient(gx * 0.4, gy * 0.3, 0, gx * 0.4, gy * 0.3, W * 0.7);
+    a.addColorStop(0, "rgba(40, 70, 120, 0.16)");
+    a.addColorStop(0.5, "rgba(20, 40, 80, 0.06)");
+    a.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = a;
+    ctx.fillRect(0, 0, W, H);
+
+    const b = ctx.createRadialGradient(W * 0.85, H * 0.7, 0, W * 0.85, H * 0.7, W * 0.55);
+    b.addColorStop(0, "rgba(90, 40, 70, 0.1)");
+    b.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = b;
+    ctx.fillRect(0, 0, W, H);
   }
 
-  function advanceDepth(obj, factor) {
-    obj.pz = obj.z;
-    obj.z -= speed * factor * (boost ? 1.6 : 1);
-    if (obj.z < 40) {
-      obj.z = DEPTH * rand(0.75, 1);
-      obj.x = (Math.random() - 0.5) * width * 2.2;
-      obj.y = (Math.random() - 0.5) * height * 2.2;
-      obj.pz = obj.z;
-    }
-  }
+  function drawFieldStar(s, streak) {
+    const p = projectSky(s.th, s.ph, 0.15);
+    if (!p.visible) return;
+    if (p.x < -20 || p.x > W + 20 || p.y < -20 || p.y > H + 20) return;
 
-  function drawStarBody(b, p, size) {
-    const [r, g, bl] = b.hue || [255, 200, 100];
-    const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size * 3.2);
-    glow.addColorStop(0, `rgba(${r},${g},${bl},0.95)`);
-    glow.addColorStop(0.25, `rgba(${r},${g},${bl},0.45)`);
-    glow.addColorStop(1, `rgba(${r},${g},${bl},0)`);
-    ctx.fillStyle = glow;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, size * 3.2, 0, Math.PI * 2);
-    ctx.fill();
+    const bright = 0.25 + s.mag * 0.75;
+    const core = 0.4 + s.mag * 1.6;
+    const alpha = 0.2 + bright * 0.7;
 
-    // corona rays
-    ctx.save();
-    ctx.translate(p.x, p.y);
-    ctx.rotate(b.spin);
-    ctx.strokeStyle = `rgba(${r},${g},${bl},0.35)`;
-    ctx.lineWidth = Math.max(1, size * 0.08);
-    for (let i = 0; i < 8; i++) {
-      const a = (i / 8) * Math.PI * 2;
-      const len = size * (1.6 + 0.35 * Math.sin(time * 0.04 + b.seed + i));
+    if (streak > 0.05) {
+      // warp streaks only for field stars, along travel (+X sky motion)
+      const len = streak * (6 + s.mag * 28);
+      const ang = heading + Math.PI * 0.5; // perpendicular hint of motion
+      const dx = Math.cos(heading) * len;
+      const dy = Math.sin(heading) * len * 0.35;
+      ctx.strokeStyle = `rgba(${s.r},${s.g},${s.b},${alpha * 0.55})`;
+      ctx.lineWidth = Math.max(0.6, core * 0.35);
       ctx.beginPath();
-      ctx.moveTo(Math.cos(a) * size * 0.7, Math.sin(a) * size * 0.7);
-      ctx.lineTo(Math.cos(a) * len, Math.sin(a) * len);
+      ctx.moveTo(p.x - dx, p.y - dy);
+      ctx.lineTo(p.x, p.y);
       ctx.stroke();
     }
-    ctx.restore();
 
-    ctx.fillStyle = `rgb(${Math.min(255, r + 30)},${Math.min(255, g + 30)},${Math.min(255, bl + 20)})`;
+    // soft halo
+    if (s.mag > 0.55) {
+      const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, core * 6);
+      g.addColorStop(0, `rgba(${s.r},${s.g},${s.b},${0.22 * bright})`);
+      g.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, core * 6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.fillStyle = `rgba(${s.r},${s.g},${s.b},${alpha})`;
     ctx.beginPath();
-    ctx.arc(p.x, p.y, size * 0.55, 0, Math.PI * 2);
+    ctx.arc(p.x, p.y, core, 0, Math.PI * 2);
     ctx.fill();
+
+    // diffraction spikes (DSP sun / bright star feel)
+    if (s.flare || s.mag > 0.88) {
+      const spike = core * (8 + s.mag * 14);
+      ctx.strokeStyle = `rgba(${s.r},${s.g},${s.b},${0.25 * bright})`;
+      ctx.lineWidth = 0.7;
+      ctx.beginPath();
+      ctx.moveTo(p.x - spike, p.y);
+      ctx.lineTo(p.x + spike, p.y);
+      ctx.moveTo(p.x, p.y - spike * 0.7);
+      ctx.lineTo(p.x, p.y + spike * 0.7);
+      ctx.stroke();
+    }
   }
 
-  function drawBlackHole(b, p, size) {
-    // accretion disk
-    ctx.save();
-    ctx.translate(p.x, p.y);
-    ctx.rotate(b.spin);
-    ctx.scale(1, 0.38);
-    const disk = ctx.createRadialGradient(0, 0, size * 0.55, 0, 0, size * 2.4);
-    disk.addColorStop(0, "rgba(255, 200, 90, 0)");
-    disk.addColorStop(0.35, "rgba(255, 140, 40, 0.75)");
-    disk.addColorStop(0.65, "rgba(220, 60, 30, 0.45)");
-    disk.addColorStop(1, "rgba(80, 20, 40, 0)");
-    ctx.fillStyle = disk;
+  function drawStarSystem(sys) {
+    const p = projectSky(sys.th, sys.ph, 0.55);
+    if (!p.visible || p.forward < 0.05) return;
+
+    const size = angularSize(sys.distLy, sys.radius) * (0.75 + p.forward * 0.35);
+    const [r, g, b] = sys.hue;
+
+    // corona
+    const glowR = size * 3.8;
+    const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, glowR);
+    glow.addColorStop(0, `rgba(${r},${g},${b},0.55)`);
+    glow.addColorStop(0.2, `rgba(${r},${g},${b},0.22)`);
+    glow.addColorStop(0.55, `rgba(${r},${g},${b},0.06)`);
+    glow.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = glow;
     ctx.beginPath();
-    ctx.arc(0, 0, size * 2.4, 0, Math.PI * 2);
+    ctx.arc(p.x, p.y, glowR, 0, Math.PI * 2);
     ctx.fill();
 
-    // hot inner ring
-    ctx.strokeStyle = "rgba(255, 230, 160, 0.85)";
-    ctx.lineWidth = Math.max(1.5, size * 0.12);
+    // photosphere
+    const core = ctx.createRadialGradient(p.x - size * 0.15, p.y - size * 0.15, 0, p.x, p.y, size);
+    core.addColorStop(0, "#fff8e8");
+    core.addColorStop(0.35, `rgb(${r},${g},${b})`);
+    core.addColorStop(1, `rgba(${Math.floor(r * 0.5)},${Math.floor(g * 0.4)},${Math.floor(b * 0.2)},0.9)`);
+    ctx.fillStyle = core;
     ctx.beginPath();
-    ctx.arc(0, 0, size * 0.95, 0, Math.PI * 2);
+    ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+    ctx.fill();
+
+    // long diffraction cross
+    const spike = size * 5.5;
+    ctx.strokeStyle = `rgba(${r},${g},${b},0.28)`;
+    ctx.lineWidth = Math.max(0.8, size * 0.06);
+    ctx.beginPath();
+    ctx.moveTo(p.x - spike, p.y);
+    ctx.lineTo(p.x + spike, p.y);
+    ctx.moveTo(p.x, p.y - spike * 0.65);
+    ctx.lineTo(p.x, p.y + spike * 0.65);
+    ctx.stroke();
+
+    drawLabel(p.x, p.y + size * 2.2, sys.label, `${sys.distLy.toFixed(1)} ly`);
+  }
+
+  function drawBlackHole(sys) {
+    const p = projectSky(sys.th, sys.ph, 0.55);
+    if (!p.visible || p.forward < 0.05) return;
+    const size = angularSize(sys.distLy, sys.radius) * (0.75 + p.forward * 0.35);
+    sys.spin = (sys.spin || 0) + 0.004 * (0.4 + throttle);
+
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(sys.spin);
+    ctx.scale(1, 0.42);
+    const disk = ctx.createRadialGradient(0, 0, size * 0.5, 0, 0, size * 2.6);
+    disk.addColorStop(0, "rgba(255,210,120,0)");
+    disk.addColorStop(0.4, "rgba(255,170,70,0.55)");
+    disk.addColorStop(0.7, "rgba(200,70,40,0.28)");
+    disk.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = disk;
+    ctx.beginPath();
+    ctx.arc(0, 0, size * 2.6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255,230,170,0.65)";
+    ctx.lineWidth = Math.max(1, size * 0.1);
+    ctx.beginPath();
+    ctx.arc(0, 0, size * 1.05, 0, Math.PI * 2);
     ctx.stroke();
     ctx.restore();
 
-    // photon ring + event horizon
-    const rim = ctx.createRadialGradient(p.x, p.y, size * 0.35, p.x, p.y, size * 1.1);
-    rim.addColorStop(0, "rgba(0,0,0,1)");
-    rim.addColorStop(0.7, "rgba(0,0,0,1)");
-    rim.addColorStop(0.85, "rgba(255, 190, 120, 0.55)");
-    rim.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = rim;
+    // shadow
+    const shadow = ctx.createRadialGradient(p.x, p.y, size * 0.2, p.x, p.y, size * 1.15);
+    shadow.addColorStop(0, "#000");
+    shadow.addColorStop(0.75, "#000");
+    shadow.addColorStop(0.88, "rgba(255,190,120,0.4)");
+    shadow.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = shadow;
     ctx.beginPath();
-    ctx.arc(p.x, p.y, size * 1.1, 0, Math.PI * 2);
+    ctx.arc(p.x, p.y, size * 1.15, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.fillStyle = "#000";
     ctx.beginPath();
-    ctx.arc(p.x, p.y, size * 0.55, 0, Math.PI * 2);
+    ctx.arc(p.x, p.y, size * 0.52, 0, Math.PI * 2);
     ctx.fill();
+
+    drawLabel(p.x, p.y + size * 2.4, sys.label, `${sys.distLy.toFixed(0)} ly`);
   }
 
-  function drawNeutron(b, p, size) {
-    // pulsar beams
+  function drawNeutron(sys) {
+    const p = projectSky(sys.th, sys.ph, 0.55);
+    if (!p.visible || p.forward < 0.05) return;
+    const size = angularSize(sys.distLy, sys.radius) * (0.9 + p.forward * 0.3);
+    sys.spin = (sys.spin || 0) + (sys.spinRate || 0.04);
+
     ctx.save();
     ctx.translate(p.x, p.y);
-    ctx.rotate(b.spin);
-    const beam = ctx.createLinearGradient(0, -size * 5, 0, size * 5);
-    beam.addColorStop(0, "rgba(140, 200, 255, 0)");
-    beam.addColorStop(0.45, "rgba(160, 220, 255, 0.55)");
-    beam.addColorStop(0.5, "rgba(255, 255, 255, 0.9)");
-    beam.addColorStop(0.55, "rgba(160, 220, 255, 0.55)");
-    beam.addColorStop(1, "rgba(140, 200, 255, 0)");
+    ctx.rotate(sys.spin);
+    const beam = ctx.createLinearGradient(0, -size * 7, 0, size * 7);
+    beam.addColorStop(0, "rgba(140,200,255,0)");
+    beam.addColorStop(0.48, "rgba(170,220,255,0.35)");
+    beam.addColorStop(0.5, "rgba(255,255,255,0.75)");
+    beam.addColorStop(0.52, "rgba(170,220,255,0.35)");
+    beam.addColorStop(1, "rgba(140,200,255,0)");
     ctx.fillStyle = beam;
     ctx.beginPath();
-    ctx.moveTo(-size * 0.18, -size * 5);
-    ctx.lineTo(size * 0.18, -size * 5);
-    ctx.lineTo(size * 0.35, size * 5);
-    ctx.lineTo(-size * 0.35, size * 5);
+    ctx.moveTo(-size * 0.12, -size * 7);
+    ctx.lineTo(size * 0.12, -size * 7);
+    ctx.lineTo(size * 0.28, size * 7);
+    ctx.lineTo(-size * 0.28, size * 7);
     ctx.closePath();
     ctx.fill();
     ctx.restore();
 
-    const core = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size * 1.8);
+    const core = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size * 2.2);
     core.addColorStop(0, "rgba(255,255,255,1)");
-    core.addColorStop(0.35, "rgba(160,210,255,0.9)");
-    core.addColorStop(1, "rgba(80,120,255,0)");
+    core.addColorStop(0.35, "rgba(160,210,255,0.85)");
+    core.addColorStop(1, "rgba(60,100,200,0)");
     ctx.fillStyle = core;
     ctx.beginPath();
-    ctx.arc(p.x, p.y, size * 1.8, 0, Math.PI * 2);
+    ctx.arc(p.x, p.y, size * 2.2, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = "#e8f4ff";
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, size * 0.35, 0, Math.PI * 2);
-    ctx.fill();
+    drawLabel(p.x, p.y + size * 3, sys.label, `${sys.distLy.toFixed(0)} ly`);
   }
 
-  function drawSatellite(b, p, size) {
-    const ox = Math.cos(b.orbitA) * b.orbitR * (p.k / 40);
-    const oy = Math.sin(b.orbitA) * b.orbitR * 0.45 * (p.k / 40);
-    const x = p.x + ox;
-    const y = p.y + oy;
-
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(b.spin + b.orbitA);
-
-    // solar panels
-    ctx.fillStyle = "rgba(60, 110, 180, 0.85)";
-    ctx.fillRect(-size * 1.8, -size * 0.22, size * 1.1, size * 0.44);
-    ctx.fillRect(size * 0.7, -size * 0.22, size * 1.1, size * 0.44);
-    ctx.strokeStyle = "rgba(200, 220, 255, 0.5)";
-    ctx.lineWidth = 1;
-    ctx.strokeRect(-size * 1.8, -size * 0.22, size * 1.1, size * 0.44);
-    ctx.strokeRect(size * 0.7, -size * 0.22, size * 1.1, size * 0.44);
-
-    // body
-    ctx.fillStyle = "rgba(220, 225, 230, 0.95)";
-    ctx.fillRect(-size * 0.45, -size * 0.35, size * 0.9, size * 0.7);
-
-    // antenna
-    ctx.strokeStyle = "rgba(240, 200, 100, 0.9)";
-    ctx.beginPath();
-    ctx.moveTo(0, -size * 0.35);
-    ctx.lineTo(0, -size * 1.1);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.arc(0, -size * 1.15, size * 0.18, 0, Math.PI * 2);
-    ctx.stroke();
-
-    ctx.restore();
+  function drawLabel(x, y, title, dist) {
+    if (throttle > 0.75) return; // hide labels at full warp for clarity
+    ctx.font = "500 11px 'IBM Plex Sans', sans-serif";
+    ctx.fillStyle = "rgba(220, 230, 245, 0.55)";
+    ctx.textAlign = "center";
+    ctx.fillText(`${title}  ·  ${dist}`, x, y);
   }
 
-  function drawAsteroid(b, p, size) {
+  function projectLocal(x, y, z) {
+    // local camera: +Z forward into depth
+    const f = 280 / z;
+    return {
+      x: W * 0.5 + (x + smoothLookX * 8) * f,
+      y: H * 0.5 + (y + smoothLookY * 6) * f,
+      s: f,
+    };
+  }
+
+  function drawRock(d, p) {
+    const size = d.size * p.s * 0.35;
+    if (size < 0.4) return;
     ctx.save();
     ctx.translate(p.x, p.y);
-    ctx.rotate(b.spin);
-    const n = 7;
+    ctx.rotate(d.spin);
     ctx.beginPath();
+    const n = 6;
     for (let i = 0; i < n; i++) {
       const a = (i / n) * Math.PI * 2;
-      const jagged = 0.65 + 0.35 * Math.sin(b.seed + i * 1.7);
-      const r = size * jagged;
-      const x = Math.cos(a) * r;
-      const y = Math.sin(a) * r;
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
+      const jagged = 0.7 + 0.3 * Math.sin(d.seed + i * 1.9);
+      const rr = size * jagged;
+      const px = Math.cos(a) * rr;
+      const py = Math.sin(a) * rr;
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
     }
     ctx.closePath();
-    ctx.fillStyle = "rgba(120, 105, 90, 0.92)";
+    // lit from "sun" upper-left
+    ctx.fillStyle = "rgba(95, 88, 80, 0.9)";
     ctx.fill();
-    ctx.strokeStyle = "rgba(70, 55, 45, 0.8)";
+    ctx.strokeStyle = "rgba(40, 35, 30, 0.7)";
     ctx.lineWidth = 1;
     ctx.stroke();
-
-    // craters
-    ctx.fillStyle = "rgba(60, 50, 42, 0.55)";
+    ctx.fillStyle = "rgba(150, 140, 125, 0.35)";
     ctx.beginPath();
-    ctx.arc(-size * 0.2, size * 0.1, size * 0.18, 0, Math.PI * 2);
-    ctx.arc(size * 0.25, -size * 0.15, size * 0.12, 0, Math.PI * 2);
+    ctx.arc(-size * 0.2, -size * 0.2, size * 0.35, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
   }
 
-  function drawMeteor(m) {
-    const p = project(m.x, m.y, m.z);
-    const pp = project(m.x - m.vx * 2, m.y - m.vy * 2, m.z - m.vz * 2);
-    const size = m.size * (p.k / 35);
-
-    const trail = ctx.createLinearGradient(pp.x, pp.y, p.x, p.y);
-    trail.addColorStop(0, "rgba(255, 180, 80, 0)");
-    trail.addColorStop(0.6, "rgba(255, 160, 60, 0.45)");
-    trail.addColorStop(1, "rgba(255, 240, 200, 0.95)");
-    ctx.strokeStyle = trail;
-    ctx.lineWidth = Math.max(1, size * 0.7);
-    ctx.lineCap = "round";
+  function drawSat(d, p) {
+    const size = d.size * p.s * 0.4;
+    if (size < 0.5) return;
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(d.spin);
+    ctx.fillStyle = "rgba(55, 95, 150, 0.85)";
+    ctx.fillRect(-size * 1.6, -size * 0.18, size * 1.0, size * 0.36);
+    ctx.fillRect(size * 0.6, -size * 0.18, size * 1.0, size * 0.36);
+    ctx.fillStyle = "rgba(210, 215, 220, 0.95)";
+    ctx.fillRect(-size * 0.4, -size * 0.28, size * 0.8, size * 0.56);
+    ctx.strokeStyle = "rgba(240, 200, 110, 0.8)";
     ctx.beginPath();
-    ctx.moveTo(pp.x, pp.y);
-    ctx.lineTo(p.x, p.y);
+    ctx.moveTo(0, -size * 0.28);
+    ctx.lineTo(0, -size * 0.95);
     ctx.stroke();
-
-    ctx.fillStyle = "rgba(255, 230, 180, 0.95)";
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, Math.max(1.2, size * 0.45), 0, Math.PI * 2);
-    ctx.fill();
+    ctx.restore();
   }
 
-  function drawBodies() {
-    // painter's algorithm: far → near
-    const sortable = bodies
-      .map((b) => ({ b, z: b.z }))
-      .sort((a, c) => c.z - a.z);
+  function updateLocal() {
+    // debris drifts slowly opposite to cruise — you're moving through local space
+    const vz = 0.015 + throttle * 0.12; // AU per frame — still gentle
+    const vx = Math.sin(heading) * vz * 0.15;
 
-    for (const { b } of sortable) {
-      b.spin += b.spinSpeed * (boost ? 1.8 : 1);
-      if (b.orbitSpeed) b.orbitA += b.orbitSpeed;
-
-      const depthFactor =
-        b.type === "asteroid" ? 10 :
-        b.type === "satellite" ? 7 :
-        b.type === "neutron" ? 5.5 :
-        b.type === "star" ? 4.5 : 3.5;
-
-      advanceDepth(b, depthFactor);
-
-      const p = project(b.x, b.y, b.z);
-      if (p.x < -200 || p.x > width + 200 || p.y < -200 || p.y > height + 200) {
-        continue;
+    for (const d of debris) {
+      d.z -= vz;
+      d.x -= vx;
+      d.spin += d.spinRate;
+      if (d.z < LOCAL_NEAR * 0.6) {
+        d.z = rand(LOCAL_FAR * 0.7, LOCAL_FAR);
+        d.x = rand(-80, 80);
+        d.y = rand(-50, 50);
       }
+    }
 
-      const size = Math.max(4, map(b.z, 40, DEPTH, 58, 8) * b.scale);
-
-      if (b.type === "star") drawStarBody(b, p, size);
-      else if (b.type === "blackhole") drawBlackHole(b, p, size);
-      else if (b.type === "neutron") drawNeutron(b, p, size);
-      else if (b.type === "satellite") drawSatellite(b, p, size);
-      else if (b.type === "asteroid") drawAsteroid(b, p, size);
+    // sort far → near
+    const sorted = debris.slice().sort((a, b) => b.z - a.z);
+    for (const d of sorted) {
+      const p = projectLocal(d.x, d.y, d.z);
+      if (p.x < -40 || p.x > W + 40 || p.y < -40 || p.y > H + 40) continue;
+      if (d.kind === "sat") drawSat(d, p);
+      else drawRock(d, p);
     }
   }
 
-  function drawFieldStars() {
-    for (let i = 0; i < stars.length; i++) {
-      const star = stars[i];
-      star.pz = star.z;
-      star.z -= speed * (boost ? 18 : 8);
-
-      if (star.z < 1) {
-        resetStar(star, false);
-        continue;
-      }
-
-      const p = project(star.x, star.y, star.z);
-      const pp = project(star.x, star.y, star.pz);
-
-      if (p.x < -40 || p.x > width + 40 || p.y < -40 || p.y > height + 40) {
-        resetStar(star, false);
-        continue;
-      }
-
-      const size = Math.max(0.4, map(star.z, 0, DEPTH, 3.0, 0.35));
-      const alpha = map(star.z, 0, DEPTH, 1, 0.15);
-      const color = `rgba(${star.r},${star.g},${star.b},${alpha})`;
-
-      ctx.beginPath();
-      ctx.moveTo(pp.x, pp.y);
-      ctx.lineTo(p.x, p.y);
-      ctx.strokeStyle = color;
-      ctx.lineWidth = size;
-      ctx.lineCap = "round";
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.fillStyle = color;
-      ctx.arc(p.x, p.y, size * 0.55, 0, Math.PI * 2);
-      ctx.fill();
-    }
+  function spawnMeteor() {
+    // parallel to velocity — same direction sense
+    const z = rand(30, 90);
+    const side = Math.random() > 0.5 ? 1 : -1;
+    meteors.push({
+      x: side * rand(40, 100),
+      y: rand(-35, 35),
+      z,
+      // velocity mostly toward camera / along cruise
+      vx: -Math.sin(heading) * rand(0.4, 0.9),
+      vy: rand(-0.05, 0.05),
+      vz: -(0.35 + throttle * 1.2),
+      life: rand(90, 160),
+      heat: rand(0.7, 1),
+    });
   }
 
   function updateMeteors() {
-    meteorCooldown -= boost ? 3 : 1;
-    if (meteorCooldown <= 0) {
-      spawnMeteor();
-      meteorCooldown = boost ? rand(25, 55) : rand(70, 140);
+    meteorCD -= 1 + throttle * 2;
+    if (meteorCD <= 0) {
+      if (Math.random() < 0.35 + throttle * 0.4) spawnMeteor();
+      meteorCD = rand(140, 280) - throttle * 60;
     }
 
     for (let i = meteors.length - 1; i >= 0; i--) {
       const m = meteors[i];
-      m.pz = m.z;
-      m.x += m.vx * (boost ? 1.6 : 1);
+      m.x += m.vx;
       m.y += m.vy;
       m.z += m.vz;
       m.life -= 1;
-      if (m.life <= 0 || m.z < 20) {
+      if (m.life <= 0 || m.z < 4) {
         meteors.splice(i, 1);
         continue;
       }
-      drawMeteor(m);
+
+      const p = projectLocal(m.x, m.y, m.z);
+      const p2 = projectLocal(m.x - m.vx * 4, m.y - m.vy * 4, m.z - m.vz * 4);
+      const w = clamp(2.5 * (280 / m.z), 0.6, 2.2);
+
+      const trail = ctx.createLinearGradient(p2.x, p2.y, p.x, p.y);
+      trail.addColorStop(0, "rgba(255,160,60,0)");
+      trail.addColorStop(0.5, `rgba(255,170,80,${0.25 * m.heat})`);
+      trail.addColorStop(1, `rgba(255,240,210,${0.85 * m.heat})`);
+      ctx.strokeStyle = trail;
+      ctx.lineWidth = w;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(p2.x, p2.y);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+
+      // small ablating head — not a big rock cartoon
+      ctx.fillStyle = `rgba(255,245,220,${0.9 * m.heat})`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, w * 0.55, 0, Math.PI * 2);
+      ctx.fill();
     }
   }
 
-  function drawFrame() {
+  function drawDirectionCue() {
+    // subtle travel corridor / vanishing point — DSP nav feel
+    const vx = W * 0.5 + Math.sin(heading) * 18;
+    const vy = H * 0.5 - 8 + pitch * 40;
+    ctx.strokeStyle = `rgba(180, 210, 255, ${0.08 + throttle * 0.12})`;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(W * 0.5 - 120, H * 0.5 + 90);
+    ctx.lineTo(vx, vy);
+    ctx.lineTo(W * 0.5 + 120, H * 0.5 + 90);
+    ctx.stroke();
+
+    ctx.fillStyle = `rgba(240, 200, 100, ${0.35 + throttle * 0.4})`;
+    ctx.beginPath();
+    ctx.arc(vx, vy, 2.2, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function nearestSystemLy() {
+    let best = Infinity;
+    for (const s of systems) {
+      const p = projectSky(s.th, s.ph, 0.55);
+      if (p.visible && p.forward > 0.2) best = Math.min(best, s.distLy);
+    }
+    return best === Infinity ? systems[0].distLy : best;
+  }
+
+  function updateHud() {
+    if (hudVel) {
+      const lyh = (0.02 + throttle * 2.4).toFixed(2);
+      hudVel.textContent = `${lyh} ly/h`;
+    }
+    if (hudRange) {
+      hudRange.textContent = `${nearestSystemLy().toFixed(1)} ly`;
+    }
+  }
+
+  function frame() {
     time += 1;
-    const wash = boost ? 0.3 : 0.45;
-    ctx.fillStyle = `rgba(5, 8, 20, ${wash})`;
-    ctx.fillRect(0, 0, width, height);
+    throttle += ((boost ? 1 : 0) - throttle) * 0.05;
+    smoothLookX += (lookX - smoothLookX) * 0.06;
+    smoothLookY += (lookY - smoothLookY) * 0.06;
 
-    speed += (targetSpeed - speed) * 0.08;
+    // cruise rotates the sky very slowly — ly-scale travel
+    heading += (CRUISE_YAW + throttle * (WARP_YAW - CRUISE_YAW));
+    pitch += smoothLookY * 0.00015;
 
-    drawFieldStars();
-    drawBodies();
+    // clear to deep space (less motion blur wash — DSP is sharp)
+    ctx.fillStyle = "#060a14";
+    ctx.fillRect(0, 0, W, H);
+    drawNebula();
+
+    const streak = throttle * throttle;
+
+    for (const s of field) drawFieldStar(s, streak);
+
+    // systems far → near by dist
+    const sorted = systems.slice().sort((a, b) => b.distLy - a.distLy);
+    for (const sys of sorted) {
+      if (sys.kind === "star") drawStarSystem(sys);
+      else if (sys.kind === "blackhole") drawBlackHole(sys);
+      else if (sys.kind === "neutron") drawNeutron(sys);
+    }
+
+    updateLocal();
     updateMeteors();
+    drawDirectionCue();
+    updateHud();
+
+    raf = requestAnimationFrame(frame);
   }
 
   function drawStatic() {
-    ctx.fillStyle = "#050814";
-    ctx.fillRect(0, 0, width, height);
-    for (let i = 0; i < 160; i++) {
-      const x = Math.random() * width;
-      const y = Math.random() * height;
-      ctx.fillStyle = `rgba(244,239,228,${0.25 + Math.random() * 0.5})`;
-      ctx.fillRect(x, y, 1.5, 1.5);
+    ctx.fillStyle = "#060a14";
+    ctx.fillRect(0, 0, W, H);
+    drawNebula();
+    initField();
+    initSystems();
+    for (const s of field) drawFieldStar(s, 0);
+    for (const sys of systems) {
+      if (sys.kind === "star") drawStarSystem(sys);
+      else if (sys.kind === "blackhole") drawBlackHole(sys);
+      else if (sys.kind === "neutron") drawNeutron(sys);
     }
-    // static celestial silhouettes
-    initBodies();
-    speed = 0;
-    targetSpeed = 0;
-    drawBodies();
   }
 
-  function loop() {
-    drawFrame();
-    raf = requestAnimationFrame(loop);
-  }
+  window.addEventListener("resize", () => {
+    const keep = { field, systems, debris };
+    resize();
+    field = keep.field;
+    systems = keep.systems;
+    debris = keep.debris;
+  }, { passive: true });
 
-  function setBoost(on) {
-    boost = on;
-    targetSpeed = on ? 2.8 : 0.55;
-  }
-
-  window.addEventListener("resize", resize, { passive: true });
   window.addEventListener("pointermove", (e) => {
-    targetX = e.clientX;
-    targetY = e.clientY;
+    lookX = (e.clientX / W) * 2 - 1;
+    lookY = (e.clientY / H) * 2 - 1;
   }, { passive: true });
 
   window.addEventListener("pointerdown", (e) => {
-    if (e.target.closest("a, button, .panel, .section")) return;
-    setBoost(true);
+    if (e.target.closest("a, button, .panel, .section, .hud")) return;
+    boost = true;
   });
-  window.addEventListener("pointerup", () => setBoost(false));
-  window.addEventListener("pointercancel", () => setBoost(false));
-
+  window.addEventListener("pointerup", () => { boost = false; });
+  window.addEventListener("pointercancel", () => { boost = false; });
   window.addEventListener("keydown", (e) => {
     if (e.code === "Space" && !e.repeat) {
       e.preventDefault();
-      setBoost(true);
+      boost = true;
     }
   });
   window.addEventListener("keyup", (e) => {
-    if (e.code === "Space") setBoost(false);
+    if (e.code === "Space") boost = false;
   });
 
   resize();
+  initField();
+  initSystems();
+  initDebris();
 
   if (reduced) {
     drawStatic();
     const hint = document.getElementById("warp-hint");
     if (hint) hint.hidden = true;
   } else {
-    loop();
+    frame();
   }
 
   document.addEventListener("visibilitychange", () => {
     if (reduced) return;
     if (document.hidden) cancelAnimationFrame(raf);
-    else loop();
+    else frame();
   });
 })();

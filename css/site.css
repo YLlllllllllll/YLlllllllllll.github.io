@@ -18,7 +18,7 @@ body {
   min-height: 100vh;
   font-family: var(--font-body);
   color: var(--ink);
-  background: #050814;
+  background: #060a14;
   overflow-x: hidden;
 }
 
@@ -46,8 +46,49 @@ a:hover { color: var(--accent); }
   z-index: 1;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 65% 50% at 28% 38%, rgba(5, 8, 20, 0.2), transparent 58%),
-    linear-gradient(180deg, rgba(5, 8, 20, 0.2) 0%, rgba(5, 8, 20, 0.55) 100%);
+    radial-gradient(ellipse 55% 45% at 30% 42%, rgba(6, 10, 20, 0.15), transparent 60%),
+    linear-gradient(180deg, rgba(6, 10, 20, 0.12) 0%, rgba(6, 10, 20, 0.62) 100%);
+}
+
+.hud {
+  position: fixed;
+  z-index: 3;
+  left: max(1rem, calc(50vw - 520px));
+  bottom: 1.1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 1rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid rgba(180, 210, 255, 0.18);
+  background: rgba(6, 10, 20, 0.55);
+  backdrop-filter: blur(8px);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  pointer-events: none;
+  color: rgba(220, 230, 245, 0.75);
+}
+
+.hud-block {
+  display: grid;
+  gap: 0.12rem;
+  min-width: 5.5rem;
+}
+
+.hud-wide { min-width: 9rem; }
+
+.hud-k {
+  color: rgba(160, 190, 230, 0.55);
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 0.62rem;
+}
+
+.hud-v {
+  font-variant-numeric: tabular-nums;
+  color: rgba(240, 220, 160, 0.9);
+  font-weight: 600;
+  letter-spacing: 0.04em;
 }
 
 .site {
@@ -298,6 +339,12 @@ a:hover { color: var(--accent); }
 @media (max-width: 640px) {
   .site { width: calc(100% - 1.75rem); }
   .hint { display: none; }
+  .hud {
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.75rem;
+  }
+  .hud-wide { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
