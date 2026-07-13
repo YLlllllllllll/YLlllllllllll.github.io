@@ -1,7 +1,6 @@
 /**
  * DSP-inspired deep-space backdrop.
- * Scale model: distant stars / systems barely move (ly-scale);
- * only local debris drifts. Mouse = look; boost = cruise, not "zoom past suns".
+ * WASD = look (4 directions) · Shift = cruise · LMB = lock celestial body.
  */
 (() => {
   const canvas = document.getElementById("hyperspace");
@@ -10,38 +9,35 @@
   const ctx = canvas.getContext("2d", { alpha: false });
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // —— scale constants (feel, not physics) ——
-  // Distant field stars: fixed on a sky sphere (parallax only from look)
   const FIELD = 1400;
-  // Cruise: how fast the sky drifts under boost (very small)
-  const CRUISE_YAW = 0.00035; // rad / frame at cruise
+  const CRUISE_YAW = 0.00035;
   const WARP_YAW = 0.0022;
-  // Local debris depth in "AU-ish" units; stars are in "ly"
   const LOCAL_NEAR = 8;
   const LOCAL_FAR = 120;
+  const TURN = 0.022;
+  const LOCK_LERP = 0.055;
+  const PICK_PAD = 28;
 
   let W = 0;
   let H = 0;
   let dpr = 1;
-  let lookX = 0; // -1..1 from pointer
-  let lookY = 0;
-  let smoothLookX = 0;
-  let smoothLookY = 0;
-  let heading = 0.35; // galactic cruise heading (rad)
-  let pitch = -0.08;
-  let boost = false; // pointer / Space
-  let throttle = 0; // 0..1 smoothed
+  let viewYaw = 0.55;
+  let viewPitch = -0.08;
+  let throttle = 0;
   let time = 0;
   let raf = 0;
+  let pointerX = 0;
+  let pointerY = 0;
+  /** @type {object|null} */
+  let locked = null;
+
   const keys = {
     w: false,
     a: false,
     s: false,
     d: false,
-    space: false,
+    shift: false,
   };
-  const YAW_KEY = 0.018;
-  const PITCH_KEY = 0.012;
 
   /** @type {{th:number,ph:number,mag:number,r:number,g:number,b:number,flare:boolean}[]} */
   let field = [];
@@ -55,6 +51,7 @@
 
   const hudVel = document.getElementById("hud-vel");
   const hudRange = document.getElementById("hud-range");
+  const hudLock = document.getElementById("hud-lock");
 
   function rand(a, b) {
     return a + Math.random() * (b - a);
@@ -64,22 +61,29 @@
     return Math.max(a, Math.min(b, v));
   }
 
-  // Spherical → screen (camera look + cruise heading)
-  function projectSky(theta, phi, parallax = 1) {
-    const th = theta + heading * 0.15 + smoothLookX * 0.55 * parallax;
-    const ph = phi + pitch * 0.4 + smoothLookY * 0.4 * parallax;
-    // equal-area-ish wrap into view frustum
-    const x = ((th % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
-    const nx = (x / (Math.PI * 2) - 0.5) * 2; // -1..1 wraps
-    // remap wrapped sky to screen with soft cylinder projection
-    let u = Math.sin(th) * Math.cos(ph);
-    let v = Math.sin(ph);
-    let depth = Math.cos(th) * Math.cos(ph); // forward hemisphere > 0
+  function wrapAngle(a) {
+    const t = Math.PI * 2;
+    return ((a % t) + t) % t;
+  }
+
+  function shortestAngle(from, to) {
+    let d = wrapAngle(to) - wrapAngle(from);
+    if (d > Math.PI) d -= Math.PI * 2;
+    if (d < -Math.PI) d += Math.PI * 2;
+    return d;
+  }
+
+  function projectSky(theta, phi) {
+    const th = theta - viewYaw;
+    const ph = phi - viewPitch;
+    const u = Math.sin(th) * Math.cos(ph);
+    const v = Math.sin(ph);
+    const depth = Math.cos(th) * Math.cos(ph);
     return {
       x: W * 0.5 + u * W * 0.62,
       y: H * 0.5 + v * H * 0.72,
       forward: depth,
-      visible: depth > -0.15,
+      visible: depth > -0.12,
     };
   }
 
@@ -89,9 +93,9 @@
       const tint = Math.random();
       let r, g, b;
       if (tint > 0.9) {
-        r = 255; g = 210; b = 140; // warm
+        r = 255; g = 210; b = 140;
       } else if (tint > 0.75) {
-        r = 170; g = 200; b = 255; // cool
+        r = 170; g = 200; b = 255;
       } else if (tint > 0.97) {
         r = 255; g = 160; b = 160;
       } else {
@@ -100,7 +104,7 @@
       field.push({
         th: rand(0, Math.PI * 2),
         ph: rand(-1.1, 1.1),
-        mag: Math.pow(Math.random(), 2.2), // more faint than bright
+        mag: Math.pow(Math.random(), 2.2),
         r, g, b,
         flare: Math.random() > 0.985,
       });
@@ -108,7 +112,6 @@
   }
 
   function initSystems() {
-    // Named landmarks — distances in light-years (display + angular size)
     systems = [
       {
         id: "sol-analogue",
@@ -186,9 +189,29 @@
   }
 
   function angularSize(distLy, radius) {
-    // DSP-like compressed scale: closer systems read as small disks, far as points
-    // size px ≈ k * radius / dist
     return clamp((radius / distLy) * 92, 1.2, 78);
+  }
+
+  function systemScreen(sys) {
+    const p = projectSky(sys.th, sys.ph);
+    const size = angularSize(sys.distLy, sys.radius) * (0.75 + Math.max(0, p.forward) * 0.35);
+    return { p, size };
+  }
+
+  function pickSystem(mx, my) {
+    let best = null;
+    let bestScore = Infinity;
+    for (const sys of systems) {
+      const { p, size } = systemScreen(sys);
+      if (!p.visible || p.forward < 0.05) continue;
+      const d = Math.hypot(p.x - mx, p.y - my);
+      const hitR = Math.max(PICK_PAD, size * 2.2);
+      if (d <= hitR && d < bestScore) {
+        best = sys;
+        bestScore = d;
+      }
+    }
+    return best;
   }
 
   function resize() {
@@ -200,15 +223,16 @@
     canvas.style.width = `${W}px`;
     canvas.style.height = `${H}px`;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    pointerX = W * 0.5;
+    pointerY = H * 0.5;
     if (!field.length) initField();
     if (!systems.length) initSystems();
     if (!debris.length) initDebris();
   }
 
   function drawNebula() {
-    // soft DSP-like color washes — fixed to look direction slightly
-    const gx = W * 0.5 + smoothLookX * 40;
-    const gy = H * 0.5 + smoothLookY * 30;
+    const gx = W * 0.5;
+    const gy = H * 0.5;
     const a = ctx.createRadialGradient(gx * 0.4, gy * 0.3, 0, gx * 0.4, gy * 0.3, W * 0.7);
     a.addColorStop(0, "rgba(40, 70, 120, 0.16)");
     a.addColorStop(0.5, "rgba(20, 40, 80, 0.06)");
@@ -224,7 +248,7 @@
   }
 
   function drawFieldStar(s, streak) {
-    const p = projectSky(s.th, s.ph, 0.15);
+    const p = projectSky(s.th, s.ph);
     if (!p.visible) return;
     if (p.x < -20 || p.x > W + 20 || p.y < -20 || p.y > H + 20) return;
 
@@ -233,11 +257,9 @@
     const alpha = 0.2 + bright * 0.7;
 
     if (streak > 0.05) {
-      // warp streaks only for field stars, along travel (+X sky motion)
       const len = streak * (6 + s.mag * 28);
-      const ang = heading + Math.PI * 0.5; // perpendicular hint of motion
-      const dx = Math.cos(heading) * len;
-      const dy = Math.sin(heading) * len * 0.35;
+      const dx = Math.cos(viewYaw) * len;
+      const dy = Math.sin(viewYaw) * len * 0.35;
       ctx.strokeStyle = `rgba(${s.r},${s.g},${s.b},${alpha * 0.55})`;
       ctx.lineWidth = Math.max(0.6, core * 0.35);
       ctx.beginPath();
@@ -246,7 +268,6 @@
       ctx.stroke();
     }
 
-    // soft halo
     if (s.mag > 0.55) {
       const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, core * 6);
       g.addColorStop(0, `rgba(${s.r},${s.g},${s.b},${0.22 * bright})`);
@@ -262,7 +283,6 @@
     ctx.arc(p.x, p.y, core, 0, Math.PI * 2);
     ctx.fill();
 
-    // diffraction spikes (DSP sun / bright star feel)
     if (s.flare || s.mag > 0.88) {
       const spike = core * (8 + s.mag * 14);
       ctx.strokeStyle = `rgba(${s.r},${s.g},${s.b},${0.25 * bright})`;
@@ -276,14 +296,29 @@
     }
   }
 
-  function drawStarSystem(sys) {
-    const p = projectSky(sys.th, sys.ph, 0.55);
-    if (!p.visible || p.forward < 0.05) return;
+  function drawLockReticle(x, y, size, label) {
+    const r = Math.max(18, size * 1.85);
+    const tick = 8;
+    ctx.strokeStyle = "rgba(240, 193, 75, 0.9)";
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    ctx.moveTo(x - r, y - r + tick); ctx.lineTo(x - r, y - r); ctx.lineTo(x - r + tick, y - r);
+    ctx.moveTo(x + r - tick, y - r); ctx.lineTo(x + r, y - r); ctx.lineTo(x + r, y - r + tick);
+    ctx.moveTo(x + r, y + r - tick); ctx.lineTo(x + r, y + r); ctx.lineTo(x + r - tick, y + r);
+    ctx.moveTo(x - r + tick, y + r); ctx.lineTo(x - r, y + r); ctx.lineTo(x - r, y + r - tick);
+    ctx.stroke();
 
-    const size = angularSize(sys.distLy, sys.radius) * (0.75 + p.forward * 0.35);
+    ctx.font = "600 11px 'IBM Plex Sans', sans-serif";
+    ctx.fillStyle = "rgba(240, 193, 75, 0.95)";
+    ctx.textAlign = "center";
+    ctx.fillText(`LOCK  ·  ${label}`, x, y - r - 10);
+  }
+
+  function drawStarSystem(sys) {
+    const { p, size } = systemScreen(sys);
+    if (!p.visible || p.forward < 0.05) return;
     const [r, g, b] = sys.hue;
 
-    // corona
     const glowR = size * 3.8;
     const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, glowR);
     glow.addColorStop(0, `rgba(${r},${g},${b},0.55)`);
@@ -295,7 +330,6 @@
     ctx.arc(p.x, p.y, glowR, 0, Math.PI * 2);
     ctx.fill();
 
-    // photosphere
     const core = ctx.createRadialGradient(p.x - size * 0.15, p.y - size * 0.15, 0, p.x, p.y, size);
     core.addColorStop(0, "#fff8e8");
     core.addColorStop(0.35, `rgb(${r},${g},${b})`);
@@ -305,7 +339,6 @@
     ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
     ctx.fill();
 
-    // long diffraction cross
     const spike = size * 5.5;
     ctx.strokeStyle = `rgba(${r},${g},${b},0.28)`;
     ctx.lineWidth = Math.max(0.8, size * 0.06);
@@ -316,13 +349,13 @@
     ctx.lineTo(p.x, p.y + spike * 0.65);
     ctx.stroke();
 
-    drawLabel(p.x, p.y + size * 2.2, sys.label, `${sys.distLy.toFixed(1)} ly`);
+    if (locked && locked.id === sys.id) drawLockReticle(p.x, p.y, size, sys.label);
+    else drawLabel(p.x, p.y + size * 2.2, sys.label, `${sys.distLy.toFixed(1)} ly`);
   }
 
   function drawBlackHole(sys) {
-    const p = projectSky(sys.th, sys.ph, 0.55);
+    const { p, size } = systemScreen(sys);
     if (!p.visible || p.forward < 0.05) return;
-    const size = angularSize(sys.distLy, sys.radius) * (0.75 + p.forward * 0.35);
     sys.spin = (sys.spin || 0) + 0.004 * (0.4 + throttle);
 
     ctx.save();
@@ -345,7 +378,6 @@
     ctx.stroke();
     ctx.restore();
 
-    // shadow
     const shadow = ctx.createRadialGradient(p.x, p.y, size * 0.2, p.x, p.y, size * 1.15);
     shadow.addColorStop(0, "#000");
     shadow.addColorStop(0.75, "#000");
@@ -361,13 +393,13 @@
     ctx.arc(p.x, p.y, size * 0.52, 0, Math.PI * 2);
     ctx.fill();
 
-    drawLabel(p.x, p.y + size * 2.4, sys.label, `${sys.distLy.toFixed(0)} ly`);
+    if (locked && locked.id === sys.id) drawLockReticle(p.x, p.y, size, sys.label);
+    else drawLabel(p.x, p.y + size * 2.4, sys.label, `${sys.distLy.toFixed(0)} ly`);
   }
 
   function drawNeutron(sys) {
-    const p = projectSky(sys.th, sys.ph, 0.55);
+    const { p, size } = systemScreen(sys);
     if (!p.visible || p.forward < 0.05) return;
-    const size = angularSize(sys.distLy, sys.radius) * (0.9 + p.forward * 0.3);
     sys.spin = (sys.spin || 0) + (sys.spinRate || 0.04);
 
     ctx.save();
@@ -398,11 +430,12 @@
     ctx.arc(p.x, p.y, size * 2.2, 0, Math.PI * 2);
     ctx.fill();
 
-    drawLabel(p.x, p.y + size * 3, sys.label, `${sys.distLy.toFixed(0)} ly`);
+    if (locked && locked.id === sys.id) drawLockReticle(p.x, p.y, size, sys.label);
+    else drawLabel(p.x, p.y + size * 3, sys.label, `${sys.distLy.toFixed(0)} ly`);
   }
 
   function drawLabel(x, y, title, dist) {
-    if (throttle > 0.75) return; // hide labels at full warp for clarity
+    if (throttle > 0.75) return;
     ctx.font = "500 11px 'IBM Plex Sans', sans-serif";
     ctx.fillStyle = "rgba(220, 230, 245, 0.55)";
     ctx.textAlign = "center";
@@ -410,11 +443,10 @@
   }
 
   function projectLocal(x, y, z) {
-    // local camera: +Z forward into depth
     const f = 280 / z;
     return {
-      x: W * 0.5 + (x + smoothLookX * 8) * f,
-      y: H * 0.5 + (y + smoothLookY * 6) * f,
+      x: W * 0.5 + x * f,
+      y: H * 0.5 + y * f,
       s: f,
     };
   }
@@ -437,7 +469,6 @@
       else ctx.lineTo(px, py);
     }
     ctx.closePath();
-    // lit from "sun" upper-left
     ctx.fillStyle = "rgba(95, 88, 80, 0.9)";
     ctx.fill();
     ctx.strokeStyle = "rgba(40, 35, 30, 0.7)";
@@ -470,9 +501,8 @@
   }
 
   function updateLocal() {
-    // debris drifts slowly opposite to cruise — you're moving through local space
-    const vz = 0.015 + throttle * 0.12; // AU per frame — still gentle
-    const vx = Math.sin(heading) * vz * 0.15;
+    const vz = 0.015 + throttle * 0.12;
+    const vx = Math.sin(viewYaw) * vz * 0.15;
 
     for (const d of debris) {
       d.z -= vz;
@@ -485,7 +515,6 @@
       }
     }
 
-    // sort far → near
     const sorted = debris.slice().sort((a, b) => b.z - a.z);
     for (const d of sorted) {
       const p = projectLocal(d.x, d.y, d.z);
@@ -496,15 +525,13 @@
   }
 
   function spawnMeteor() {
-    // parallel to velocity — same direction sense
     const z = rand(30, 90);
     const side = Math.random() > 0.5 ? 1 : -1;
     meteors.push({
       x: side * rand(40, 100),
       y: rand(-35, 35),
       z,
-      // velocity mostly toward camera / along cruise
-      vx: -Math.sin(heading) * rand(0.4, 0.9),
+      vx: -Math.sin(viewYaw) * rand(0.4, 0.9),
       vy: rand(-0.05, 0.05),
       vz: -(0.35 + throttle * 1.2),
       life: rand(90, 160),
@@ -546,7 +573,6 @@
       ctx.lineTo(p.x, p.y);
       ctx.stroke();
 
-      // small ablating head — not a big rock cartoon
       ctx.fillStyle = `rgba(255,245,220,${0.9 * m.heat})`;
       ctx.beginPath();
       ctx.arc(p.x, p.y, w * 0.55, 0, Math.PI * 2);
@@ -555,10 +581,9 @@
   }
 
   function drawDirectionCue() {
-    // subtle travel corridor / vanishing point — DSP nav feel
-    const vx = W * 0.5 + Math.sin(heading) * 18;
-    const vy = H * 0.5 - 8 + pitch * 40;
-    ctx.strokeStyle = `rgba(180, 210, 255, ${0.08 + throttle * 0.12})`;
+    const vx = W * 0.5;
+    const vy = H * 0.5;
+    ctx.strokeStyle = `rgba(180, 210, 255, ${0.06 + throttle * 0.1})`;
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(W * 0.5 - 120, H * 0.5 + 90);
@@ -566,79 +591,63 @@
     ctx.lineTo(W * 0.5 + 120, H * 0.5 + 90);
     ctx.stroke();
 
-    ctx.fillStyle = `rgba(240, 200, 100, ${0.35 + throttle * 0.4})`;
+    ctx.fillStyle = `rgba(240, 200, 100, ${0.3 + throttle * 0.4})`;
     ctx.beginPath();
     ctx.arc(vx, vy, 2.2, 0, Math.PI * 2);
     ctx.fill();
   }
 
-  function nearestSystemLy() {
-    let best = Infinity;
-    for (const s of systems) {
-      const p = projectSky(s.th, s.ph, 0.55);
-      if (p.visible && p.forward > 0.2) best = Math.min(best, s.distLy);
-    }
-    return best === Infinity ? systems[0].distLy : best;
-  }
-
   function updateHud() {
     if (hudVel) {
-      const lyh = (0.02 + throttle * 2.4).toFixed(2);
-      hudVel.textContent = `${lyh} ly/h`;
+      hudVel.textContent = `${(0.02 + throttle * 2.4).toFixed(2)} ly/h`;
     }
     if (hudRange) {
-      hudRange.textContent = `${nearestSystemLy().toFixed(1)} ly`;
+      const ly = locked ? locked.distLy : (() => {
+        let best = Infinity;
+        for (const s of systems) {
+          const { p } = systemScreen(s);
+          if (p.visible && p.forward > 0.2) best = Math.min(best, s.distLy);
+        }
+        return best === Infinity ? systems[0].distLy : best;
+      })();
+      hudRange.textContent = `${Number(ly).toFixed(1)} ly`;
+    }
+    if (hudLock) {
+      hudLock.textContent = locked ? locked.label : "—";
+    }
+  }
+
+  function applyLook() {
+    if (keys.a) viewYaw = wrapAngle(viewYaw - TURN);
+    if (keys.d) viewYaw = wrapAngle(viewYaw + TURN);
+    if (keys.w) viewPitch = clamp(viewPitch + TURN * 0.75, -1.05, 1.05);
+    if (keys.s) viewPitch = clamp(viewPitch - TURN * 0.75, -1.05, 1.05);
+
+    // Track locked body when not manually looking
+    if (locked && !(keys.w || keys.a || keys.s || keys.d)) {
+      viewYaw = wrapAngle(viewYaw + shortestAngle(viewYaw, locked.th) * LOCK_LERP);
+      viewPitch += (locked.ph - viewPitch) * LOCK_LERP;
     }
   }
 
   function frame() {
     time += 1;
+    applyLook();
 
-    // WASD: A/D yaw, W thrust, S brake; also nudge look for feedback
-    if (keys.a) {
-      heading -= YAW_KEY * (0.55 + throttle * 0.7);
-      lookX = Math.max(-1, lookX - 0.04);
-    }
-    if (keys.d) {
-      heading += YAW_KEY * (0.55 + throttle * 0.7);
-      lookX = Math.min(1, lookX + 0.04);
-    }
-    if (keys.w) {
-      pitch = clamp(pitch - PITCH_KEY * 0.25, -0.6, 0.6);
-      lookY = Math.max(-1, lookY - 0.03);
-    }
-    if (keys.s) {
-      pitch = clamp(pitch + PITCH_KEY * 0.25, -0.6, 0.6);
-      lookY = Math.min(1, lookY + 0.03);
+    const targetThrottle = keys.shift ? 1 : 0;
+    throttle += (targetThrottle - throttle) * 0.05;
+
+    if (throttle > 0.05 && !locked) {
+      viewYaw = wrapAngle(viewYaw + CRUISE_YAW + throttle * (WARP_YAW - CRUISE_YAW));
     }
 
-    const wantBoost = boost || keys.space || keys.w;
-    const wantBrake = keys.s && !keys.w;
-    const targetThrottle = wantBrake ? 0 : wantBoost ? 1 : 0;
-    throttle += (targetThrottle - throttle) * (wantBrake ? 0.08 : 0.05);
-
-    smoothLookX += (lookX - smoothLookX) * 0.06;
-    smoothLookY += (lookY - smoothLookY) * 0.06;
-    // ease look back toward center when using keys only
-    if (keys.a || keys.d || keys.w || keys.s) {
-      lookX *= 0.96;
-      lookY *= 0.96;
-    }
-
-    // cruise rotates the sky very slowly — ly-scale travel
-    heading += (CRUISE_YAW + throttle * (WARP_YAW - CRUISE_YAW));
-    pitch += smoothLookY * 0.00015;
-
-    // clear to deep space (less motion blur wash — DSP is sharp)
     ctx.fillStyle = "#060a14";
     ctx.fillRect(0, 0, W, H);
     drawNebula();
 
     const streak = throttle * throttle;
-
     for (const s of field) drawFieldStar(s, streak);
 
-    // systems far → near by dist
     const sorted = systems.slice().sort((a, b) => b.distLy - a.distLy);
     for (const sys of sorted) {
       if (sys.kind === "star") drawStarSystem(sys);
@@ -650,6 +659,16 @@
     updateMeteors();
     drawDirectionCue();
     updateHud();
+
+    const hover = pickSystem(pointerX, pointerY);
+    if (hover && (!locked || locked.id !== hover.id)) {
+      const { p, size } = systemScreen(hover);
+      ctx.strokeStyle = "rgba(220, 230, 245, 0.35)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, Math.max(14, size * 1.6), 0, Math.PI * 2);
+      ctx.stroke();
+    }
 
     raf = requestAnimationFrame(frame);
   }
@@ -669,24 +688,31 @@
   }
 
   window.addEventListener("resize", () => {
-    const keep = { field, systems, debris };
+    const keep = { field, systems, debris, locked };
     resize();
     field = keep.field;
     systems = keep.systems;
     debris = keep.debris;
+    locked = keep.locked
+      ? systems.find((s) => s.id === keep.locked.id) || null
+      : null;
   }, { passive: true });
 
   window.addEventListener("pointermove", (e) => {
-    lookX = (e.clientX / W) * 2 - 1;
-    lookY = (e.clientY / H) * 2 - 1;
+    pointerX = e.clientX;
+    pointerY = e.clientY;
   }, { passive: true });
 
   window.addEventListener("pointerdown", (e) => {
+    if (e.button !== 0) return;
     if (e.target.closest("a, button, .panel, .section, .hud")) return;
-    boost = true;
+    const hit = pickSystem(e.clientX, e.clientY);
+    if (hit) {
+      locked = locked && locked.id === hit.id ? null : hit;
+    } else if (locked) {
+      locked = null;
+    }
   });
-  window.addEventListener("pointerup", () => { boost = false; });
-  window.addEventListener("pointercancel", () => { boost = false; });
 
   function setKey(code, down) {
     switch (code) {
@@ -702,8 +728,9 @@
       case "KeyD":
       case "ArrowRight":
         keys.d = down; break;
-      case "Space":
-        keys.space = down; break;
+      case "ShiftLeft":
+      case "ShiftRight":
+        keys.shift = down; break;
       default:
         return false;
     }
@@ -718,8 +745,7 @@
     setKey(e.code, false);
   });
   window.addEventListener("blur", () => {
-    keys.w = keys.a = keys.s = keys.d = keys.space = false;
-    boost = false;
+    keys.w = keys.a = keys.s = keys.d = keys.shift = false;
   });
 
   resize();
