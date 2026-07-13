@@ -116,64 +116,81 @@
 
   function initSystems() {
     const catalog = [
-      { id: "sol", label: "G2V Sol-analogue", kind: "star", th: 0.15, ph: -0.05, distLy: 2.8, rSun: 1.0, hue: [255, 214, 140] },
-      { id: "rigel", label: "B8Ia Rigel-class", kind: "star", th: 0.9, ph: 0.12, distLy: 9, rSun: 12, hue: [170, 205, 255] },
-      { id: "betel", label: "M2I Betelgeuse-class", kind: "star", th: -0.7, ph: 0.08, distLy: 6.5, rSun: 16, hue: [255, 130, 90] },
-      { id: "vega", label: "A0V Vega-class", kind: "star", th: 0.45, ph: -0.18, distLy: 4.5, rSun: 2.1, hue: [210, 230, 255] },
-      { id: "proxima", label: "M-dwarf", kind: "star", th: -0.35, ph: -0.22, distLy: 3.2, rSun: 0.55, hue: [255, 120, 95] },
+      // nearby showcase — DSP-like planets first so approach is rewarding
+      { id: "med", label: "Mediterranean", kind: "planet", biome: "mediterranean", th: 0.12, ph: -0.04, distLy: 1.6, rSun: 0.55 },
+      { id: "arid", label: "Arid Desert", kind: "planet", biome: "arid", th: -0.25, ph: 0.08, distLy: 2.1, rSun: 0.5 },
+      { id: "ice", label: "Scarlet Ice", kind: "planet", biome: "ice", th: 0.4, ph: 0.15, distLy: 2.4, rSun: 0.48 },
+      { id: "lava", label: "Lava Planet", kind: "planet", biome: "lava", th: -0.5, ph: -0.1, distLy: 2.8, rSun: 0.52 },
+      { id: "ocean", label: "Oceanic", kind: "planet", biome: "ocean", th: 0.55, ph: -0.18, distLy: 3.0, rSun: 0.5 },
+      { id: "ashen", label: "Ashen Gelisol", kind: "planet", biome: "ashen", th: -0.15, ph: 0.22, distLy: 3.3, rSun: 0.47 },
+      { id: "pandora", label: "Pandora-class", kind: "planet", biome: "pandora", th: 0.7, ph: 0.05, distLy: 3.6, rSun: 0.53 },
+      { id: "gas1", label: "Gas Giant", kind: "planet", biome: "gas_cream", th: -0.8, ph: 0.02, distLy: 4.2, rSun: 2.8 },
+      { id: "gas2", label: "Ice Giant", kind: "planet", biome: "gas_blue", th: 0.95, ph: -0.12, distLy: 5.0, rSun: 2.2 },
+      // stars
+      { id: "sol", label: "G2V Sol-analogue", kind: "star", th: 0.05, ph: -0.02, distLy: 6.5, rSun: 1.0, hue: [255, 214, 140] },
+      { id: "rigel", label: "B8Ia Rigel-class", kind: "star", th: 0.9, ph: 0.12, distLy: 11, rSun: 12, hue: [170, 205, 255] },
+      { id: "betel", label: "M2I Betelgeuse-class", kind: "star", th: -0.7, ph: 0.08, distLy: 9, rSun: 16, hue: [255, 130, 90] },
+      { id: "vega", label: "A0V Vega-class", kind: "star", th: 0.45, ph: -0.18, distLy: 7.5, rSun: 2.1, hue: [210, 230, 255] },
       { id: "bh1", label: "Stellar BH", kind: "blackhole", th: 1.2, ph: 0.06, distLy: 14, rSun: 3.0, hue: [255, 170, 70], spin: 0 },
-      { id: "psr1", label: "Pulsar", kind: "neutron", th: -1.0, ph: 0.15, distLy: 11, rSun: 0.14, spin: 0, spinRate: 0.08 },
-      { id: "wr", label: "Wolf–Rayet", kind: "star", th: 0.05, ph: 0.28, distLy: 12, rSun: 4.2, hue: [255, 200, 255] },
+      { id: "psr1", label: "Pulsar", kind: "neutron", th: -1.0, ph: 0.15, distLy: 12, rSun: 0.14, spin: 0, spinRate: 0.08 },
     ];
     systems = catalog.map(placeSystem);
 
+    const biomes = ["mediterranean", "arid", "ice", "lava", "ocean", "ashen", "pandora", "gas", "gas_blue", "gas_cream"];
+    for (let i = 0; i < 24; i++) {
+      const biome = biomes[i % biomes.length];
+      systems.push(placeSystem({
+        id: `p-${i}`,
+        label: `${biome.replace("_", " ")} #${i + 1}`,
+        kind: "planet",
+        biome,
+        th: rand(-1.3, 1.3),
+        ph: rand(-0.45, 0.45),
+        distLy: rand(4, 40),
+        rSun: String(biome).startsWith("gas") ? rand(1.8, 3.2) : rand(0.4, 0.7),
+      }));
+    }
+
     const spectral = [
-      { tag: "O", hue: [150, 185, 255], r: [5, 14] },
-      { tag: "B", hue: [175, 205, 255], r: [2.2, 8] },
-      { tag: "A", hue: [210, 225, 255], r: [1.3, 2.5] },
-      { tag: "F", hue: [240, 235, 220], r: [1.0, 1.5] },
+      { tag: "O", hue: [150, 185, 255], r: [5, 12] },
+      { tag: "B", hue: [175, 205, 255], r: [2.2, 7] },
+      { tag: "A", hue: [210, 225, 255], r: [1.3, 2.4] },
       { tag: "G", hue: [255, 220, 150], r: [0.85, 1.15] },
       { tag: "K", hue: [255, 170, 110], r: [0.6, 0.95] },
       { tag: "M", hue: [255, 120, 90], r: [0.4, 0.7] },
     ];
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < 28; i++) {
       const sp = spectral[i % spectral.length];
       systems.push(placeSystem({
         id: `s-${i}`,
         label: `${sp.tag}-type #${i + 1}`,
         kind: "star",
         th: rand(-1.4, 1.4),
-        ph: rand(-0.55, 0.55),
-        distLy: rand(3.5, 55),
+        ph: rand(-0.5, 0.5),
+        distLy: rand(8, 60),
         rSun: rand(sp.r[0], sp.r[1]),
-        hue: sp.hue.map((c) => clamp(c + rand(-15, 15), 90, 255)),
+        hue: sp.hue.map((c) => clamp(c + rand(-12, 12), 90, 255)),
+      }));
+    }
+    for (let i = 0; i < 4; i++) {
+      systems.push(placeSystem({
+        id: `bh-${i}`, label: `BH #${i + 1}`, kind: "blackhole",
+        th: rand(-1.4, 1.4), ph: rand(-0.35, 0.35), distLy: rand(18, 70),
+        rSun: rand(2.2, 5.5), hue: [255, 160, 60], spin: rand(0, 3),
       }));
     }
     for (let i = 0; i < 5; i++) {
       systems.push(placeSystem({
-        id: `bh-${i}`,
-        label: `BH #${i + 1}`,
-        kind: "blackhole",
-        th: rand(-1.5, 1.5),
-        ph: rand(-0.4, 0.4),
-        distLy: rand(16, 70),
-        rSun: rand(2.2, 6),
-        hue: [255, 160, 60],
-        spin: rand(0, 3),
-      }));
-    }
-    for (let i = 0; i < 6; i++) {
-      systems.push(placeSystem({
-        id: `ns-${i}`,
-        label: `Pulsar #${i + 1}`,
-        kind: "neutron",
-        th: rand(-1.5, 1.5),
-        ph: rand(-0.45, 0.45),
-        distLy: rand(10, 60),
-        rSun: rand(0.09, 0.15),
-        spin: rand(0, 3),
+        id: `ns-${i}`, label: `Pulsar #${i + 1}`, kind: "neutron",
+        th: rand(-1.4, 1.4), ph: rand(-0.4, 0.4), distLy: rand(12, 55),
+        rSun: rand(0.09, 0.15), spin: rand(0, 3),
         spinRate: rand(0.04, 0.12) * (Math.random() > 0.5 ? 1 : -1),
       }));
+    }
+
+    if (window.DSPTextures) {
+      // bake offline-style atlas into memory once
+      window.DSPTextures.warm(systems);
     }
   }
 
@@ -291,24 +308,37 @@
     }
   }
 
-  function drawSolidSphere(p, size, hue, opts = {}) {
-    const [r, g, b] = hue;
-    const seed = opts.seed || 1;
-    const spin = opts.spin || 0;
-    const prox = opts.prox != null ? opts.prox : proximityDetail(size);
-    const boostG = 0.5 + prox * 1.5;
-    const litX = p.x - size * 0.28;
-    const litY = p.y - size * 0.32;
+  function atmoColor(biome) {
+    const map = {
+      mediterranean: [120, 180, 255],
+      arid: [220, 180, 120],
+      ice: [180, 210, 255],
+      lava: [255, 100, 40],
+      ocean: [80, 150, 255],
+      ashen: [160, 170, 180],
+      pandora: [80, 255, 200],
+      gas: [255, 200, 140],
+      gas_blue: [140, 180, 255],
+      gas_cream: [255, 220, 160],
+    };
+    return map[biome] || [140, 190, 255];
+  }
 
-    if (opts.corona !== false && size > 2) {
-      const layers = 2 + Math.floor(prox * 4);
-      const baseScale = (opts.coronaScale || 0.8) * (1 + prox * 0.9);
+  /** Runtime: baked texture + cheap corona/atmosphere (DSP look, low CPU). */
+  function drawBody(sys, p, size, prox) {
+    const tex = window.DSPTextures ? window.DSPTextures.get(sys) : null;
+    const hue = sys.hue || atmoColor(sys.biome) || [255, 220, 150];
+    const [r, g, b] = hue;
+
+    // star / neutron corona — gradients only
+    if (sys.kind === "star" || sys.kind === "neutron") {
+      const layers = 2 + Math.floor(prox * 3);
       for (let i = layers; i >= 1; i--) {
-        const glowR = size * (1.1 + i * baseScale * 0.5);
-        const alpha = ((0.14 + prox * 0.3) / i) * (opts.darkCore ? 0.5 : 1) * boostG;
-        const glow = ctx.createRadialGradient(p.x, p.y, size * 0.9, p.x, p.y, glowR);
+        const glowR = size * (1.25 + i * (0.55 + prox * 0.5));
+        const alpha = (0.16 + prox * 0.28) / i;
+        const glow = ctx.createRadialGradient(p.x, p.y, size * 0.85, p.x, p.y, glowR);
         glow.addColorStop(0, `rgba(${r},${g},${b},${alpha})`);
-        glow.addColorStop(0.5, `rgba(${r},${g},${b},${alpha * 0.3})`);
+        glow.addColorStop(0.55, `rgba(${r},${g},${b},${alpha * 0.25})`);
         glow.addColorStop(1, "rgba(0,0,0,0)");
         ctx.fillStyle = glow;
         ctx.beginPath();
@@ -317,92 +347,84 @@
       }
     }
 
-    const body = ctx.createRadialGradient(litX, litY, size * 0.04, p.x, p.y, size);
-    if (opts.darkCore) {
-      body.addColorStop(0, "#050505");
-      body.addColorStop(0.55, "#000");
-      body.addColorStop(0.82, `rgba(${r},${g},${b},${0.4 + prox * 0.35})`);
-      body.addColorStop(1, "#000");
-    } else {
-      body.addColorStop(0, opts.hotCore || "#fffaf0");
-      body.addColorStop(0.2, `rgb(${Math.min(255, r + 20)},${Math.min(255, g + 15)},${Math.min(255, b + 10)})`);
-      body.addColorStop(0.55, `rgb(${r},${g},${b})`);
-      body.addColorStop(0.85, `rgb(${Math.floor(r * 0.45)},${Math.floor(g * 0.38)},${Math.floor(b * 0.3)})`);
-      body.addColorStop(1, `rgb(${Math.floor(r * 0.15)},${Math.floor(g * 0.1)},${Math.floor(b * 0.08)})`);
+    // planet atmosphere halo (DSP nephogram / ionosphere feel)
+    if (sys.kind === "planet" && size > 6) {
+      const [ar, ag, ab] = atmoColor(sys.biome);
+      const atmoR = size * (1.08 + prox * 0.12);
+      const atmo = ctx.createRadialGradient(p.x, p.y, size * 0.92, p.x, p.y, atmoR);
+      atmo.addColorStop(0, "rgba(0,0,0,0)");
+      atmo.addColorStop(0.7, `rgba(${ar},${ag},${ab},${0.05 + prox * 0.12})`);
+      atmo.addColorStop(0.92, `rgba(${ar},${ag},${ab},${0.35 + prox * 0.4})`);
+      atmo.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = atmo;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, atmoR, 0, Math.PI * 2);
+      ctx.fill();
     }
-    ctx.fillStyle = body;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
-    ctx.fill();
 
-    if (!opts.darkCore && prox > 0.1 && size > 20) {
+    // blackhole accretion disk (procedural, cheap)
+    if (sys.kind === "blackhole") {
+      sys.spin = (sys.spin || 0) + 0.004 + speed * 0.001;
       ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(sys.spin);
+      ctx.scale(1, 0.34);
+      const disk = ctx.createRadialGradient(0, 0, size * 0.55, 0, 0, size * 2.5);
+      disk.addColorStop(0, "rgba(255,210,120,0)");
+      disk.addColorStop(0.4, `rgba(255,160,60,${0.35 + prox * 0.35})`);
+      disk.addColorStop(0.75, "rgba(180,50,30,0.25)");
+      disk.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = disk;
       ctx.beginPath();
-      ctx.arc(p.x, p.y, size * 0.99, 0, Math.PI * 2);
-      ctx.clip();
-      const cells = Math.floor(20 + prox * prox * 300);
-      for (let i = 0; i < cells; i++) {
-        const u = hash01(seed * 17 + i * 3.1);
-        const v = hash01(seed * 29 + i * 5.7);
-        const ang = u * Math.PI * 2 + spin * 0.35;
-        const rad = Math.sqrt(v) * size * 0.92;
-        const px = p.x + Math.cos(ang) * rad;
-        const py = p.y + Math.sin(ang) * rad * 0.95;
-        const rr = size * (0.012 + hash01(i + seed) * (0.02 + prox * 0.035));
-        ctx.fillStyle = `rgba(255,248,230,${(0.03 + hash01(i * 9) * 0.1) * (0.5 + prox)})`;
-        ctx.beginPath();
-        ctx.arc(px, py, rr, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      if (prox > 0.28) {
-        const spots = Math.floor(3 + prox * 26);
-        for (let i = 0; i < spots; i++) {
-          const u = hash01(seed * 41 + i * 11.3);
-          const v = hash01(seed * 7 + i * 2.9);
-          if (v > 0.8 - prox * 0.15) continue;
-          const ang = u * Math.PI * 2 + spin * 0.5;
-          const rad = (0.22 + v * 0.55) * size;
-          const px = p.x + Math.cos(ang) * rad;
-          const py = p.y + Math.sin(ang) * rad * 0.88;
-          const rr = size * (0.025 + hash01(i + 99) * 0.06) * (0.7 + prox);
-          ctx.fillStyle = `rgba(35,15,8,${0.22 + prox * 0.4})`;
-          ctx.beginPath();
-          ctx.arc(px, py, rr, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      }
-      if (opts.bands && prox > 0.2) {
-        for (let i = -4; i <= 4; i++) {
-          const yy = p.y + i * size * 0.16;
-          const band = ctx.createLinearGradient(p.x - size, yy, p.x + size, yy);
-          band.addColorStop(0, "rgba(0,0,0,0)");
-          band.addColorStop(0.5, `rgba(255,255,255,${0.03 + prox * 0.05})`);
-          band.addColorStop(1, "rgba(0,0,0,0)");
-          ctx.fillStyle = band;
-          ctx.fillRect(p.x - size, yy - size * 0.04, size * 2, size * 0.08);
-        }
-      }
-      const limb = ctx.createRadialGradient(p.x, p.y, size * 0.45, p.x, p.y, size);
-      limb.addColorStop(0, "rgba(0,0,0,0)");
-      limb.addColorStop(1, `rgba(0,0,0,${0.3 + prox * 0.35})`);
-      ctx.fillStyle = limb;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+      ctx.arc(0, 0, size * 2.5, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
     }
 
-    if (!opts.darkCore && size > 14) {
-      ctx.strokeStyle = `rgba(${Math.min(255, r + 40)},${Math.min(255, g + 20)},${b},${0.35 + prox * 0.4})`;
-      ctx.lineWidth = Math.max(1, size * 0.012);
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, size * 0.996, 0, Math.PI * 2);
-      ctx.stroke();
+    // neutron jets
+    if (sys.kind === "neutron") {
+      sys.spin = (sys.spin || 0) + (sys.spinRate || 0.06);
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(sys.spin);
+      const bh = Math.max(size * 9, 40);
+      const beam = ctx.createLinearGradient(0, -bh, 0, bh);
+      beam.addColorStop(0, "rgba(140,200,255,0)");
+      beam.addColorStop(0.5, `rgba(255,255,255,${0.55 + prox * 0.3})`);
+      beam.addColorStop(1, "rgba(140,200,255,0)");
+      ctx.fillStyle = beam;
+      ctx.fillRect(-Math.max(size * 0.12, 1), -bh, Math.max(size * 0.24, 2), bh * 2);
+      ctx.restore();
     }
 
-    if (!opts.darkCore && size < 24 && prox < 0.2) {
+    // main sphere from prebaked texture
+    if (tex) {
+      ctx.drawImage(tex, p.x - size, p.y - size, size * 2, size * 2);
+    } else {
+      ctx.fillStyle = `rgb(${r},${g},${b})`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // proximity specular sheen on planets
+    if (sys.kind === "planet" && prox > 0.35) {
+      const spec = ctx.createRadialGradient(
+        p.x - size * 0.28, p.y - size * 0.32, 0,
+        p.x - size * 0.28, p.y - size * 0.32, size * 0.55
+      );
+      spec.addColorStop(0, `rgba(255,255,255,${0.08 + prox * 0.18})`);
+      spec.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = spec;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // star diffraction when distant
+    if (sys.kind === "star" && size < 18 && prox < 0.15) {
       const spike = size * 5;
-      ctx.strokeStyle = `rgba(${r},${g},${b},0.28)`;
+      ctx.strokeStyle = `rgba(${r},${g},${b},0.3)`;
       ctx.lineWidth = Math.max(0.7, size * 0.05);
       ctx.beginPath();
       ctx.moveTo(p.x - spike, p.y); ctx.lineTo(p.x + spike, p.y);
@@ -412,7 +434,7 @@
   }
 
   function drawLockReticle(x, y, size, label) {
-    const r = Math.max(16, size * 1.15 + 8);
+    const r = Math.max(16, size * 1.12 + 8);
     const t = 7;
     ctx.strokeStyle = "rgba(240,193,75,0.95)";
     ctx.lineWidth = 1.4;
@@ -451,61 +473,14 @@
 
     for (const sys of sorted) {
       const { p, size, dist } = systemScreen(sys);
-      if (!p.visible || size < 0.3) continue;
-      // soft skip if behind / too close to clip
+      if (!p.visible || size < 0.35) continue;
       if (p.depth < sys.radius * 0.5) continue;
 
       const proxScreen = proximityDetail(size);
-      const proxPhys = clamp(1 - (dist - sys.radius) / (sys.radius * 100), 0, 1);
+      const proxPhys = clamp(1 - (dist - sys.radius) / (sys.radius * 90), 0, 1);
       const prox = Math.max(proxScreen, proxPhys * 0.85);
-      const seed = sys.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
 
-      if (sys.kind === "blackhole") {
-        sys.spin = (sys.spin || 0) + 0.004 + speed * 0.001;
-        if (size < W * 0.65) {
-          ctx.save();
-          ctx.translate(p.x, p.y);
-          ctx.rotate(sys.spin);
-          ctx.scale(1, 0.36);
-          const disk = ctx.createRadialGradient(0, 0, size * 0.6, 0, 0, size * 2.6);
-          disk.addColorStop(0, "rgba(255,210,120,0)");
-          disk.addColorStop(0.4, "rgba(255,160,60,0.5)");
-          disk.addColorStop(1, "rgba(0,0,0,0)");
-          ctx.fillStyle = disk;
-          ctx.beginPath();
-          ctx.arc(0, 0, size * 2.6, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.restore();
-        }
-        drawSolidSphere(p, size, sys.hue || [255, 170, 70], {
-          darkCore: true, corona: true, coronaScale: 0.55 + prox * 0.35, prox, seed,
-        });
-      } else if (sys.kind === "neutron") {
-        sys.spin = (sys.spin || 0) + (sys.spinRate || 0.06);
-        ctx.save();
-        ctx.translate(p.x, p.y);
-        ctx.rotate(sys.spin);
-        const bh = Math.max(size * 9, 36);
-        const beam = ctx.createLinearGradient(0, -bh, 0, bh);
-        beam.addColorStop(0, "rgba(140,200,255,0)");
-        beam.addColorStop(0.5, "rgba(255,255,255,0.75)");
-        beam.addColorStop(1, "rgba(140,200,255,0)");
-        ctx.fillStyle = beam;
-        ctx.fillRect(-Math.max(size * 0.14, 1.2), -bh, Math.max(size * 0.28, 2.4), bh * 2);
-        ctx.restore();
-        drawSolidSphere(p, Math.max(size, 2.2), [200, 220, 255], {
-          hotCore: "#fff", corona: true, coronaScale: 1, prox, seed: 77,
-        });
-      } else {
-        drawSolidSphere(p, size, sys.hue, {
-          corona: true,
-          coronaScale: 0.65 + (1 - prox) * 0.7,
-          seed,
-          spin: time * 0.08,
-          bands: (sys.rSun || 1) > 4,
-          prox,
-        });
-      }
+      drawBody(sys, p, size, prox);
 
       if (locked && locked.id === sys.id) drawLockReticle(p.x, p.y, size, sys.label);
       else if (size < H * 0.42) {
