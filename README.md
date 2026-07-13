@@ -1,27 +1,12 @@
 # Yucheng Lu
 
-Personal profile site for [YLlllllllllll](https://github.com/YLlllllllllll).
+Personal site — AI deployment & model optimization.
 
-Full-bleed **canvas hyperspace** background (classic open-source starfield / warp technique — reimplemented, no third-party runtime deps). Hold click or Space to jump to lightspeed; move the pointer to steer.
+- Live preview: `python3 -m http.server 8765` then open http://127.0.0.1:8765
+- Background: canvas hyperspace with stars, black holes, neutron stars (pulsars), satellites, asteroids & meteors
+- Content sourced from LinkedIn public profile (Google Doc resume was unreachable from this environment)
 
-## Preview
+## Links
 
-```bash
-cd YuchengLu-profile
-python3 -m http.server 8080
-# http://127.0.0.1:8080
-```
-
-## Layout
-
-```
-index.html
-css/site.css
-js/hyperspace.js
-```
-
-## GitHub Pages
-
-Enable Pages on branch `main` / root. Project URL:
-
-`https://yllllllllllll.github.io/YuchengLu-profile/`
+- [LinkedIn](https://www.linkedin.com/in/yucheng-lu-431a04233/)
+- [GitHub](https://github.com/YLlllllllllll)

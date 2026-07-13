@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yucheng Lu</title>
-  <meta name="description" content="Yucheng Lu — ML systems, training infrastructure, and code agents.">
+  <title>Yucheng Lu — ML Deployment Engineer</title>
+  <meta name="description" content="Yucheng Lu — AI deployment & model optimization engineer. SNPE / QNN / TensorRT, PTQ / QAT. Columbia Statistics M.A.">
   <meta property="og:title" content="Yucheng Lu">
-  <meta property="og:description" content="Personal profile — ML systems & code agents.">
+  <meta property="og:description" content="AI deployment & model optimization — on-device perception, quantization, inference.">
   <meta property="og:type" content="website">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%050814'/%3E%3Ccircle cx='32' cy='32' r='3' fill='%23f4e8c8'/%3E%3Cpath d='M32 8 L34 28 L32 32 L30 28 Z' fill='%23f0c14b' opacity='.9'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23050814'/%3E%3Ccircle cx='32' cy='32' r='3' fill='%23f4e8c8'/%3E%3Cpath d='M32 8 L34 28 L32 32 L30 28 Z' fill='%23f0c14b' opacity='.9'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -16,51 +16,115 @@
 </head>
 <body>
   <canvas id="hyperspace" aria-hidden="true"></canvas>
-
   <div class="veil" aria-hidden="true"></div>
 
   <main class="site">
     <header class="hero">
-      <p class="eyebrow">Personal profile</p>
+      <p class="eyebrow">Diamond Bar, CA · Open to opportunities</p>
       <h1 class="brand">Yucheng&nbsp;Lu</h1>
       <p class="lede">
-        ML systems and training infrastructure — VeOmni, SFT pipelines,
-        and code-agent evaluation.
+        AI deployment &amp; model optimization engineer —
+        on-device perception, quantization (PTQ / QAT), and
+        high-throughput inference on Qualcomm &amp; GPU runtimes.
       </p>
       <div class="cta-row">
-        <a class="btn btn-primary" href="https://github.com/YLlllllllllll">GitHub</a>
-        <a class="btn btn-ghost" href="#work">Selected work</a>
+        <a class="btn btn-primary" href="https://www.linkedin.com/in/yucheng-lu-431a04233/" rel="noopener noreferrer">LinkedIn</a>
+        <a class="btn btn-ghost" href="https://github.com/YLlllllllllll" rel="noopener noreferrer">GitHub</a>
+        <a class="btn btn-ghost" href="#experience">Experience</a>
       </div>
-      <p class="hint" id="warp-hint">Move pointer to steer · hold click or Space to jump to lightspeed</p>
+      <p class="hint" id="warp-hint">Steer with pointer · hold click / Space for lightspeed · watch for black holes, pulsars &amp; meteors</p>
     </header>
 
-    <section class="section" id="work" aria-labelledby="work-heading">
-      <h2 id="work-heading">Selected work</h2>
-      <p class="section-lede">Things that travel well in public.</p>
+    <section class="panel section" id="experience" aria-labelledby="exp-heading">
+      <h2 id="exp-heading">Experience</h2>
+      <p class="section-lede">Deployment-first engineering across autonomous driving and LLM compression.</p>
+
+      <article class="job">
+        <header class="job-head">
+          <h3>Perception Deployment Engineer</h3>
+          <p class="job-meta">Megatronix · Beijing · Jan 2024 – Present</p>
+        </header>
+        <ul>
+          <li>Parking: geometric checks cut AVM stitching freespace errors by &gt;95%; BEV3D with synchronized IPM queues.</li>
+          <li>Driving: owned DD3D / Anchor3D perception path with custom memory pools → ~3% CPU utilization.</li>
+          <li>Sparse 4D Lane: ONNX + quantization brought inference 62 ms → 18 ms (~0.3% metric loss).</li>
+          <li>OpenCL kernels (UYVY→BGR, resize, crop): 7× 4K frames in 8 ms.</li>
+          <li>Unified inference on Qualcomm 8155/8255/8295/8775; shared buffer, zero-copy, STR sleep.</li>
+          <li>Quantization toolchain on SNPE / QNN + AIMET: pruning, PTQ, mixed precision, compile &amp; profile.</li>
+        </ul>
+      </article>
+
+      <article class="job">
+        <header class="job-head">
+          <h3>Algorithm Engineer</h3>
+          <p class="job-meta">Baidu · Beijing · Jun 2023 – Aug 2023</p>
+        </header>
+        <ul>
+          <li>LLaMA 13B: L1 + SVD pruning (−30% params) + distillation, &lt;1.5% accuracy drop.</li>
+          <li>GPTQ &amp; SmoothQuant (W4A8) with FlashAttention 2 → ~70% less memory, ~2.8× faster inference.</li>
+        </ul>
+      </article>
+
+      <article class="job">
+        <header class="job-head">
+          <h3>Earlier roles</h3>
+          <p class="job-meta">Finance &amp; data · 2021</p>
+        </header>
+        <ul>
+          <li>Financial Analyst Intern — CCB Principal Asset Management (FOF risk, cointegration, Python / R).</li>
+          <li>Data Analyst Intern — Bank of China (risk premium, GLM pricing, Access SQL).</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="panel section" id="education" aria-labelledby="edu-heading">
+      <h2 id="edu-heading">Education</h2>
+      <ul class="edu-list">
+        <li>
+          <span class="name">Columbia University</span>
+          <span class="meta">M.A. Statistics · 2022 – 2023</span>
+        </li>
+        <li>
+          <span class="name">The Ohio State University</span>
+          <span class="meta">B.S. Financial Mathematics · 2019 – 2022</span>
+        </li>
+        <li>
+          <span class="name">Beijing University of Chemical Technology</span>
+          <span class="meta">B.Eng. Chemical Engineering · 2017 – 2019</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="panel section" id="skills" aria-labelledby="skills-heading">
+      <h2 id="skills-heading">Focus</h2>
+      <p class="skills-block">
+        SNPE · QNN · TensorRT · ONNX · AIMET · PTQ / QAT · mixed precision ·
+        channel pruning · OpenCL · zero-copy / shared buffer ·
+        BEV / IPM perception · LLM compression (GPTQ, SmoothQuant, FlashAttention) ·
+        Python · C++ · R · SQL
+      </p>
+    </section>
+
+    <section class="panel section" id="links" aria-labelledby="links-heading">
+      <h2 id="links-heading">Elsewhere</h2>
       <ul class="links">
         <li>
-          <a href="https://github.com/YLlllllllllll/VeOmni">
-            <span class="name">VeOmni</span>
-            <span class="meta">Multimodal training recipes</span>
+          <a href="https://www.linkedin.com/in/yucheng-lu-431a04233/" rel="noopener noreferrer">
+            <span class="name">LinkedIn</span>
+            <span class="meta">Full profile &amp; recommendations</span>
           </a>
         </li>
         <li>
-          <a href="https://github.com/YLlllllllllll/ClimSim">
-            <span class="name">ClimSim</span>
-            <span class="meta">Climate emulator dataset</span>
-          </a>
-        </li>
-        <li>
-          <a href="https://github.com/YLlllllllllll/codex-remote-ssh-GCP">
-            <span class="name">codex-remote-ssh-GCP</span>
-            <span class="meta">Remote agent tooling</span>
+          <a href="https://github.com/YLlllllllllll" rel="noopener noreferrer">
+            <span class="name">GitHub</span>
+            <span class="meta">VeOmni, ClimSim, tooling</span>
           </a>
         </li>
       </ul>
     </section>
 
     <footer class="footer">
-      <p>Background: canvas hyperspace (classic open starfield / warp technique).</p>
+      <p>© Yucheng Lu · Canvas hyperspace with stars, black holes, pulsars, satellites &amp; meteors.</p>
     </footer>
   </main>
 
