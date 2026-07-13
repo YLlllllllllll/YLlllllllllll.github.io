@@ -1,36 +1,27 @@
-# Yucheng Lu — Personal Profile
+# Yucheng Lu
 
-Personal homepage for **Yucheng Lu** (`YLlllllllllll`).
+Personal profile site for [YLlllllllllll](https://github.com/YLlllllllllll).
 
-Merged from:
+Full-bleed **canvas hyperspace** background (classic open-source starfield / warp technique — reimplemented, no third-party runtime deps). Hold click or Space to jump to lightspeed; move the pointer to steer.
 
-| Source | Role | Status |
-|--------|------|--------|
-| [`YLlllllllllll.github.io`](https://github.com/YLlllllllllll/YLlllllllllll.github.io) | Tech-lab landing (Mario theme + particles) | Archived under `archive/profile-v1/` |
-| [`cornhub.github.io`](https://github.com/YLlllllllllll/cornhub.github.io) | Placeholder personal page | Archived under `archive/cornhub/` |
-
-## Live
-
-- Intended GitHub Pages: `https://yllllllllllll.github.io/YuchengLu-profile/`
-- Or replace user-site content in `YLlllllllllll.github.io` for root URL
-
-## Local preview
+## Preview
 
 ```bash
 cd YuchengLu-profile
 python3 -m http.server 8080
-# open http://127.0.0.1:8080
+# http://127.0.0.1:8080
 ```
 
-## Structure
+## Layout
 
 ```
-index.html          # current profile page
-assets/             # favicon & static assets
-archive/            # immutable snapshots of the two old sites
-docs/AUDIT.md       # code review & optimization backlog
+index.html
+css/site.css
+js/hyperspace.js
 ```
 
-## License
+## GitHub Pages
 
-Personal site — content © Yucheng Lu.
+Enable Pages on branch `main` / root. Project URL:
+
+`https://yllllllllllll.github.io/YuchengLu-profile/`
