@@ -48,7 +48,7 @@
   /** @type {{fx:number,fy:number,fz:number,rx:number,ry:number,rz:number,ux:number,uy:number,uz:number}|null} */
   let basis = null;
 
-  const keys = { w: false, a: false, s: false, d: false, shift: false };
+  const keys = { w: false, a: false, s: false, d: false, shift: false, ctrl: false };
 
   let field = [];
   let systems = [];
@@ -444,23 +444,32 @@
     return x - Math.floor(x);
   }
 
-  /** Spectacular solid sphere with corona, granulation, spots, rim. */
+  /** Detail strength scales with on-screen size (closer → richer). */
+  function proximityDetail(size) {
+    // 0 at tiny point, ~1 when sphere dominates the view
+    return clamp((size - 12) / Math.max(180, Math.min(W, H) * 0.45), 0, 1);
+  }
+
+  /** Spectacular solid sphere; near-field ramps corona, granulation, spots. */
   function drawSolidSphere(p, size, hue, opts = {}) {
     const [r, g, b] = hue;
     const seed = opts.seed || 1;
     const spin = opts.spin || 0;
+    const prox = opts.prox != null ? opts.prox : proximityDetail(size);
     const litX = p.x - size * 0.3;
     const litY = p.y - size * 0.34;
+    const boost = 0.45 + prox * 1.55; // color / glow strength
 
-    // multi-layer corona / atmosphere
+    // multi-layer corona — stronger & wider when close
     if (opts.corona !== false && size > 2) {
-      const layers = size > 80 ? 4 : size > 30 ? 3 : 2;
+      const layers = 2 + Math.floor(prox * 4);
+      const baseScale = (opts.coronaScale || 0.85) * (1 + prox * 0.85);
       for (let i = layers; i >= 1; i--) {
-        const glowR = size * (1.15 + i * (opts.coronaScale || 0.85));
-        const alpha = (0.22 / i) * (opts.darkCore ? 0.55 : 1);
-        const glow = ctx.createRadialGradient(p.x, p.y, size * 0.92, p.x, p.y, glowR);
+        const glowR = size * (1.08 + i * baseScale * 0.55);
+        const alpha = ((0.14 + prox * 0.28) / i) * (opts.darkCore ? 0.5 : 1) * boost;
+        const glow = ctx.createRadialGradient(p.x, p.y, size * (0.88 - prox * 0.05), p.x, p.y, glowR);
         glow.addColorStop(0, `rgba(${r},${g},${b},${alpha})`);
-        glow.addColorStop(0.55, `rgba(${r},${g},${b},${alpha * 0.25})`);
+        glow.addColorStop(0.45, `rgba(${r},${g},${b},${alpha * 0.35})`);
         glow.addColorStop(1, "rgba(0,0,0,0)");
         ctx.fillStyle = glow;
         ctx.beginPath();
@@ -469,126 +478,134 @@
       }
     }
 
-    // body
+    // photosphere
     const body = ctx.createRadialGradient(litX, litY, size * 0.04, p.x, p.y, size);
     if (opts.darkCore) {
       body.addColorStop(0, "#050505");
       body.addColorStop(0.5, "#000");
-      body.addColorStop(0.78, `rgba(${r},${g},${b},0.45)`);
-      body.addColorStop(0.92, `rgba(${r},${g},${b},0.75)`);
+      body.addColorStop(0.78, `rgba(${r},${g},${b},${0.35 + prox * 0.35})`);
+      body.addColorStop(0.92, `rgba(${r},${g},${b},${0.55 + prox * 0.35})`);
       body.addColorStop(1, "rgba(0,0,0,1)");
     } else {
-      body.addColorStop(0, opts.hotCore || "#fffaf0");
-      body.addColorStop(0.22, `rgb(${Math.min(255, r + 20)},${Math.min(255, g + 15)},${Math.min(255, b + 10)})`);
-      body.addColorStop(0.55, `rgb(${r},${g},${b})`);
-      body.addColorStop(0.82, `rgb(${Math.floor(r * 0.5)},${Math.floor(g * 0.42)},${Math.floor(b * 0.32)})`);
-      body.addColorStop(1, `rgb(${Math.floor(r * 0.18)},${Math.floor(g * 0.12)},${Math.floor(b * 0.1)})`);
+      const hot = opts.hotCore || `rgb(${Math.min(255, 250 + prox * 5)},${Math.min(255, 245 + prox * 5)},${Math.min(255, 230 + prox * 10)})`;
+      body.addColorStop(0, hot);
+      body.addColorStop(0.18, `rgb(${Math.min(255, r + 25 + prox * 20)},${Math.min(255, g + 18)},${Math.min(255, b + 12)})`);
+      body.addColorStop(0.5, `rgb(${r},${g},${b})`);
+      body.addColorStop(0.8, `rgb(${Math.floor(r * (0.45 - prox * 0.05))},${Math.floor(g * 0.38)},${Math.floor(b * 0.3)})`);
+      body.addColorStop(1, `rgb(${Math.floor(r * 0.14)},${Math.floor(g * 0.1)},${Math.floor(b * 0.08)})`);
     }
     ctx.fillStyle = body;
     ctx.beginPath();
     ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
     ctx.fill();
 
-    // close-up surface detail
-    if (!opts.darkCore && size > 36) {
+    // surface detail — density & contrast rise with proximity
+    if (!opts.darkCore && prox > 0.08 && size > 22) {
       ctx.save();
       ctx.beginPath();
-      ctx.arc(p.x, p.y, size * 0.985, 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, size * 0.99, 0, Math.PI * 2);
       ctx.clip();
 
-      // granulation / convection cells
-      const cells = Math.min(140, Math.floor(size * 0.55));
+      const cells = Math.floor(24 + prox * prox * 320);
       for (let i = 0; i < cells; i++) {
         const u = hash01(seed * 17 + i * 3.1);
         const v = hash01(seed * 29 + i * 5.7);
         const ang = u * Math.PI * 2 + spin * 0.35;
-        const rad = Math.sqrt(v) * size * 0.92;
+        const rad = Math.sqrt(v) * size * 0.93;
         const px = p.x + Math.cos(ang) * rad;
         const py = p.y + Math.sin(ang) * rad * 0.95;
-        const rr = size * (0.02 + hash01(i + seed) * 0.045);
-        const bright = 0.04 + hash01(i * 9 + seed) * 0.1;
-        ctx.fillStyle = `rgba(255,245,220,${bright})`;
+        const rr = size * (0.012 + hash01(i + seed) * (0.02 + prox * 0.04));
+        const bright = (0.03 + hash01(i * 9 + seed) * 0.12) * (0.5 + prox);
+        ctx.fillStyle = `rgba(255,248,230,${bright})`;
         ctx.beginPath();
         ctx.arc(px, py, rr, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      // sunspots / darker patches
-      if (size > 70) {
-        const spots = Math.min(18, Math.floor(size / 20));
+      if (prox > 0.25) {
+        const spots = Math.floor(4 + prox * 28);
         for (let i = 0; i < spots; i++) {
           const u = hash01(seed * 41 + i * 11.3);
           const v = hash01(seed * 7 + i * 2.9);
-          if (v > 0.72) continue;
+          if (v > 0.78 - prox * 0.15) continue;
           const ang = u * Math.PI * 2 + spin * 0.5;
-          const rad = (0.25 + v * 0.55) * size;
+          const rad = (0.2 + v * 0.6) * size;
           const px = p.x + Math.cos(ang) * rad;
           const py = p.y + Math.sin(ang) * rad * 0.88;
-          const rr = size * (0.03 + hash01(i + 99) * 0.06);
-          ctx.fillStyle = `rgba(40, 20, 10, ${0.25 + hash01(i) * 0.35})`;
+          const rr = size * (0.025 + hash01(i + 99) * 0.07) * (0.7 + prox);
+          ctx.fillStyle = `rgba(35, 15, 8, ${0.2 + prox * 0.45})`;
           ctx.beginPath();
           ctx.arc(px, py, rr, 0, Math.PI * 2);
           ctx.fill();
-          ctx.fillStyle = `rgba(20, 10, 5, 0.45)`;
+          ctx.fillStyle = `rgba(15, 8, 4, ${0.35 + prox * 0.35})`;
           ctx.beginPath();
-          ctx.arc(px, py, rr * 0.45, 0, Math.PI * 2);
+          ctx.arc(px, py, rr * 0.42, 0, Math.PI * 2);
           ctx.fill();
         }
       }
 
-      // latitude glow bands for giants
-      if (opts.bands && size > 60) {
-        for (let i = -3; i <= 3; i++) {
-          const yy = p.y + i * size * 0.18;
+      if (opts.bands && prox > 0.2) {
+        for (let i = -4; i <= 4; i++) {
+          const yy = p.y + i * size * 0.16;
           const band = ctx.createLinearGradient(p.x - size, yy, p.x + size, yy);
           band.addColorStop(0, "rgba(0,0,0,0)");
-          band.addColorStop(0.5, `rgba(255,255,255,${0.04 + (i % 2 ? 0.03 : 0)})`);
+          band.addColorStop(0.5, `rgba(255,255,255,${(0.03 + prox * 0.06) * (i % 2 ? 1.2 : 0.7)})`);
           band.addColorStop(1, "rgba(0,0,0,0)");
           ctx.fillStyle = band;
-          ctx.fillRect(p.x - size, yy - size * 0.04, size * 2, size * 0.08);
+          ctx.fillRect(p.x - size, yy - size * 0.045, size * 2, size * 0.09);
         }
       }
 
-      // limb darkening overlay
-      const limb = ctx.createRadialGradient(p.x, p.y, size * 0.55, p.x, p.y, size);
+      const limb = ctx.createRadialGradient(p.x, p.y, size * (0.4 + prox * 0.15), p.x, p.y, size);
       limb.addColorStop(0, "rgba(0,0,0,0)");
-      limb.addColorStop(1, "rgba(0,0,0,0.45)");
+      limb.addColorStop(1, `rgba(0,0,0,${0.28 + prox * 0.35})`);
       ctx.fillStyle = limb;
       ctx.beginPath();
       ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
       ctx.fill();
+
+      // specular / hot limb crescent when very close
+      if (prox > 0.45) {
+        const spec = ctx.createRadialGradient(litX, litY, 0, litX, litY, size * 0.55);
+        spec.addColorStop(0, `rgba(255,255,245,${0.12 + prox * 0.2})`);
+        spec.addColorStop(1, "rgba(255,255,255,0)");
+        ctx.fillStyle = spec;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+        ctx.fill();
+      }
       ctx.restore();
     }
 
-    // chromosphere rim
-    if (!opts.darkCore && size > 18) {
-      ctx.strokeStyle = `rgba(${Math.min(255, r + 40)},${Math.min(255, g + 20)},${b},0.55)`;
-      ctx.lineWidth = Math.max(1, size * 0.012);
+    if (!opts.darkCore && size > 14) {
+      ctx.strokeStyle = `rgba(${Math.min(255, r + 40)},${Math.min(255, g + 20)},${b},${0.35 + prox * 0.45})`;
+      ctx.lineWidth = Math.max(1, size * (0.01 + prox * 0.012));
       ctx.beginPath();
-      ctx.arc(p.x, p.y, size * 0.995, 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, size * 0.996, 0, Math.PI * 2);
       ctx.stroke();
     }
 
-    // prominences when very close
-    if (!opts.darkCore && size > 120) {
+    if (!opts.darkCore && prox > 0.55) {
       ctx.save();
       ctx.beginPath();
-      ctx.arc(p.x, p.y, size * 1.35, 0, Math.PI * 2);
-      ctx.arc(p.x, p.y, size * 0.98, 0, Math.PI * 2, true);
+      ctx.arc(p.x, p.y, size * (1.15 + prox * 0.35), 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, size * 0.985, 0, Math.PI * 2, true);
       ctx.clip();
-      for (let i = 0; i < 7; i++) {
-        const a = hash01(seed + i * 13) * Math.PI * 2 + time * 0.15;
+      const promos = Math.floor(5 + prox * 10);
+      for (let i = 0; i < promos; i++) {
+        const a = hash01(seed + i * 13) * Math.PI * 2 + time * (0.1 + prox * 0.2);
         const x0 = p.x + Math.cos(a) * size;
         const y0 = p.y + Math.sin(a) * size;
-        const x1 = p.x + Math.cos(a) * size * (1.08 + hash01(i) * 0.12);
-        const y1 = p.y + Math.sin(a) * size * (1.08 + hash01(i + 1) * 0.12);
-        ctx.strokeStyle = `rgba(${r},${g},${Math.floor(b * 0.6)},0.45)`;
-        ctx.lineWidth = size * 0.015;
+        const reach = 1.05 + hash01(i) * 0.2 * prox;
+        const x1 = p.x + Math.cos(a) * size * reach;
+        const y1 = p.y + Math.sin(a) * size * reach;
+        ctx.strokeStyle = `rgba(${r},${g},${Math.floor(b * 0.55)},${0.25 + prox * 0.4})`;
+        ctx.lineWidth = size * (0.01 + prox * 0.012);
         ctx.beginPath();
         ctx.moveTo(x0, y0);
         ctx.quadraticCurveTo(
-          p.x + Math.cos(a + 0.2) * size * 1.15,
-          p.y + Math.sin(a + 0.2) * size * 1.15,
+          p.x + Math.cos(a + 0.25) * size * (1.1 + prox * 0.15),
+          p.y + Math.sin(a + 0.25) * size * (1.1 + prox * 0.15),
           x1, y1
         );
         ctx.stroke();
@@ -596,8 +613,7 @@
       ctx.restore();
     }
 
-    // diffraction only when distant/small
-    if (!opts.darkCore && size < 26) {
+    if (!opts.darkCore && size < 26 && prox < 0.2) {
       const spike = size * 5.5;
       ctx.strokeStyle = `rgba(${r},${g},${b},0.28)`;
       ctx.lineWidth = Math.max(0.7, size * 0.05);
@@ -614,15 +630,19 @@
     const { p, size, dist } = systemScreen(sys);
     if (!p.visible || size < 0.35) return;
     const giant = (sys.rSun || 1) > 4;
+    const proxScreen = proximityDetail(size);
+    const proxPhys = clamp(1 - (dist - sys.radius) / (sys.radius * 120), 0, 1);
+    const prox = Math.max(proxScreen, proxPhys * 0.85);
     drawSolidSphere(p, size, sys.hue, {
       corona: true,
-      coronaScale: size > 100 ? 0.55 : size > 40 ? 0.9 : 1.35,
+      coronaScale: 0.7 + (1 - prox) * 0.8,
       seed: sys.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0),
       spin: time * 0.08 + (sys.spin || 0),
       bands: giant,
+      prox,
     });
     if (locked && locked.id === sys.id) drawLockReticle(p.x, p.y, size, sys.label);
-    else if (size < H * 0.4) drawLabel(p.x, p.y + size + 14, sys.label, formatDist(dist / LY));
+    else if (size < H * 0.45) drawLabel(p.x, p.y + size + 14, sys.label, formatDist(dist / LY));
   }
 
   function drawBlackHole(sys) {
@@ -653,7 +673,8 @@
       ctx.restore();
     }
 
-    drawSolidSphere(p, size, sys.hue || [255, 180, 80], { darkCore: true, corona: true, coronaScale: 0.7 });
+    const prox = proximityDetail(size);
+    drawSolidSphere(p, size, sys.hue || [255, 180, 80], { darkCore: true, corona: true, coronaScale: 0.55 + prox * 0.4, prox });
     if (locked && locked.id === sys.id) drawLockReticle(p.x, p.y, size, sys.label);
     else if (size < H * 0.4) drawLabel(p.x, p.y + size + 14, sys.label, formatDist(dist / LY));
   }
@@ -683,11 +704,13 @@
     ctx.fill();
     ctx.restore();
 
+    const prox = proximityDetail(Math.max(size, 2.5));
     drawSolidSphere(p, Math.max(size, 2.5), [200, 220, 255], {
       hotCore: "#ffffff",
       corona: true,
-      coronaScale: 1.2,
+      coronaScale: 0.9 + prox * 0.6,
       seed: 77,
+      prox,
     });
     if (locked && locked.id === sys.id) drawLockReticle(p.x, p.y, size, sys.label);
     else if (size < H * 0.4) drawLabel(p.x, p.y + size + 14, sys.label, formatDist(dist / LY));
@@ -723,17 +746,35 @@
     updateBasis();
 
     // Shift: sublight thrust, then curvature ramp past c → cap 2c
-    if (keys.shift) {
+    if (keys.shift && !keys.ctrl) {
       const b = beta();
       let accel = THRUST * (1 + b * 1.25);
       if (b > 0.85) {
-        // Alcubierre-ish spool: thrust climbs hard toward 2c
         const warpFactor = 1 + (b - 0.85) * 4.5;
         accel = WARP_THRUST * warpFactor;
       }
       velX += basis.fx * accel * dt;
       velY += basis.fy * accel * dt;
       velZ += basis.fz * accel * dt;
+    }
+
+    // Ctrl: brake opposite velocity (stronger in warp)
+    if (keys.ctrl) {
+      const spd = speed();
+      if (spd > 1e-6) {
+        const b = spd / C;
+        const brake = (THRUST * 1.6 + (b > 1 ? WARP_THRUST * 1.8 : 0)) * (1 + b);
+        const ax = -(velX / spd) * brake;
+        const ay = -(velY / spd) * brake;
+        const az = -(velZ / spd) * brake;
+        velX += ax * dt;
+        velY += ay * dt;
+        velZ += az * dt;
+        // kill residual crawl
+        if (speed() < C * 0.0008) {
+          velX = velY = velZ = 0;
+        }
+      }
     }
 
     let spd = speed();
@@ -954,6 +995,9 @@
       case "ShiftLeft":
       case "ShiftRight":
         keys.shift = down; break;
+      case "ControlLeft":
+      case "ControlRight":
+        keys.ctrl = down; break;
       default:
         return false;
     }
@@ -966,7 +1010,7 @@
   });
   window.addEventListener("keyup", (e) => setKey(e.code, false));
   window.addEventListener("blur", () => {
-    keys.w = keys.a = keys.s = keys.d = keys.shift = false;
+    keys.w = keys.a = keys.s = keys.d = keys.shift = keys.ctrl = false;
   });
 
   resize();
