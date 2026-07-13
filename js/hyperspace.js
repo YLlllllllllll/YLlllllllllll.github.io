@@ -29,10 +29,19 @@
   let smoothLookY = 0;
   let heading = 0.35; // galactic cruise heading (rad)
   let pitch = -0.08;
-  let boost = false;
+  let boost = false; // pointer / Space
   let throttle = 0; // 0..1 smoothed
   let time = 0;
   let raf = 0;
+  const keys = {
+    w: false,
+    a: false,
+    s: false,
+    d: false,
+    space: false,
+  };
+  const YAW_KEY = 0.018;
+  const PITCH_KEY = 0.012;
 
   /** @type {{th:number,ph:number,mag:number,r:number,g:number,b:number,flare:boolean}[]} */
   let field = [];
@@ -584,9 +593,37 @@
 
   function frame() {
     time += 1;
-    throttle += ((boost ? 1 : 0) - throttle) * 0.05;
+
+    // WASD: A/D yaw, W thrust, S brake; also nudge look for feedback
+    if (keys.a) {
+      heading -= YAW_KEY * (0.55 + throttle * 0.7);
+      lookX = Math.max(-1, lookX - 0.04);
+    }
+    if (keys.d) {
+      heading += YAW_KEY * (0.55 + throttle * 0.7);
+      lookX = Math.min(1, lookX + 0.04);
+    }
+    if (keys.w) {
+      pitch = clamp(pitch - PITCH_KEY * 0.25, -0.6, 0.6);
+      lookY = Math.max(-1, lookY - 0.03);
+    }
+    if (keys.s) {
+      pitch = clamp(pitch + PITCH_KEY * 0.25, -0.6, 0.6);
+      lookY = Math.min(1, lookY + 0.03);
+    }
+
+    const wantBoost = boost || keys.space || keys.w;
+    const wantBrake = keys.s && !keys.w;
+    const targetThrottle = wantBrake ? 0 : wantBoost ? 1 : 0;
+    throttle += (targetThrottle - throttle) * (wantBrake ? 0.08 : 0.05);
+
     smoothLookX += (lookX - smoothLookX) * 0.06;
     smoothLookY += (lookY - smoothLookY) * 0.06;
+    // ease look back toward center when using keys only
+    if (keys.a || keys.d || keys.w || keys.s) {
+      lookX *= 0.96;
+      lookY *= 0.96;
+    }
 
     // cruise rotates the sky very slowly — ly-scale travel
     heading += (CRUISE_YAW + throttle * (WARP_YAW - CRUISE_YAW));
@@ -650,14 +687,39 @@
   });
   window.addEventListener("pointerup", () => { boost = false; });
   window.addEventListener("pointercancel", () => { boost = false; });
-  window.addEventListener("keydown", (e) => {
-    if (e.code === "Space" && !e.repeat) {
-      e.preventDefault();
-      boost = true;
+
+  function setKey(code, down) {
+    switch (code) {
+      case "KeyW":
+      case "ArrowUp":
+        keys.w = down; break;
+      case "KeyA":
+      case "ArrowLeft":
+        keys.a = down; break;
+      case "KeyS":
+      case "ArrowDown":
+        keys.s = down; break;
+      case "KeyD":
+      case "ArrowRight":
+        keys.d = down; break;
+      case "Space":
+        keys.space = down; break;
+      default:
+        return false;
     }
+    return true;
+  }
+
+  window.addEventListener("keydown", (e) => {
+    if (e.target.closest("input, textarea, a, button")) return;
+    if (setKey(e.code, true)) e.preventDefault();
   });
   window.addEventListener("keyup", (e) => {
-    if (e.code === "Space") boost = false;
+    setKey(e.code, false);
+  });
+  window.addEventListener("blur", () => {
+    keys.w = keys.a = keys.s = keys.d = keys.space = false;
+    boost = false;
   });
 
   resize();
