@@ -10,21 +10,20 @@
   const ctx = canvas.getContext("2d", { alpha: false });
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  const FIELD = 1600;
+  const FIELD = 2400;
   const TURN = 0.024;
   const LOCK_LERP = 0.06;
-  const PICK_PAD = 28;
+  const PICK_PAD = 36;
   const FOV = 1.05;
   const CELL = 3200;
   const HALF = CELL * 0.5;
 
   // —— scale (gameplay-compressed, ratios kept) ——
-  // 1 ly in world units; solar radius so a star fills view when you get "close"
   const LY = 1200;
-  const R_SUN = LY * 0.0045; // ~compressed solar radius
-  const C = LY * 0.15; // c in world-units / second (game light speed)
-  const THRUST = C * 0.35; // acceleration (wu/s²) while holding Shift
-  const MAX_BETA = 0.92; // soft relativistic cap
+  const R_SUN = LY * 0.012; // larger so close-ups become huge sooner
+  const C = LY * 0.15;
+  const THRUST = C * 0.35;
+  const MAX_BETA = 0.92;
 
   let W = 0;
   let H = 0;
@@ -205,32 +204,75 @@
   }
 
   function initSystems() {
-    systems = [
-      placeSystem({
-        id: "sol-analogue", label: "G2V primary", kind: "star",
-        th: 0.55, ph: -0.12, distLy: 4.2, rSun: 1.0, hue: [255, 214, 140],
-      }),
-      placeSystem({
-        id: "blue-giant", label: "B-type giant", kind: "star",
-        th: 2.4, ph: 0.22, distLy: 18, rSun: 8.0, hue: [180, 210, 255],
-      }),
-      placeSystem({
-        id: "red-dwarf", label: "K-dwarf", kind: "star",
-        th: 4.1, ph: -0.35, distLy: 9.5, rSun: 0.7, hue: [255, 150, 110],
-      }),
-      placeSystem({
-        id: "bh-1", label: "Stellar BH", kind: "blackhole",
-        th: 1.2, ph: 0.08, distLy: 32, rSun: 2.5, hue: [255, 180, 80], spin: 0,
-      }),
-      placeSystem({
-        id: "psr", label: "Millisecond pulsar", kind: "neutron",
-        th: 5.0, ph: 0.18, distLy: 24, rSun: 0.12, spin: 0, spinRate: 0.05,
-      }),
-      placeSystem({
-        id: "psr-2", label: "Radio pulsar", kind: "neutron",
-        th: 3.3, ph: -0.28, distLy: 41, rSun: 0.1, spin: 1.2, spinRate: -0.035,
-      }),
+    const catalog = [
+      { id: "sol", label: "G2V Sol-analogue", kind: "star", th: 0.55, ph: -0.08, distLy: 3.8, rSun: 1.0, hue: [255, 214, 140] },
+      { id: "rigel", label: "B8Ia Rigel-class", kind: "star", th: 2.15, ph: 0.18, distLy: 12, rSun: 14, hue: [170, 205, 255] },
+      { id: "betel", label: "M2I Betelgeuse-class", kind: "star", th: 4.0, ph: 0.12, distLy: 8.5, rSun: 18, hue: [255, 130, 90] },
+      { id: "vega", label: "A0V Vega-class", kind: "star", th: 1.1, ph: -0.22, distLy: 6.2, rSun: 2.2, hue: [210, 230, 255] },
+      { id: "sirius", label: "A1V Sirius-class", kind: "star", th: 5.4, ph: 0.05, distLy: 5.1, rSun: 1.7, hue: [220, 235, 255] },
+      { id: "proxima", label: "M5.5V red dwarf", kind: "star", th: 3.6, ph: -0.35, distLy: 4.2, rSun: 0.55, hue: [255, 120, 95] },
+      { id: "bh-cyg", label: "Cyg X-1 analogue", kind: "blackhole", th: 1.35, ph: 0.1, distLy: 22, rSun: 3.2, hue: [255, 170, 70], spin: 0 },
+      { id: "bh-sgr", label: "IMBH candidate", kind: "blackhole", th: 4.7, ph: -0.15, distLy: 48, rSun: 6.5, hue: [255, 150, 60], spin: 1 },
+      { id: "psr-crab", label: "Crab-like pulsar", kind: "neutron", th: 5.1, ph: 0.2, distLy: 16, rSun: 0.14, spin: 0, spinRate: 0.07 },
+      { id: "psr-ms", label: "Millisecond pulsar", kind: "neutron", th: 2.8, ph: -0.28, distLy: 28, rSun: 0.11, spin: 1.2, spinRate: -0.11 },
+      { id: "wr", label: "Wolf–Rayet", kind: "star", th: 0.2, ph: 0.32, distLy: 19, rSun: 4.5, hue: [255, 200, 255] },
+      { id: "wd", label: "DA white dwarf", kind: "star", th: 3.1, ph: 0.4, distLy: 11, rSun: 0.35, hue: [200, 220, 255] },
     ];
+
+    systems = catalog.map(placeSystem);
+
+    const spectral = [
+      { tag: "O", hue: [150, 185, 255], r: [6, 16] },
+      { tag: "B", hue: [175, 205, 255], r: [2.5, 9] },
+      { tag: "A", hue: [210, 225, 255], r: [1.4, 2.8] },
+      { tag: "F", hue: [240, 235, 220], r: [1.1, 1.6] },
+      { tag: "G", hue: [255, 220, 150], r: [0.85, 1.2] },
+      { tag: "K", hue: [255, 170, 110], r: [0.65, 0.95] },
+      { tag: "M", hue: [255, 120, 90], r: [0.4, 0.75] },
+    ];
+
+    for (let i = 0; i < 64; i++) {
+      const sp = spectral[i % spectral.length];
+      const th = rand(0, Math.PI * 2);
+      const ph = rand(-0.85, 0.85);
+      const distLy = rand(4.5, 95);
+      const rSun = rand(sp.r[0], sp.r[1]);
+      systems.push(placeSystem({
+        id: `star-${i}`,
+        label: `${sp.tag}-type #${i + 1}`,
+        kind: "star",
+        th, ph, distLy, rSun,
+        hue: sp.hue.map((c) => clamp(c + rand(-18, 18), 80, 255)),
+      }));
+    }
+
+    for (let i = 0; i < 8; i++) {
+      systems.push(placeSystem({
+        id: `bh-${i}`,
+        label: `Stellar BH #${i + 1}`,
+        kind: "blackhole",
+        th: rand(0, Math.PI * 2),
+        ph: rand(-0.6, 0.6),
+        distLy: rand(25, 110),
+        rSun: rand(2.2, 7),
+        hue: [255, 160 + rand(0, 40), 50 + rand(0, 40)],
+        spin: rand(0, Math.PI),
+      }));
+    }
+
+    for (let i = 0; i < 10; i++) {
+      systems.push(placeSystem({
+        id: `ns-${i}`,
+        label: `Pulsar #${i + 1}`,
+        kind: "neutron",
+        th: rand(0, Math.PI * 2),
+        ph: rand(-0.7, 0.7),
+        distLy: rand(14, 90),
+        rSun: rand(0.08, 0.16),
+        spin: rand(0, Math.PI),
+        spinRate: rand(0.03, 0.12) * (Math.random() > 0.5 ? 1 : -1),
+      }));
+    }
   }
 
   /** Screen radius from true geometry: R_px = f * R / sqrt(R² + d²)  (sphere silhouette). */
@@ -253,7 +295,8 @@
       const { p, size } = systemScreen(sys);
       if (!p.visible) continue;
       const d = Math.hypot(p.x - mx, p.y - my);
-      const hitR = Math.max(PICK_PAD, size * 1.35);
+      // generous pick radius so distant catalog stars stay selectable
+      const hitR = Math.max(PICK_PAD, size * 1.5, 22);
       if (d <= hitR && d < bestScore) {
         best = sys;
         bestScore = d;
@@ -279,11 +322,19 @@
   }
 
   function drawNebula() {
-    const a = ctx.createRadialGradient(W * 0.25, H * 0.2, 0, W * 0.25, H * 0.2, W * 0.7);
-    a.addColorStop(0, "rgba(40, 70, 120, 0.12)");
-    a.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = a;
-    ctx.fillRect(0, 0, W, H);
+    const washes = [
+      [0.2, 0.15, 0.55, "rgba(40, 70, 130, 0.16)"],
+      [0.8, 0.25, 0.45, "rgba(90, 40, 90, 0.1)"],
+      [0.55, 0.75, 0.5, "rgba(30, 90, 100, 0.1)"],
+      [0.15, 0.7, 0.4, "rgba(120, 60, 40, 0.07)"],
+    ];
+    for (const [ux, uy, scale, color] of washes) {
+      const g = ctx.createRadialGradient(W * ux, H * uy, 0, W * ux, H * uy, W * scale);
+      g.addColorStop(0, color);
+      g.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, W, H);
+    }
   }
 
   /** Mild Doppler tint only at high β — not motion streaks. */
@@ -386,45 +437,166 @@
     return `${(kms * 1000).toFixed(0)} m/s`;
   }
 
-  /** Solid limb-darkened sphere (close approach). */
+  function hash01(n) {
+    const x = Math.sin(n * 127.1 + 311.7) * 43758.5453;
+    return x - Math.floor(x);
+  }
+
+  /** Spectacular solid sphere with corona, granulation, spots, rim. */
   function drawSolidSphere(p, size, hue, opts = {}) {
     const [r, g, b] = hue;
-    const litX = p.x - size * 0.28;
-    const litY = p.y - size * 0.32;
+    const seed = opts.seed || 1;
+    const spin = opts.spin || 0;
+    const litX = p.x - size * 0.3;
+    const litY = p.y - size * 0.34;
 
-    if (opts.corona && size < W * 0.45) {
-      const glowR = size * (opts.coronaScale || 2.4);
-      const glow = ctx.createRadialGradient(p.x, p.y, size * 0.9, p.x, p.y, glowR);
-      glow.addColorStop(0, `rgba(${r},${g},${b},0.35)`);
-      glow.addColorStop(0.45, `rgba(${r},${g},${b},0.08)`);
-      glow.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.fillStyle = glow;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, glowR, 0, Math.PI * 2);
-      ctx.fill();
+    // multi-layer corona / atmosphere
+    if (opts.corona !== false && size > 2) {
+      const layers = size > 80 ? 4 : size > 30 ? 3 : 2;
+      for (let i = layers; i >= 1; i--) {
+        const glowR = size * (1.15 + i * (opts.coronaScale || 0.85));
+        const alpha = (0.22 / i) * (opts.darkCore ? 0.55 : 1);
+        const glow = ctx.createRadialGradient(p.x, p.y, size * 0.92, p.x, p.y, glowR);
+        glow.addColorStop(0, `rgba(${r},${g},${b},${alpha})`);
+        glow.addColorStop(0.55, `rgba(${r},${g},${b},${alpha * 0.25})`);
+        glow.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, glowR, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
 
-    // photosphere / solid body with limb darkening
-    const body = ctx.createRadialGradient(litX, litY, size * 0.05, p.x, p.y, size);
+    // body
+    const body = ctx.createRadialGradient(litX, litY, size * 0.04, p.x, p.y, size);
     if (opts.darkCore) {
-      body.addColorStop(0, "#0a0a0a");
-      body.addColorStop(0.55, "#000");
-      body.addColorStop(0.82, `rgba(${r},${g},${b},0.55)`);
-      body.addColorStop(1, "rgba(0,0,0,0.9)");
+      body.addColorStop(0, "#050505");
+      body.addColorStop(0.5, "#000");
+      body.addColorStop(0.78, `rgba(${r},${g},${b},0.45)`);
+      body.addColorStop(0.92, `rgba(${r},${g},${b},0.75)`);
+      body.addColorStop(1, "rgba(0,0,0,1)");
     } else {
-      body.addColorStop(0, opts.hotCore || "#fff8e8");
-      body.addColorStop(0.35, `rgb(${r},${g},${b})`);
-      body.addColorStop(0.78, `rgb(${Math.floor(r * 0.55)},${Math.floor(g * 0.45)},${Math.floor(b * 0.35)})`);
-      body.addColorStop(1, `rgb(${Math.floor(r * 0.2)},${Math.floor(g * 0.15)},${Math.floor(b * 0.12)})`);
+      body.addColorStop(0, opts.hotCore || "#fffaf0");
+      body.addColorStop(0.22, `rgb(${Math.min(255, r + 20)},${Math.min(255, g + 15)},${Math.min(255, b + 10)})`);
+      body.addColorStop(0.55, `rgb(${r},${g},${b})`);
+      body.addColorStop(0.82, `rgb(${Math.floor(r * 0.5)},${Math.floor(g * 0.42)},${Math.floor(b * 0.32)})`);
+      body.addColorStop(1, `rgb(${Math.floor(r * 0.18)},${Math.floor(g * 0.12)},${Math.floor(b * 0.1)})`);
     }
     ctx.fillStyle = body;
     ctx.beginPath();
     ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
     ctx.fill();
 
-    // diffraction only when still small on screen
-    if (!opts.darkCore && size < 28) {
-      const spike = size * 5;
+    // close-up surface detail
+    if (!opts.darkCore && size > 36) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, size * 0.985, 0, Math.PI * 2);
+      ctx.clip();
+
+      // granulation / convection cells
+      const cells = Math.min(140, Math.floor(size * 0.55));
+      for (let i = 0; i < cells; i++) {
+        const u = hash01(seed * 17 + i * 3.1);
+        const v = hash01(seed * 29 + i * 5.7);
+        const ang = u * Math.PI * 2 + spin * 0.35;
+        const rad = Math.sqrt(v) * size * 0.92;
+        const px = p.x + Math.cos(ang) * rad;
+        const py = p.y + Math.sin(ang) * rad * 0.95;
+        const rr = size * (0.02 + hash01(i + seed) * 0.045);
+        const bright = 0.04 + hash01(i * 9 + seed) * 0.1;
+        ctx.fillStyle = `rgba(255,245,220,${bright})`;
+        ctx.beginPath();
+        ctx.arc(px, py, rr, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // sunspots / darker patches
+      if (size > 70) {
+        const spots = Math.min(18, Math.floor(size / 20));
+        for (let i = 0; i < spots; i++) {
+          const u = hash01(seed * 41 + i * 11.3);
+          const v = hash01(seed * 7 + i * 2.9);
+          if (v > 0.72) continue;
+          const ang = u * Math.PI * 2 + spin * 0.5;
+          const rad = (0.25 + v * 0.55) * size;
+          const px = p.x + Math.cos(ang) * rad;
+          const py = p.y + Math.sin(ang) * rad * 0.88;
+          const rr = size * (0.03 + hash01(i + 99) * 0.06);
+          ctx.fillStyle = `rgba(40, 20, 10, ${0.25 + hash01(i) * 0.35})`;
+          ctx.beginPath();
+          ctx.arc(px, py, rr, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = `rgba(20, 10, 5, 0.45)`;
+          ctx.beginPath();
+          ctx.arc(px, py, rr * 0.45, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // latitude glow bands for giants
+      if (opts.bands && size > 60) {
+        for (let i = -3; i <= 3; i++) {
+          const yy = p.y + i * size * 0.18;
+          const band = ctx.createLinearGradient(p.x - size, yy, p.x + size, yy);
+          band.addColorStop(0, "rgba(0,0,0,0)");
+          band.addColorStop(0.5, `rgba(255,255,255,${0.04 + (i % 2 ? 0.03 : 0)})`);
+          band.addColorStop(1, "rgba(0,0,0,0)");
+          ctx.fillStyle = band;
+          ctx.fillRect(p.x - size, yy - size * 0.04, size * 2, size * 0.08);
+        }
+      }
+
+      // limb darkening overlay
+      const limb = ctx.createRadialGradient(p.x, p.y, size * 0.55, p.x, p.y, size);
+      limb.addColorStop(0, "rgba(0,0,0,0)");
+      limb.addColorStop(1, "rgba(0,0,0,0.45)");
+      ctx.fillStyle = limb;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // chromosphere rim
+    if (!opts.darkCore && size > 18) {
+      ctx.strokeStyle = `rgba(${Math.min(255, r + 40)},${Math.min(255, g + 20)},${b},0.55)`;
+      ctx.lineWidth = Math.max(1, size * 0.012);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, size * 0.995, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    // prominences when very close
+    if (!opts.darkCore && size > 120) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, size * 1.35, 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, size * 0.98, 0, Math.PI * 2, true);
+      ctx.clip();
+      for (let i = 0; i < 7; i++) {
+        const a = hash01(seed + i * 13) * Math.PI * 2 + time * 0.15;
+        const x0 = p.x + Math.cos(a) * size;
+        const y0 = p.y + Math.sin(a) * size;
+        const x1 = p.x + Math.cos(a) * size * (1.08 + hash01(i) * 0.12);
+        const y1 = p.y + Math.sin(a) * size * (1.08 + hash01(i + 1) * 0.12);
+        ctx.strokeStyle = `rgba(${r},${g},${Math.floor(b * 0.6)},0.45)`;
+        ctx.lineWidth = size * 0.015;
+        ctx.beginPath();
+        ctx.moveTo(x0, y0);
+        ctx.quadraticCurveTo(
+          p.x + Math.cos(a + 0.2) * size * 1.15,
+          p.y + Math.sin(a + 0.2) * size * 1.15,
+          x1, y1
+        );
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    // diffraction only when distant/small
+    if (!opts.darkCore && size < 26) {
+      const spike = size * 5.5;
       ctx.strokeStyle = `rgba(${r},${g},${b},0.28)`;
       ctx.lineWidth = Math.max(0.7, size * 0.05);
       ctx.beginPath();
@@ -438,77 +610,85 @@
 
   function drawStarSystem(sys) {
     const { p, size, dist } = systemScreen(sys);
-    if (!p.visible || size < 0.4) return;
-    const close = size > 22;
+    if (!p.visible || size < 0.35) return;
+    const giant = (sys.rSun || 1) > 4;
     drawSolidSphere(p, size, sys.hue, {
-      corona: !close || size < W * 0.35,
-      coronaScale: close ? 1.6 : 3.2,
+      corona: true,
+      coronaScale: size > 100 ? 0.55 : size > 40 ? 0.9 : 1.35,
+      seed: sys.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0),
+      spin: time * 0.08 + (sys.spin || 0),
+      bands: giant,
     });
     if (locked && locked.id === sys.id) drawLockReticle(p.x, p.y, size, sys.label);
-    else if (size < H * 0.35) {
-      drawLabel(p.x, p.y + size + 14, sys.label, formatDist(dist / LY));
-    }
+    else if (size < H * 0.4) drawLabel(p.x, p.y + size + 14, sys.label, formatDist(dist / LY));
   }
 
   function drawBlackHole(sys) {
     const { p, size, dist } = systemScreen(sys);
-    if (!p.visible || size < 0.4) return;
-    sys.spin = (sys.spin || 0) + 0.003;
+    if (!p.visible || size < 0.35) return;
+    sys.spin = (sys.spin || 0) + 0.004;
 
-    // accretion disk (edge-on-ish ellipse) — outside horizon
-    if (size < W * 0.6) {
+    if (size < W * 0.7) {
       ctx.save();
       ctx.translate(p.x, p.y);
       ctx.rotate(sys.spin);
-      ctx.scale(1, 0.38);
-      const disk = ctx.createRadialGradient(0, 0, size * 0.7, 0, 0, size * 2.8);
-      disk.addColorStop(0, "rgba(255,210,120,0)");
-      disk.addColorStop(0.4, "rgba(255,160,60,0.5)");
-      disk.addColorStop(0.75, "rgba(180,50,30,0.25)");
-      disk.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.fillStyle = disk;
+      ctx.scale(1, 0.36);
+      for (let i = 0; i < 3; i++) {
+        const disk = ctx.createRadialGradient(0, 0, size * (0.55 + i * 0.15), 0, 0, size * (2.2 + i * 0.5));
+        disk.addColorStop(0, "rgba(255,210,120,0)");
+        disk.addColorStop(0.4, `rgba(255,${160 - i * 20},${60 + i * 10},${0.45 - i * 0.1})`);
+        disk.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = disk;
+        ctx.beginPath();
+        ctx.arc(0, 0, size * (2.2 + i * 0.5), 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.strokeStyle = "rgba(255,230,180,0.7)";
+      ctx.lineWidth = Math.max(1.2, size * 0.08);
       ctx.beginPath();
-      ctx.arc(0, 0, size * 2.8, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.arc(0, 0, size * 1.05, 0, Math.PI * 2);
+      ctx.stroke();
       ctx.restore();
     }
 
-    drawSolidSphere(p, size, sys.hue || [255, 180, 80], { darkCore: true });
-
+    drawSolidSphere(p, size, sys.hue || [255, 180, 80], { darkCore: true, corona: true, coronaScale: 0.7 });
     if (locked && locked.id === sys.id) drawLockReticle(p.x, p.y, size, sys.label);
-    else if (size < H * 0.35) {
-      drawLabel(p.x, p.y + size + 14, sys.label, formatDist(dist / LY));
-    }
+    else if (size < H * 0.4) drawLabel(p.x, p.y + size + 14, sys.label, formatDist(dist / LY));
   }
 
   function drawNeutron(sys) {
     const { p, size, dist } = systemScreen(sys);
-    if (!p.visible || size < 0.3) return;
+    if (!p.visible || size < 0.25) return;
     sys.spin = (sys.spin || 0) + (sys.spinRate || 0.04);
 
-    if (size < 80) {
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(sys.spin);
-      const beam = ctx.createLinearGradient(0, -size * 8, 0, size * 8);
-      beam.addColorStop(0, "rgba(140,200,255,0)");
-      beam.addColorStop(0.5, "rgba(220,240,255,0.55)");
-      beam.addColorStop(1, "rgba(140,200,255,0)");
-      ctx.fillStyle = beam;
-      ctx.fillRect(-size * 0.15, -size * 8, size * 0.3, size * 16);
-      ctx.restore();
-    }
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(sys.spin);
+    const beam = ctx.createLinearGradient(0, -Math.max(size * 10, 40), 0, Math.max(size * 10, 40));
+    beam.addColorStop(0, "rgba(140,200,255,0)");
+    beam.addColorStop(0.45, "rgba(180,220,255,0.35)");
+    beam.addColorStop(0.5, "rgba(255,255,255,0.85)");
+    beam.addColorStop(0.55, "rgba(180,220,255,0.35)");
+    beam.addColorStop(1, "rgba(140,200,255,0)");
+    ctx.fillStyle = beam;
+    const bh = Math.max(size * 10, 40);
+    ctx.beginPath();
+    ctx.moveTo(-Math.max(size * 0.12, 1), -bh);
+    ctx.lineTo(Math.max(size * 0.12, 1), -bh);
+    ctx.lineTo(Math.max(size * 0.28, 2), bh);
+    ctx.lineTo(-Math.max(size * 0.28, 2), bh);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
 
-    drawSolidSphere(p, Math.max(size, 2), [200, 220, 255], {
+    drawSolidSphere(p, Math.max(size, 2.5), [200, 220, 255], {
       hotCore: "#ffffff",
       corona: true,
-      coronaScale: 2.8,
+      coronaScale: 1.2,
+      seed: 77,
     });
-
     if (locked && locked.id === sys.id) drawLockReticle(p.x, p.y, size, sys.label);
-    else if (size < H * 0.35) {
-      drawLabel(p.x, p.y + size + 14, sys.label, formatDist(dist / LY));
-    }
+    else if (size < H * 0.4) drawLabel(p.x, p.y + size + 14, sys.label, formatDist(dist / LY));
   }
 
   function collideBodies(dt) {
@@ -601,8 +781,8 @@
   function applyLook() {
     if (keys.a) yaw -= TURN;
     if (keys.d) yaw += TURN;
-    if (keys.w) pitch += TURN;
-    if (keys.s) pitch -= TURN;
+    if (keys.w) pitch -= TURN; // look up
+    if (keys.s) pitch += TURN; // look down
     yaw = wrapAngle(yaw);
     pitch = wrapAngle(pitch + Math.PI) - Math.PI;
 
@@ -681,7 +861,6 @@
   window.addEventListener("resize", () => {
     const keep = { field, systems, locked, camX, camY, camZ, velX, velY, velZ, yaw, pitch };
     resize();
-    Object.assign(window, {});
     field = keep.field;
     systems = keep.systems;
     camX = keep.camX; camY = keep.camY; camZ = keep.camZ;
