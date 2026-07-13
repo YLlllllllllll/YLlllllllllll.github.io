@@ -22,8 +22,9 @@
   const LY = 1200;
   const R_SUN = LY * 0.012; // larger so close-ups become huge sooner
   const C = LY * 0.15;
-  const THRUST = C * 0.35;
-  const MAX_BETA = 0.92;
+  const THRUST = C * 1.4; // sublight spool
+  const WARP_THRUST = C * 3.2; // curvature assist above ~0.9c
+  const MAX_BETA = 2.0; // Shift can break to 2c
 
   let W = 0;
   let H = 0;
@@ -92,9 +93,10 @@
     const rx = cy;
     const ry = 0;
     const rz = -sy;
-    const ux = ry * fz - rz * fy;
-    const uy = rz * fx - rx * fz;
-    const uz = rx * fy - ry * fx;
+    // up = forward × right  (Y-up, so +pitch looks toward sky / up on screen)
+    const ux = fy * rz - fz * ry;
+    const uy = fz * rx - fx * rz;
+    const uz = fx * ry - fy * rx;
     basis = { fx, fy, fz, rx, ry, rz, ux, uy, uz };
   }
 
@@ -430,9 +432,9 @@
 
   function formatVel(spd) {
     const b = spd / C;
+    if (b >= 1) return `${b.toFixed(2)} c · WARP`;
     if (b >= 0.01) return `${b.toFixed(3)} c`;
-    // map game units → illustrative km/s
-    const kms = (spd / LY) * 299792.458 * 0.15; // tied to compressed c
+    const kms = (spd / LY) * 299792.458 * 0.15;
     if (kms >= 1) return `${kms.toFixed(0)} km/s`;
     return `${(kms * 1000).toFixed(0)} m/s`;
   }
@@ -720,26 +722,76 @@
   function integrate(dt) {
     updateBasis();
 
-    // thrust along look — vacuum coast otherwise (no drag)
+    // Shift: sublight thrust, then curvature ramp past c → cap 2c
     if (keys.shift) {
-      velX += basis.fx * THRUST * dt;
-      velY += basis.fy * THRUST * dt;
-      velZ += basis.fz * THRUST * dt;
+      const b = beta();
+      let accel = THRUST * (1 + b * 1.25);
+      if (b > 0.85) {
+        // Alcubierre-ish spool: thrust climbs hard toward 2c
+        const warpFactor = 1 + (b - 0.85) * 4.5;
+        accel = WARP_THRUST * warpFactor;
+      }
+      velX += basis.fx * accel * dt;
+      velY += basis.fy * accel * dt;
+      velZ += basis.fz * accel * dt;
     }
 
-    // soft relativistic speed cap
     let spd = speed();
     const maxV = MAX_BETA * C;
     if (spd > maxV) {
       const s = maxV / spd;
       velX *= s; velY *= s; velZ *= s;
-      spd = maxV;
     }
 
     camX += velX * dt;
     camY += velY * dt;
     camZ += velZ * dt;
     collideBodies(dt);
+  }
+
+  function drawWarpField() {
+    const b = beta();
+    if (b < 1.02) return;
+    const t = clamp((b - 1) / 1, 0, 1); // 0 at 1c → 1 at 2c
+    const cx = W * 0.5;
+    const cy = H * 0.5;
+
+    // curvature bubble — compressed space ahead, expanded aft (schematic)
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.scale(1 + t * 0.08, 1 - t * 0.12);
+    ctx.translate(-cx, -cy);
+
+    const r0 = Math.min(W, H) * (0.28 - t * 0.04);
+    const r1 = Math.min(W, H) * (0.55 + t * 0.08);
+    const ring = ctx.createRadialGradient(cx, cy, r0, cx, cy, r1);
+    ring.addColorStop(0, "rgba(0,0,0,0)");
+    ring.addColorStop(0.55, `rgba(120, 180, 255, ${0.04 + t * 0.06})`);
+    ring.addColorStop(0.78, `rgba(240, 200, 100, ${0.1 + t * 0.12})`);
+    ring.addColorStop(0.9, `rgba(180, 140, 255, ${0.08 + t * 0.1})`);
+    ring.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = ring;
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.strokeStyle = `rgba(240, 210, 140, ${0.25 + t * 0.35})`;
+    ctx.lineWidth = 1.5 + t * 2;
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, r0 * 1.35, r0 * 0.95, 0, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+
+    // FTL only: short Cheerenkov-like fringe on bright field stars (not sublight streaks)
+    if (b > 1.15) {
+      ctx.strokeStyle = `rgba(140, 200, 255, ${0.08 + t * 0.12})`;
+      ctx.lineWidth = 1;
+      for (let i = 0; i < 12; i++) {
+        const a = (i / 12) * Math.PI * 2 + time * 0.4;
+        const r = Math.min(W, H) * (0.2 + (i % 3) * 0.05);
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, a, a + 0.35);
+        ctx.stroke();
+      }
+    }
   }
 
   function closingSpeedTo(sys) {
@@ -781,8 +833,8 @@
   function applyLook() {
     if (keys.a) yaw -= TURN;
     if (keys.d) yaw += TURN;
-    if (keys.w) pitch -= TURN; // look up
-    if (keys.s) pitch += TURN; // look down
+    if (keys.w) pitch += TURN; // look up
+    if (keys.s) pitch -= TURN; // look down
     yaw = wrapAngle(yaw);
     pitch = wrapAngle(pitch + Math.PI) - Math.PI;
 
@@ -823,9 +875,10 @@
       else if (sys.kind === "neutron") drawNeutron(sys);
     }
 
+    drawWarpField();
     updateHud();
 
-    ctx.fillStyle = `rgba(240, 200, 100, ${0.25 + Math.min(0.4, beta())})`;
+    ctx.fillStyle = `rgba(240, 200, 100, ${0.25 + Math.min(0.55, beta() * 0.35)})`;
     ctx.beginPath();
     ctx.arc(W * 0.5, H * 0.5, 2, 0, Math.PI * 2);
     ctx.fill();
