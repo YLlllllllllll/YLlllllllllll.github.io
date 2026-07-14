@@ -135,7 +135,7 @@
       { id: "redgiant", label: "Betel-X · 红巨星", kind: "star", featured: true, th: -0.42, ph: 0.12, distLy: 3.8, rSun: 28, hue: [255, 95, 55] },
       { id: "supergiant", label: "UY-Analog · 超巨星", kind: "star", featured: true, th: 0.72, ph: 0.08, distLy: 5.5, rSun: 42, hue: [255, 140, 110] },
       { id: "binary", label: "Sirius-pair · 双星", kind: "binary", featured: true, th: 0.28, ph: -0.1, distLy: 2.8, rSun: 1.45, hue: [255, 235, 190],
-        orbitSpeed: 0.7, companionHue: [140, 190, 255], companionR: 0.85 },
+        orbitSpeed: 0.55, companionHue: [140, 190, 255], companionR: 0.95 },
       { id: "bh-core", label: "Eventide · 黑洞", kind: "blackhole", featured: true, th: 0.95, ph: 0.04, distLy: 4.6, rSun: 5.2, hue: [255, 170, 70], spin: 0, mass: 48 },
       // DSP-like: tiny luminous core + huge jets / magnetic particle flow (not a fat ball)
       { id: "pulsar", label: "PSR-Δ · 中子星", kind: "neutron", featured: true, th: -0.78, ph: 0.16, distLy: 3.6, rSun: 0.045, spin: 0, spinRate: 0.22, hue: [210, 235, 255] },
@@ -150,14 +150,30 @@
     systems = catalog.map((opts) => {
       const body = placeSystem(opts);
       if (body.kind === "binary") {
-        body.sep = body.radius * 2.6;
+        // Two stars orbit a shared barycenter (not planet–moon). Mass ~ R³.
+        const r1 = body.radius;
+        const r2 = R_SUN * (opts.companionR || 0.9);
+        body.mass1 = Math.pow(opts.rSun || 1, 3);
+        body.mass2 = Math.pow(opts.companionR || 0.9, 3);
+        body.sep = (r1 + r2) * 3.4; // clear mutual separation
+        body.incl = 0.42; // orbital plane tilt (visual depth only)
         body.orbitA = 0;
+        body.orbitSpeed = opts.orbitSpeed || 0.5;
+        body.primary = {
+          x: body.x, y: body.y, z: body.z,
+          radius: r1,
+          hue: body.hue || [255, 230, 180],
+          kind: "star",
+          id: `${body.id}-a`,
+        };
         body.comp = {
           x: body.x, y: body.y, z: body.z,
-          radius: R_SUN * (opts.companionR || 0.9),
+          radius: r2,
           hue: opts.companionHue || [180, 210, 255],
           kind: "star",
+          id: `${body.id}-b`,
         };
+        updateBinaryPositions(body);
       }
       return body;
     });
@@ -294,12 +310,82 @@
 
   /** How close the camera may get (multiple of body radius). */
   function approachLimit(sys) {
+    if (sys.kind === "binary") {
+      const rMax = Math.max(sys.primary?.radius || sys.radius, sys.comp?.radius || 0);
+      return (sys.sep || sys.radius * 2) * 0.5 + rMax * 1.08;
+    }
     if (sys.kind === "blackhole") return sys.radius * 1.055; // skim the horizon
     if (sys.kind === "neutron") return sys.radius * 1.8;
-    if (sys.kind === "star" || sys.kind === "binary" || sys.kind === "dyson") {
+    if (sys.kind === "star" || sys.kind === "dyson") {
       return sys.radius * 1.035;
     }
     return sys.radius * 1.018; // planets / giants — almost surface
+  }
+
+  /** Both components opposite the barycenter — Keplerian circular binary. */
+  function updateBinaryPositions(sys) {
+    const m1 = sys.mass1 || 1;
+    const m2 = sys.mass2 || 1;
+    const a = sys.sep || sys.radius * 3;
+    const r1 = a * (m2 / (m1 + m2));
+    const r2 = a * (m1 / (m1 + m2));
+    const ca = Math.cos(sys.orbitA || 0);
+    const sa = Math.sin(sys.orbitA || 0);
+    const incl = sys.incl || 0.4;
+    const ci = Math.cos(incl);
+    const si = Math.sin(incl);
+    if (sys.primary) {
+      sys.primary.x = sys.x + ca * r1;
+      sys.primary.y = sys.y + sa * r1 * ci;
+      sys.primary.z = sys.z + sa * r1 * si;
+    }
+    if (sys.comp) {
+      sys.comp.x = sys.x - ca * r2;
+      sys.comp.y = sys.y - sa * r2 * ci;
+      sys.comp.z = sys.z - sa * r2 * si;
+    }
+  }
+
+  function drawStarComponent(star, prox) {
+    const p = projectWorld(star.x, star.y, star.z);
+    if (!p.visible) return;
+    const size = screenRadius(star.radius, p.dist);
+    if (size < 0.4) return;
+    const hue = star.hue || [255, 220, 150];
+    const [r, g, b] = hue;
+    const tex = window.DSPTextures
+      ? window.DSPTextures.get({ kind: "star", hue, id: star.id }, { lazy: true, priority: Math.floor(prox * 200 + size) })
+      : null;
+
+    const layers = 2 + Math.floor(prox * 2);
+    for (let i = layers; i >= 1; i--) {
+      const glowR = size * (1.2 + i * (0.5 + prox * 0.4));
+      const alpha = (0.14 + prox * 0.25) / i;
+      const glow = ctx.createRadialGradient(p.x, p.y, size * 0.8, p.x, p.y, glowR);
+      glow.addColorStop(0, `rgba(${r},${g},${b},${alpha})`);
+      glow.addColorStop(0.55, `rgba(${r},${g},${b},${alpha * 0.25})`);
+      glow.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, glowR, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    if (tex) ctx.drawImage(tex, p.x - size, p.y - size, size * 2, size * 2);
+    else {
+      ctx.fillStyle = `rgb(${r},${g},${b})`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    if (size < 16 && prox < 0.2) {
+      const spike = size * 5;
+      ctx.strokeStyle = `rgba(${r},${g},${b},0.28)`;
+      ctx.lineWidth = Math.max(0.7, size * 0.05);
+      ctx.beginPath();
+      ctx.moveTo(p.x - spike, p.y); ctx.lineTo(p.x + spike, p.y);
+      ctx.moveTo(p.x, p.y - spike * 0.65); ctx.lineTo(p.x, p.y + spike * 0.65);
+      ctx.stroke();
+    }
   }
 
   function proximityDetail(size) {
@@ -569,6 +655,31 @@
 
   /** Runtime: baked texture + cheap corona/atmosphere (DSP look, low CPU). */
   function drawBody(sys, p, size, prox) {
+    // Binary: two stars around barycenter — no tether, no planet–moon hierarchy
+    if (sys.kind === "binary") {
+      // draw farther component first
+      const d1 = sys.primary
+        ? Math.hypot(sys.primary.x - camX, sys.primary.y - camY, sys.primary.z - camZ)
+        : 0;
+      const d2 = sys.comp
+        ? Math.hypot(sys.comp.x - camX, sys.comp.y - camY, sys.comp.z - camZ)
+        : 0;
+      if (d1 >= d2) {
+        if (sys.primary) drawStarComponent(sys.primary, prox);
+        if (sys.comp) drawStarComponent(sys.comp, prox);
+      } else {
+        if (sys.comp) drawStarComponent(sys.comp, prox);
+        if (sys.primary) drawStarComponent(sys.primary, prox);
+      }
+      if (sys.featured && size > 4 && size < H * 0.4) {
+        ctx.font = "600 10px 'IBM Plex Sans', sans-serif";
+        ctx.fillStyle = "rgba(240,193,75,0.75)";
+        ctx.textAlign = "center";
+        ctx.fillText("★ FEATURED", p.x, p.y - size - 8);
+      }
+      return;
+    }
+
     const tex = window.DSPTextures
       ? window.DSPTextures.get(sys, { lazy: true, priority: Math.floor(prox * 200 + size) })
       : null;
@@ -576,8 +687,8 @@
     const [r, g, b] = hue;
     const isGiant = sys.kind === "star" && (sys.rSun || 0) >= 8;
 
-    // star / neutron / binary primary corona
-    if (sys.kind === "star" || sys.kind === "neutron" || sys.kind === "binary" || sys.kind === "dyson") {
+    // star / neutron / dyson primary corona
+    if (sys.kind === "star" || sys.kind === "neutron" || sys.kind === "dyson") {
       const layers = 2 + Math.floor(prox * 3) + (isGiant ? 2 : 0);
       const stretch = isGiant ? 1.55 : 1;
       for (let i = layers; i >= 1; i--) {
@@ -740,38 +851,6 @@
       ctx.fill();
     }
 
-    // binary companion + Roche bridge
-    if (sys.kind === "binary" && sys.comp) {
-      const cp = projectWorld(sys.comp.x, sys.comp.y, sys.comp.z);
-      if (cp.visible) {
-        const csize = screenRadius(sys.comp.radius, cp.dist);
-        const ctex = window.DSPTextures
-          ? window.DSPTextures.get({ kind: "star", hue: sys.comp.hue, id: sys.id + "-b" }, { lazy: true })
-          : null;
-        const midX = (p.x + cp.x) * 0.5;
-        const midY = (p.y + cp.y) * 0.5;
-        const bridge = ctx.createLinearGradient(p.x, p.y, cp.x, cp.y);
-        bridge.addColorStop(0, `rgba(${r},${g},${b},${0.15 + prox * 0.2})`);
-        bridge.addColorStop(0.5, `rgba(200,220,255,${0.2 + prox * 0.25})`);
-        const [cr0, cg0, cb0] = sys.comp.hue;
-        bridge.addColorStop(1, `rgba(${cr0},${cg0},${cb0},${0.15 + prox * 0.2})`);
-        ctx.strokeStyle = bridge;
-        ctx.lineWidth = Math.max(2, (size + csize) * 0.08);
-        ctx.beginPath();
-        ctx.moveTo(p.x, p.y);
-        ctx.quadraticCurveTo(midX, midY - size * 0.25, cp.x, cp.y);
-        ctx.stroke();
-        if (ctex) ctx.drawImage(ctex, cp.x - csize, cp.y - csize, csize * 2, csize * 2);
-        const cg = ctx.createRadialGradient(cp.x, cp.y, csize * 0.8, cp.x, cp.y, csize * 2.6);
-        cg.addColorStop(0, `rgba(${cr0},${cg0},${cb0},${0.28 + prox * 0.3})`);
-        cg.addColorStop(1, "rgba(0,0,0,0)");
-        ctx.fillStyle = cg;
-        ctx.beginPath();
-        ctx.arc(cp.x, cp.y, csize * 2.6, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
     // ring back (behind globe)
     if (sys.kind === "planet") drawPlanetRing(sys, p, size, prox, "back");
 
@@ -891,7 +970,7 @@
     }
 
     // star diffraction when distant
-    if ((sys.kind === "star" || sys.kind === "binary") && size < 18 && prox < 0.15) {
+    if (sys.kind === "star" && size < 18 && prox < 0.15) {
       const spike = size * 5;
       ctx.strokeStyle = `rgba(${r},${g},${b},0.3)`;
       ctx.lineWidth = Math.max(0.7, size * 0.05);
@@ -1078,14 +1157,11 @@
       camZ += forward.z * go;
     }
 
-    // companion orbits for binaries (barycenter fixed)
+    // binaries: both stars orbit the barycenter (opposite sides)
     for (const sys of systems) {
-      if (sys.kind !== "binary" || !sys.comp) continue;
-      sys.orbitA = (sys.orbitA || 0) + dt * (sys.orbitSpeed || 0.35);
-      const r = sys.sep || sys.radius * 2.2;
-      sys.comp.x = sys.x + Math.cos(sys.orbitA) * r;
-      sys.comp.y = sys.y + Math.sin(sys.orbitA) * r * 0.35;
-      sys.comp.z = sys.z + Math.sin(sys.orbitA) * r * 0.2;
+      if (sys.kind !== "binary" || !sys.primary || !sys.comp) continue;
+      sys.orbitA = (sys.orbitA || 0) + dt * (sys.orbitSpeed || 0.5);
+      updateBinaryPositions(sys);
     }
 
     applyGravity(dt);
