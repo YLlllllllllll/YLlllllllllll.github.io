@@ -804,7 +804,7 @@
     if (sys.kind === "neutron") {
       sys.spin = (sys.spin || 0) + (sys.spinRate || 0.06);
       const flowR = Math.max(size * 18, 36);
-      const nFlow = size > 40 ? 12 : 28;
+      const nFlow = heavy ? 8 : (size > 40 ? 10 : 18);
       for (let i = 0; i < nFlow; i++) {
         const phase = time * 1.8 + i * 0.55 + sys.spin;
         const lobe = (i % 2 === 0) ? 1 : -1;
@@ -868,7 +868,7 @@
     }
 
     // ring back (behind globe)
-    if (sys.kind === "planet") drawPlanetRing(sys, p, size, prox, "back");
+    if (sys.kind === "planet" && !heavy) drawPlanetRing(sys, p, size, prox, "back");
 
     // main sphere from prebaked texture
     if (tex) {
@@ -880,18 +880,18 @@
       ctx.fill();
     }
 
-    if (sys.kind === "planet") {
+    if (sys.kind === "planet" && !heavy) {
       drawTerminator(p, size, prox);
       drawNearSurfaceDetail(sys, p, size, prox);
     }
 
     // Sol granulation shimmer when close
-    if (sys.id === "sol" && prox > 0.35 && size > 20) {
+    if (sys.id === "sol" && prox > 0.35 && size > 20 && !heavy) {
       ctx.save();
       ctx.beginPath();
       ctx.arc(p.x, p.y, size * 0.98, 0, Math.PI * 2);
       ctx.clip();
-      for (let i = 0; i < 12; i++) {
+      for (let i = 0; i < 8; i++) {
         const a = hash01(i * 3) * Math.PI * 2 + time * 0.15;
         const rad = size * hash01(i * 8) * 0.85;
         const px = p.x + Math.cos(a) * rad;
@@ -905,7 +905,7 @@
     }
 
     // proximity specular sheen on planets
-    if (sys.kind === "planet" && prox > 0.3) {
+    if (sys.kind === "planet" && prox > 0.3 && !heavy) {
       const spec = ctx.createRadialGradient(
         p.x - size * 0.28, p.y - size * 0.32, 0,
         p.x - size * 0.28, p.y - size * 0.32, size * 0.55
@@ -919,10 +919,10 @@
     }
 
     // ring front
-    if (sys.kind === "planet") drawPlanetRing(sys, p, size, prox, "front");
+    if (sys.kind === "planet" && !heavy) drawPlanetRing(sys, p, size, prox, "front");
 
     // —— Dyson: denser lattice + energy spokes + beacons ——
-    if (sys.kind === "dyson") {
+    if (sys.kind === "dyson" && !heavy) {
       const shellR = size * (sys.shell || 2.2);
       ctx.save();
       // energy spokes from star to shell
