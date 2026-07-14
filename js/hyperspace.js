@@ -66,6 +66,8 @@
   const hudRange = document.getElementById("hud-range");
   const hudEta = document.getElementById("hud-eta");
   const hudLock = document.getElementById("hud-lock");
+  const bhCaptureEl = document.getElementById("bh-capture");
+  let bhCaptured = false;
 
   function rand(a, b) {
     return a + Math.random() * (b - a);
@@ -1116,6 +1118,44 @@
     }
   }
 
+  /** True when ship is stuck on / inside the near-horizon shell. */
+  function isBlackHoleCaptured() {
+    for (const sys of systems) {
+      if (sys.kind !== "blackhole") continue;
+      const dist = Math.hypot(sys.x - camX, sys.y - camY, sys.z - camZ);
+      const stopAt = approachLimit(sys);
+      // glued to horizon, or deep in the well where reverse can't open range
+      if (dist <= stopAt * 1.12) return true;
+      const near = clamp(1 - (dist - sys.radius) / (sys.radius * 28), 0, 1);
+      if (near > 0.88 && Math.abs(speed) < 0.9) return true;
+    }
+    return false;
+  }
+
+  function updateBhCaptureWarning() {
+    if (!bhCaptureEl) return;
+    const trapped = isBlackHoleCaptured();
+    if (trapped && !bhCaptured) {
+      bhCaptured = true;
+      bhCaptureEl.hidden = false;
+    } else if (!trapped && bhCaptured) {
+      // allow clear only if you somehow flee far enough
+      let stillNear = false;
+      for (const sys of systems) {
+        if (sys.kind !== "blackhole") continue;
+        const dist = Math.hypot(sys.x - camX, sys.y - camY, sys.z - camZ);
+        if (dist < sys.radius * 40) {
+          stillNear = true;
+          break;
+        }
+      }
+      if (!stillNear) {
+        bhCaptured = false;
+        bhCaptureEl.hidden = true;
+      }
+    }
+  }
+
   /** Only black holes gravitationally pull the ship. */
   function applyGravity(dt) {
     for (const sys of systems) {
@@ -1259,6 +1299,7 @@
     drawWarpStars();
     drawBodies();
     updateHud();
+    updateBhCaptureWarning();
 
     // center cue (= lock aim point)
     ctx.fillStyle = `rgba(240,200,100,${0.25 + (boost ? 0.35 : 0) + (locked ? 0.35 : 0) + (brake ? 0.2 : 0)})`;
