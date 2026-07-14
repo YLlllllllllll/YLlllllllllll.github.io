@@ -286,15 +286,10 @@
     const vx = dx * right.x + dy * right.y + dz * right.z;
     const vy = dx * up.x + dy * up.y + dz * up.z;
     const vz = dx * forward.x + dy * forward.y + dz * forward.z;
-    // allow drawing until truly inside; near-horizon BH still renders huge
-    if (vz <= radius * 0.02 && dist < radius * 1.5) {
-      // keep visible for close flybys using center depth floor
-    }
     if (vz <= 0.5) return { x: 0, y: 0, visible: false, depth: vz, dist };
-    const depth = Math.max(vz, radius * 0.15);
     return {
-      x: cx + (vx / depth) * focal,
-      y: cy - (vy / depth) * focal,
+      x: cx + (vx / vz) * focal,
+      y: cy - (vy / vz) * focal,
       visible: true,
       depth: vz,
       dist,

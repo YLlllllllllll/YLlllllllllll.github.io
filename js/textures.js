@@ -304,10 +304,12 @@ window.DSPTextures = (() => {
   let warmScheduled = false;
 
   function enqueueWarm(sys, priority) {
-    const id = sys.id || JSON.stringify(sys.hue) + sys.kind;
+    const id = sys.id || `${sys.kind}:${(sys.hue || []).join(",")}:${sys.biome || ""}`;
     if (warmQueued.has(id)) {
-      // bump priority if already queued
-      const item = warmQueue.find((q) => (q.sys.id || "") === (sys.id || ""));
+      const item = warmQueue.find((q) => {
+        const qid = q.sys.id || `${q.sys.kind}:${(q.sys.hue || []).join(",")}:${q.sys.biome || ""}`;
+        return qid === id;
+      });
       if (item && priority > item.priority) item.priority = priority;
       return;
     }
