@@ -29,7 +29,7 @@ Per-frame procedural granulation is too heavy for a static GH Pages site. Baking
 | Hold LMB / Space | Warp boost (with lock: fly toward target) |
 | RMB hold + drag | Look around (angle freezes on release) |
 | RMB click | Lock / unlock body under cursor |
-| Ctrl | Brake |
+| Ctrl | Reverse thrust (speed goes negative; flee) |
 
 ## Links
 
