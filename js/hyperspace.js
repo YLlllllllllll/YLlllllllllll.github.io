@@ -135,8 +135,10 @@
       { id: "sol", label: "Sol · G2V 恒星", kind: "star", featured: true, th: 0.06, ph: -0.02, distLy: 2.4, rSun: 1.15, hue: [255, 214, 140] },
       { id: "redgiant", label: "Betel-X · 红巨星", kind: "star", featured: true, th: -0.42, ph: 0.12, distLy: 3.8, rSun: 28, hue: [255, 95, 55] },
       { id: "supergiant", label: "UY-Analog · 超巨星", kind: "star", featured: true, th: 0.72, ph: 0.08, distLy: 5.5, rSun: 42, hue: [255, 140, 110] },
-      { id: "binary", label: "Sirius-pair · 双星", kind: "binary", featured: true, th: 0.28, ph: -0.1, distLy: 2.8, rSun: 1.45, hue: [255, 235, 190],
-        orbitSpeed: 0.55, companionHue: [140, 190, 255], companionR: 0.95 },
+      { id: "binary", label: "Sirius-pair · 双星", kind: "binary", featured: true, th: 0.28, ph: -0.1, distLy: 2.8,
+        // near-equal masses so BOTH clearly orbit the barycenter (not a moon)
+        rSun: 1.25, hue: [255, 235, 190], companionR: 1.05, companionHue: [140, 190, 255],
+        orbitSpeed: 0.85 },
       { id: "bh-core", label: "Eventide · 黑洞", kind: "blackhole", featured: true, th: 0.95, ph: 0.04, distLy: 3.2, rSun: 5.2, hue: [255, 170, 70], spin: 0, mass: 48 },
       // DSP-like: tiny luminous core + huge jets / magnetic particle flow (not a fat ball)
       { id: "pulsar", label: "PSR-Δ · 中子星", kind: "neutron", featured: true, th: -0.78, ph: 0.16, distLy: 2.8, rSun: 0.045, spin: 0, spinRate: 0.22, hue: [210, 235, 255] },
@@ -156,8 +158,14 @@
         const r2 = R_SUN * (opts.companionR || 0.9);
         body.mass1 = Math.pow(opts.rSun || 1, 3);
         body.mass2 = Math.pow(opts.companionR || 0.9, 3);
-        body.sep = (r1 + r2) * 3.4; // clear mutual separation
-        body.incl = 0.42; // orbital plane tilt (visual depth only)
+        // Prefer near-equal demo masses when ratio would look like a satellite
+        if (body.mass1 / body.mass2 > 2.2) {
+          const mean = (body.mass1 + body.mass2) * 0.5;
+          body.mass1 = mean * 1.15;
+          body.mass2 = mean * 0.85;
+        }
+        body.sep = (r1 + r2) * 4.2; // wide pair — motion easy to read
+        body.incl = 0.55; // steeper plane so both tracks read in 2D
         body.orbitA = 0;
         body.orbitSpeed = opts.orbitSpeed || 0.5;
         body.primary = {
