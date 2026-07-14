@@ -3,7 +3,7 @@
  * Runtime cost ≈ drawImage + a couple of gradients (GH Pages friendly).
  */
 window.DSPTextures = (() => {
-  const SIZE = 320;
+  const SIZE = 256;
   const cache = new Map();
 
   function clamp(v, a, b) {
@@ -186,18 +186,56 @@ window.DSPTextures = (() => {
   }
 
   function bakePlanet(biome, seed) {
-    const key = `planet:${biome}:${seed}`;
+    const key = `planet:${biome}:${seed}:v2`;
     if (cache.has(key)) return cache.get(key);
     const s = seed * 0.01;
     const tex = bakeSphere((nx, ny, nz) => {
       const lat = ny;
-      const n = fbm(nx * 2.2 + s, ny * 2.2, nz * 2.2 + s, 5);
-      const h = fbm(nx * 3.5 + 20 + s, ny * 3.5, nz * 3.5 + 9, 4);
+      const n = fbm(nx * 2.2 + s, ny * 2.2, nz * 2.2 + s, 4);
+      const h = fbm(nx * 3.5 + 20 + s, ny * 3.5, nz * 3.5 + 9, 3);
       let col = biomeColor(biome, n, h, lat);
-      // polar ice caps for temperate worlds
-      if ((biome === "mediterranean" || biome === "ocean" || biome === "pandora") && Math.abs(lat) > 0.78) {
-        col = [235, 245, 255];
+
+      // Smaller, ragged polar ice (not a clean white band)
+      if (biome === "mediterranean" || biome === "ocean" || biome === "pandora") {
+        const absLat = Math.abs(lat);
+        const edge = fbm(nx * 7 + s * 3, ny * 1.2 + 40, nz * 7, 3);
+        const crack = fbm(nx * 14 + 9, ny * 14, nz * 14 + s, 2);
+        // Cap only very near poles; noise eats the margin into fjords / broken ice
+        const capLine = 0.90 + (edge - 0.5) * 0.10; // ~0.85–0.95
+        if (absLat > capLine) {
+          const t = clamp((absLat - capLine) / Math.max(1e-4, 1 - capLine), 0, 1);
+          // dirty / blue-shadow ice, not flat #fff
+          let ice = [
+            200 + edge * 35 + crack * 10,
+            215 + edge * 25,
+            230 + (1 - edge) * 20,
+          ];
+          if (crack > 0.58) {
+            ice = [ice[0] * 0.78, ice[1] * 0.84, ice[2] * 0.92]; // crevasse
+          } else if (edge < 0.38) {
+            ice = [ice[0] * 0.9, ice[1] * 0.92, ice[2] * 0.95]; // dusty
+          }
+          // soft blend at margin so the rim is irregular, not a hard circle
+          const blend = Math.pow(t, 0.85) * (0.4 + edge * 0.55);
+          col = [
+            col[0] * (1 - blend) + ice[0] * blend,
+            col[1] * (1 - blend) + ice[1] * blend,
+            col[2] * (1 - blend) + ice[2] * blend,
+          ];
+        } else if (absLat > capLine - 0.06 && h > 0.52) {
+          // sparse highland frost patches south of the main cap
+          const frost = (edge - 0.55) * 2;
+          if (frost > 0) {
+            const k = clamp(frost, 0, 0.45);
+            col = [
+              col[0] * (1 - k) + 220 * k,
+              col[1] * (1 - k) + 230 * k,
+              col[2] * (1 - k) + 240 * k,
+            ];
+          }
+        }
       }
+
       // subtle cloud veil baked in
       const clouds = fbm(nx * 4 + s * 2, ny * 2, nz * 4, 3);
       if (clouds > 0.62 && biome !== "lava" && !String(biome).startsWith("gas")) {
@@ -279,14 +317,13 @@ window.DSPTextures = (() => {
   function get(sys, opts = {}) {
     const seed = (sys.id || "x").split("").reduce((a, c) => a + c.charCodeAt(0), 0);
     let key;
-    if (sys.kind === "planet") key = `planet:${sys.biome || "mediterranean"}:${seed}`;
+    if (sys.kind === "planet") key = `planet:${sys.biome || "mediterranean"}:${seed}:v2`;
     else if (sys.kind === "blackhole") key = `bh:${seed}`;
     else if (sys.kind === "neutron") key = `ns:${seed}`;
     else key = `star:${(sys.hue || [255, 220, 150]).join(",")}:${seed}`;
 
     if (cache.has(key)) return cache.get(key);
 
-    // Lazy: never block the render loop — queue bake and return null (solid fallback)
     if (opts.lazy) {
       enqueueWarm(sys, opts.priority || 0);
       return null;

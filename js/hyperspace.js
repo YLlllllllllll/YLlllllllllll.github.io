@@ -13,7 +13,7 @@
   const ctx = canvas.getContext("2d", { alpha: false });
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  const STAR_COUNT = 720;
+  const STAR_COUNT = 480;
   const DEPTH = 1000;
   const LY = 900;
   /** Solar radius — human FOV presence without dominating mid-range */
@@ -317,7 +317,7 @@
     const chord = Math.sqrt(dist * dist - radius * radius);
     const raw = (H * FOCAL_K) * (radius / Math.max(chord, radius * 0.05));
     // Cap draw size — still overflows viewport when close, avoids huge GPU fill
-    return Math.min(raw, Math.max(W, H) * 1.75);
+    return Math.min(raw, Math.max(W, H) * 1.4);
   }
 
   /** How close the camera may get. */
@@ -429,7 +429,7 @@
   }
 
   function resize() {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     W = window.innerWidth;
     H = window.innerHeight;
     canvas.width = Math.floor(W * dpr);
@@ -671,10 +671,9 @@
   }
 
   /** Runtime: baked texture + cheap corona/atmosphere (DSP look, low CPU). */
-  function drawBody(sys, p, size, prox) {
+  function drawBody(sys, p, size, prox, heavy) {
     // Binary: two stars around barycenter — no tether, no planet–moon hierarchy
     if (sys.kind === "binary") {
-      // draw farther component first
       const d1 = sys.primary
         ? Math.hypot(sys.primary.x - camX, sys.primary.y - camY, sys.primary.z - camZ)
         : 0;
@@ -698,7 +697,7 @@
     }
 
     const tex = window.DSPTextures
-      ? window.DSPTextures.get(sys, { lazy: true, priority: Math.floor(prox * 200 + size) })
+      ? window.DSPTextures.get(sys, { lazy: true, priority: size > 8 ? Math.floor(prox * 200 + size) : 0 })
       : null;
     const hue = sys.hue || atmoColor(sys.biome) || [255, 220, 150];
     const [r, g, b] = hue;
@@ -706,9 +705,7 @@
 
     // star / neutron / dyson primary corona
     if (sys.kind === "star" || sys.kind === "neutron" || sys.kind === "dyson") {
-      const layers = size > Math.min(W, H) * 0.55
-        ? 2
-        : (2 + Math.floor(prox * 3) + (isGiant ? 2 : 0));
+      const layers = heavy ? 1 : (size > Math.min(W, H) * 0.55 ? 2 : (2 + Math.floor(prox * 2) + (isGiant ? 1 : 0)));
       const stretch = isGiant ? 1.55 : 1;
       for (let i = layers; i >= 1; i--) {
         const glowR = size * (1.25 + i * (0.55 + prox * 0.5) * stretch);
@@ -722,13 +719,11 @@
         ctx.arc(p.x, p.y, glowR, 0, Math.PI * 2);
         ctx.fill();
       }
-      if (isGiant && prox > 0.2 && size < Math.min(W, H) * 0.65) {
-        drawRedGiantProminence(p, size, prox, hue);
-      }
+      if (isGiant && prox > 0.2 && !heavy) drawRedGiantProminence(p, size, prox, hue);
     }
 
     // planet atmosphere halo
-    if (sys.kind === "planet" && size > 6) {
+    if (sys.kind === "planet" && size > 6 && !heavy) {
       const [ar, ag, ab] = atmoColor(sys.biome);
       const atmoR = size * (1.08 + prox * 0.14 + ((sys.rSun || 1) > 3 ? 0.08 : 0));
       const atmo = ctx.createRadialGradient(p.x, p.y, size * 0.9, p.x, p.y, atmoR);
@@ -1042,27 +1037,33 @@
     return `${sec.toFixed(1)} s`;
   }
 
-  function drawBodies() {
-    const sorted = systems.slice().sort((a, b) => {
-      const da = Math.hypot(a.x - camX, a.y - camY, a.z - camZ);
-      const db = Math.hypot(b.x - camX, b.y - camY, b.z - camZ);
-      return db - da;
-    });
+  let bodySortTick = 0;
+  let bodySortCache = [];
 
-    for (const sys of sorted) {
+  function drawBodies() {
+    if ((bodySortTick++ & 7) === 0 || bodySortCache.length !== systems.length) {
+      bodySortCache = systems.slice().sort((a, b) => {
+        const da = Math.hypot(a.x - camX, a.y - camY, a.z - camZ);
+        const db = Math.hypot(b.x - camX, b.y - camY, b.z - camZ);
+        return db - da;
+      });
+    }
+
+    const fillCap = Math.min(W, H) * 0.55;
+    for (const sys of bodySortCache) {
       const { p, size, dist } = systemScreen(sys);
-      if (!p.visible || size < 0.35) continue;
-      // only cull when truly inside the body
+      if (!p.visible || size < 0.5) continue;
+      if (size < 3 && !sys.featured && (!locked || locked.id !== sys.id)) continue;
       if (dist < sys.radius * 0.96) continue;
 
       const proxScreen = proximityDetail(size);
       const proxPhys = clamp(1 - (dist - sys.radius) / (sys.radius * 50), 0, 1);
       const prox = Math.max(proxScreen, proxPhys * 0.9);
+      const heavy = size > fillCap;
 
-      drawBody(sys, p, size, prox);
+      drawBody(sys, p, size, prox, heavy);
 
-      // hide chrome when the body dominates the frame
-      if (size > H * 0.55) continue;
+      if (heavy) continue;
 
       if (locked && locked.id === sys.id) drawLockReticle(p.x, p.y, size, sys.label);
       else if (size < H * 0.42) {
