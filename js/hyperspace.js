@@ -16,9 +16,10 @@
   const STAR_COUNT = 1100;
   const DEPTH = 1000;
   const LY = 900;
-  const R_SUN = LY * 0.014;
+  /** Solar radius — large enough that close approaches fill a human FOV */
+  const R_SUN = LY * 0.032;
   const PICK_PAD = 34;
-  const FOCAL_K = 0.92;
+  const FOCAL_K = 1.05;
   const MAX_PITCH = 1.2;
   /** rad per pixel while RMB-dragging */
   const LOOK_SENS = 0.0042;
@@ -136,12 +137,12 @@
       { id: "supergiant", label: "UY-Analog · 超巨星", kind: "star", featured: true, th: 0.72, ph: 0.08, distLy: 5.5, rSun: 42, hue: [255, 140, 110] },
       { id: "binary", label: "Sirius-pair · 双星", kind: "binary", featured: true, th: 0.28, ph: -0.1, distLy: 2.8, rSun: 1.45, hue: [255, 235, 190],
         orbitSpeed: 0.55, companionHue: [140, 190, 255], companionR: 0.95 },
-      { id: "bh-core", label: "Eventide · 黑洞", kind: "blackhole", featured: true, th: 0.95, ph: 0.04, distLy: 4.6, rSun: 5.2, hue: [255, 170, 70], spin: 0, mass: 48 },
+      { id: "bh-core", label: "Eventide · 黑洞", kind: "blackhole", featured: true, th: 0.95, ph: 0.04, distLy: 3.2, rSun: 5.2, hue: [255, 170, 70], spin: 0, mass: 48 },
       // DSP-like: tiny luminous core + huge jets / magnetic particle flow (not a fat ball)
-      { id: "pulsar", label: "PSR-Δ · 中子星", kind: "neutron", featured: true, th: -0.78, ph: 0.16, distLy: 3.6, rSun: 0.045, spin: 0, spinRate: 0.22, hue: [210, 235, 255] },
-      { id: "dyson", label: "Helios Cage · 戴森球文明", kind: "dyson", featured: true, th: -0.18, ph: -0.06, distLy: 3.2, rSun: 1.2, hue: [255, 220, 150], shell: 2.55 },
-      { id: "mega", label: "Titan-α · 超大类地", kind: "planet", featured: true, biome: "mediterranean", th: 0.18, ph: 0.09, distLy: 1.55, rSun: 4.6 },
-      { id: "gas-mega", label: "Leviathan · 巨型气态", kind: "planet", featured: true, biome: "gas_cream", th: -0.32, ph: -0.04, distLy: 2.0, rSun: 9.5, rings: true },
+      { id: "pulsar", label: "PSR-Δ · 中子星", kind: "neutron", featured: true, th: -0.78, ph: 0.16, distLy: 2.8, rSun: 0.045, spin: 0, spinRate: 0.22, hue: [210, 235, 255] },
+      { id: "dyson", label: "Helios Cage · 戴森球文明", kind: "dyson", featured: true, th: -0.18, ph: -0.06, distLy: 2.4, rSun: 1.2, hue: [255, 220, 150], shell: 2.55 },
+      { id: "mega", label: "Titan-α · 超大类地", kind: "planet", featured: true, biome: "mediterranean", th: 0.18, ph: 0.09, distLy: 1.15, rSun: 4.6 },
+      { id: "gas-mega", label: "Leviathan · 巨型气态", kind: "planet", featured: true, biome: "gas_cream", th: -0.32, ph: -0.04, distLy: 1.45, rSun: 9.5, rings: true },
       { id: "med", label: "Mediterranean", kind: "planet", biome: "mediterranean", th: 0.5, ph: -0.15, distLy: 2.2, rSun: 0.55 },
       { id: "lava", label: "Lava World", kind: "planet", biome: "lava", th: 0.65, ph: 0.12, distLy: 2.5, rSun: 0.6 },
       { id: "ice", label: "Ice World", kind: "planet", biome: "ice", th: -0.7, ph: 0.18, distLy: 2.9, rSun: 0.5, rings: true, ringTint: [180, 210, 255] },
@@ -285,10 +286,15 @@
     const vx = dx * right.x + dy * right.y + dz * right.z;
     const vy = dx * up.x + dy * up.y + dz * up.z;
     const vz = dx * forward.x + dy * forward.y + dz * forward.z;
-    if (vz <= 2) return { x: 0, y: 0, visible: false, depth: vz, dist };
+    // allow drawing until truly inside; near-horizon BH still renders huge
+    if (vz <= radius * 0.02 && dist < radius * 1.5) {
+      // keep visible for close flybys using center depth floor
+    }
+    if (vz <= 0.5) return { x: 0, y: 0, visible: false, depth: vz, dist };
+    const depth = Math.max(vz, radius * 0.15);
     return {
-      x: cx + (vx / vz) * focal,
-      y: cy - (vy / vz) * focal,
+      x: cx + (vx / depth) * focal,
+      y: cy - (vy / depth) * focal,
       visible: true,
       depth: vz,
       dist,
@@ -301,25 +307,26 @@
   }
 
   function screenRadius(radius, dist) {
-    // True perspective: hugging the surface → angular size blows past the viewport
-    const d = Math.max(dist, radius * 0.015, 1e-3);
-    const raw = (H * FOCAL_K) * (radius / d);
-    // allow overflow so close approaches fill / exceed the screen
-    return Math.min(raw, Math.max(W, H) * 2.2);
+    // Sphere silhouette: angular radius α = arcsin(R/D), screen = f·tan(α) = f·R/√(D²−R²)
+    // Plain R/D badly underestimates size when hugging the surface.
+    if (!(dist > radius * 1.002)) {
+      return Math.max(W, H) * 3.5; // on / inside surface → fill the view
+    }
+    const chord = Math.sqrt(dist * dist - radius * radius);
+    const raw = (H * FOCAL_K) * (radius / Math.max(chord, radius * 0.02));
+    return Math.min(raw, Math.max(W, H) * 4.5);
   }
 
-  /** How close the camera may get (multiple of body radius). */
+  /** How close the camera may get. */
   function approachLimit(sys) {
     if (sys.kind === "binary") {
       const rMax = Math.max(sys.primary?.radius || sys.radius, sys.comp?.radius || 0);
-      return (sys.sep || sys.radius * 2) * 0.5 + rMax * 1.08;
+      return (sys.sep || sys.radius * 2) * 0.5 + rMax * 1.05;
     }
-    if (sys.kind === "blackhole") return sys.radius * 1.055; // skim the horizon
-    if (sys.kind === "neutron") return sys.radius * 1.8;
-    if (sys.kind === "star" || sys.kind === "dyson") {
-      return sys.radius * 1.035;
-    }
-    return sys.radius * 1.018; // planets / giants — almost surface
+    if (sys.kind === "blackhole") return sys.radius * 1.02; // almost on the horizon
+    if (sys.kind === "neutron") return sys.radius * 1.35;
+    if (sys.kind === "star" || sys.kind === "dyson") return sys.radius * 1.025;
+    return sys.radius * 1.012; // planets — skim the cloud tops
   }
 
   /** Both components opposite the barycenter — Keplerian circular binary. */
@@ -395,7 +402,12 @@
   function systemScreen(sys) {
     const p = projectWorld(sys.x, sys.y, sys.z);
     if (!p.visible) return { p, size: 0, dist: p.dist || 0 };
-    return { p, size: screenRadius(sys.radius, p.dist), dist: p.dist };
+    let rad = sys.radius;
+    if (sys.kind === "binary") {
+      rad = (sys.sep || sys.radius * 2) * 0.5
+        + Math.max(sys.primary?.radius || 0, sys.comp?.radius || 0);
+    }
+    return { p, size: screenRadius(rad, p.dist), dist: p.dist };
   }
 
   function pickSystem(mx, my) {
@@ -1054,6 +1066,27 @@
 
   function collide() {
     for (const sys of systems) {
+      if (sys.kind === "binary") {
+        for (const star of [sys.primary, sys.comp]) {
+          if (!star) continue;
+          const dx = camX - star.x;
+          const dy = camY - star.y;
+          const dz = camZ - star.z;
+          const dist = Math.hypot(dx, dy, dz);
+          const minD = star.radius * 1.04;
+          if (dist < minD && dist > 1e-6) {
+            const n = minD / dist;
+            camX = star.x + dx * n;
+            camY = star.y + dy * n;
+            camZ = star.z + dz * n;
+            if (speed > 0.6) {
+              targetSpeed = Math.min(targetSpeed, 0.35);
+              speed = Math.min(speed, 0.35);
+            }
+          }
+        }
+        continue;
+      }
       const dx = camX - sys.x;
       const dy = camY - sys.y;
       const dz = camZ - sys.z;
