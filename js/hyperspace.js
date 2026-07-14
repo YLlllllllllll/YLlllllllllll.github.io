@@ -13,11 +13,11 @@
   const ctx = canvas.getContext("2d", { alpha: false });
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  const STAR_COUNT = 1100;
+  const STAR_COUNT = 720;
   const DEPTH = 1000;
   const LY = 900;
-  /** Solar radius — large enough that close approaches fill a human FOV */
-  const R_SUN = LY * 0.032;
+  /** Solar radius — human FOV presence without dominating mid-range */
+  const R_SUN = LY * 0.022;
   const PICK_PAD = 34;
   const FOCAL_K = 1.05;
   const MAX_PITCH = 1.2;
@@ -189,7 +189,7 @@
 
     // filler worlds
     const biomes = ["mediterranean", "arid", "ice", "lava", "ocean", "ashen", "pandora", "gas_blue"];
-    for (let i = 0; i < 16; i++) {
+    for (let i = 0; i < 10; i++) {
       const biome = biomes[i % biomes.length];
       systems.push(placeSystem({
         id: `p-${i}`,
@@ -202,7 +202,7 @@
         rSun: String(biome).startsWith("gas") ? rand(2, 4) : rand(0.4, 0.8),
       }));
     }
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 8; i++) {
       systems.push(placeSystem({
         id: `s-${i}`,
         label: `Field star #${i + 1}`,
@@ -310,14 +310,14 @@
   }
 
   function screenRadius(radius, dist) {
-    // Sphere silhouette: angular radius α = arcsin(R/D), screen = f·tan(α) = f·R/√(D²−R²)
-    // Plain R/D badly underestimates size when hugging the surface.
+    // Sphere silhouette: α = arcsin(R/D), screen = f·tan(α) = f·R/√(D²−R²)
     if (!(dist > radius * 1.002)) {
-      return Math.max(W, H) * 3.5; // on / inside surface → fill the view
+      return Math.max(W, H) * 1.8;
     }
     const chord = Math.sqrt(dist * dist - radius * radius);
-    const raw = (H * FOCAL_K) * (radius / Math.max(chord, radius * 0.02));
-    return Math.min(raw, Math.max(W, H) * 4.5);
+    const raw = (H * FOCAL_K) * (radius / Math.max(chord, radius * 0.05));
+    // Cap draw size — still overflows viewport when close, avoids huge GPU fill
+    return Math.min(raw, Math.max(W, H) * 1.75);
   }
 
   /** How close the camera may get. */
@@ -552,6 +552,8 @@
   /** Scrolling cloud / band overlay clipped to disk (near approach only). */
   function drawNearSurfaceDetail(sys, p, size, prox) {
     if (sys.kind !== "planet" || prox < 0.28 || size < 16) return;
+    // Skip heavy overlays when the body already fills the frame (perf)
+    if (size > Math.min(W, H) * 0.7) return;
     ctx.save();
     ctx.beginPath();
     ctx.arc(p.x, p.y, size * 0.99, 0, Math.PI * 2);
@@ -704,7 +706,9 @@
 
     // star / neutron / dyson primary corona
     if (sys.kind === "star" || sys.kind === "neutron" || sys.kind === "dyson") {
-      const layers = 2 + Math.floor(prox * 3) + (isGiant ? 2 : 0);
+      const layers = size > Math.min(W, H) * 0.55
+        ? 2
+        : (2 + Math.floor(prox * 3) + (isGiant ? 2 : 0));
       const stretch = isGiant ? 1.55 : 1;
       for (let i = layers; i >= 1; i--) {
         const glowR = size * (1.25 + i * (0.55 + prox * 0.5) * stretch);
@@ -718,7 +722,9 @@
         ctx.arc(p.x, p.y, glowR, 0, Math.PI * 2);
         ctx.fill();
       }
-      if (isGiant && prox > 0.2) drawRedGiantProminence(p, size, prox, hue);
+      if (isGiant && prox > 0.2 && size < Math.min(W, H) * 0.65) {
+        drawRedGiantProminence(p, size, prox, hue);
+      }
     }
 
     // planet atmosphere halo
@@ -802,9 +808,9 @@
     // neutron — DSP-style: tiny core + bipolar jets + magnetic particle flow
     if (sys.kind === "neutron") {
       sys.spin = (sys.spin || 0) + (sys.spinRate || 0.06);
-      // magnetic susceptibility particle flow (DSP 0.9.27 look)
       const flowR = Math.max(size * 18, 36);
-      for (let i = 0; i < 28; i++) {
+      const nFlow = size > 40 ? 12 : 28;
+      for (let i = 0; i < nFlow; i++) {
         const phase = time * 1.8 + i * 0.55 + sys.spin;
         const lobe = (i % 2 === 0) ? 1 : -1;
         const t = (hash01(i * 9 + 1) + time * 0.35) % 1;
@@ -954,8 +960,9 @@
         ctx.strokeStyle = `rgba(100, 210, 255, ${0.2 + prox * 0.32})`;
         ctx.stroke();
       }
-      if (prox > 0.15) {
-        for (let i = 0; i < 36; i++) {
+      if (prox > 0.15 && size < Math.min(W, H) * 0.7) {
+        const nPanel = size > 80 ? 16 : 36;
+        for (let i = 0; i < nPanel; i++) {
           const a = hash01(i * 7 + 3) * Math.PI * 2 + time * 0.12;
           const b = (hash01(i * 3) - 0.5) * 1.55;
           const px = p.x + Math.cos(a) * shellR * Math.cos(b);
@@ -1108,7 +1115,7 @@
     }
   }
 
-  /** Black-hole gravity: near-field pull can exceed reverse thrust — hard to flee. */
+  /** Only black holes gravitationally pull the ship. */
   function applyGravity(dt) {
     for (const sys of systems) {
       if (sys.kind !== "blackhole") continue;
@@ -1117,7 +1124,7 @@
       const dz = sys.z - camZ;
       const dist = Math.hypot(dx, dy, dz) || 1;
       const rs = sys.radius;
-      const influence = rs * 140;
+      const influence = rs * 90;
       if (dist > influence) continue;
       const stopAt = approachLimit(sys);
       if (dist <= stopAt) continue;
@@ -1172,14 +1179,8 @@
           camX -= ux * go;
           camY -= uy * go;
           camZ -= uz * go;
-        } else if (speed > 0.08) {
-          const creep = signedStep * 0.08;
-          if (dist > stopAt) {
-            camX += ux * Math.min(creep, dist - stopAt);
-            camY += uy * Math.min(creep, dist - stopAt);
-            camZ += uz * Math.min(creep, dist - stopAt);
-          }
         }
+        // no passive gravity creep for normal bodies — only black holes pull
       }
     } else {
       const { forward } = getBasis();
