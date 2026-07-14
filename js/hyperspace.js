@@ -1,9 +1,10 @@
 /**
  * Hybrid space backdrop:
  * - Original click-to-boost hyperspace star streaks (WarpSpeed-style)
- * - Current close-approach solid planets/stars in world space
+ * - Approachable planets/stars in world space
  *
- * Hold LMB / Space = warp boost · mouse steers · RMB = lock · Ctrl = brake
+ * LMB / Space = warp boost · RMB hold+drag = look (angle stays on release)
+ * RMB click = lock body · Ctrl = brake
  */
 (() => {
   const canvas = document.getElementById("hyperspace");
@@ -17,16 +18,18 @@
   const LY = 900;
   const R_SUN = LY * 0.014;
   const PICK_PAD = 34;
+  const FOCAL_K = 0.92;
+  const MAX_PITCH = 1.2;
+  /** rad per pixel while RMB-dragging */
+  const LOOK_SENS = 0.0042;
+  /** movement above this → drag look; below → click lock */
+  const CLICK_SLOP = 7;
 
   let W = 0;
   let H = 0;
   let dpr = 1;
   let cx = 0;
   let cy = 0;
-  let targetX = 0;
-  let targetY = 0;
-  let smoothTX = 0;
-  let smoothTY = 0;
 
   // classic warp speed (original feel)
   let speed = 0.55;
@@ -34,16 +37,26 @@
   let boost = false;
   let brake = false;
 
-  // world flight — approach planets while warp VFX runs
+  // world flight — true camera orientation (yaw around Y, pitch up/down)
   let camX = 0;
   let camY = 0;
   let camZ = 0;
+  let yaw = 0;
+  let pitch = 0;
   let time = 0;
   let raf = 0;
   let pointerX = 0;
   let pointerY = 0;
   /** @type {object|null} */
   let locked = null;
+
+  // RMB look: hold+drag turns view; release freezes angle (stable aim)
+  let rmbHeld = false;
+  let lookDragged = false;
+  let lookStartX = 0;
+  let lookStartY = 0;
+  let lookLastX = 0;
+  let lookLastY = 0;
 
   let stars = [];
   let systems = [];
@@ -116,104 +129,161 @@
 
   function initSystems() {
     const catalog = [
-      // nearby showcase — DSP-like planets first so approach is rewarding
-      { id: "med", label: "Mediterranean", kind: "planet", biome: "mediterranean", th: 0.12, ph: -0.04, distLy: 1.6, rSun: 0.55 },
-      { id: "arid", label: "Arid Desert", kind: "planet", biome: "arid", th: -0.25, ph: 0.08, distLy: 2.1, rSun: 0.5 },
-      { id: "ice", label: "Scarlet Ice", kind: "planet", biome: "ice", th: 0.4, ph: 0.15, distLy: 2.4, rSun: 0.48 },
-      { id: "lava", label: "Lava Planet", kind: "planet", biome: "lava", th: -0.5, ph: -0.1, distLy: 2.8, rSun: 0.52 },
-      { id: "ocean", label: "Oceanic", kind: "planet", biome: "ocean", th: 0.55, ph: -0.18, distLy: 3.0, rSun: 0.5 },
-      { id: "ashen", label: "Ashen Gelisol", kind: "planet", biome: "ashen", th: -0.15, ph: 0.22, distLy: 3.3, rSun: 0.47 },
-      { id: "pandora", label: "Pandora-class", kind: "planet", biome: "pandora", th: 0.7, ph: 0.05, distLy: 3.6, rSun: 0.53 },
-      { id: "gas1", label: "Gas Giant", kind: "planet", biome: "gas_cream", th: -0.8, ph: 0.02, distLy: 4.2, rSun: 2.8 },
-      { id: "gas2", label: "Ice Giant", kind: "planet", biome: "gas_blue", th: 0.95, ph: -0.12, distLy: 5.0, rSun: 2.2 },
-      // stars
-      { id: "sol", label: "G2V Sol-analogue", kind: "star", th: 0.05, ph: -0.02, distLy: 6.5, rSun: 1.0, hue: [255, 214, 140] },
-      { id: "rigel", label: "B8Ia Rigel-class", kind: "star", th: 0.9, ph: 0.12, distLy: 11, rSun: 12, hue: [170, 205, 255] },
-      { id: "betel", label: "M2I Betelgeuse-class", kind: "star", th: -0.7, ph: 0.08, distLy: 9, rSun: 16, hue: [255, 130, 90] },
-      { id: "vega", label: "A0V Vega-class", kind: "star", th: 0.45, ph: -0.18, distLy: 7.5, rSun: 2.1, hue: [210, 230, 255] },
-      { id: "bh1", label: "Stellar BH", kind: "blackhole", th: 1.2, ph: 0.06, distLy: 14, rSun: 3.0, hue: [255, 170, 70], spin: 0 },
-      { id: "psr1", label: "Pulsar", kind: "neutron", th: -1.0, ph: 0.15, distLy: 12, rSun: 0.14, spin: 0, spinRate: 0.08 },
+      // —— featured destinations (closer, distinctive) ——
+      { id: "sol", label: "Sol · G2V 恒星", kind: "star", featured: true, th: 0.06, ph: -0.02, distLy: 2.4, rSun: 1.15, hue: [255, 214, 140] },
+      { id: "redgiant", label: "Betel-X · 红巨星", kind: "star", featured: true, th: -0.42, ph: 0.12, distLy: 3.8, rSun: 28, hue: [255, 95, 55] },
+      { id: "supergiant", label: "UY-Analog · 超巨星", kind: "star", featured: true, th: 0.72, ph: 0.08, distLy: 5.5, rSun: 42, hue: [255, 140, 110] },
+      { id: "binary", label: "Sirius-pair · 双星", kind: "binary", featured: true, th: 0.28, ph: -0.1, distLy: 2.8, rSun: 1.45, hue: [255, 235, 190],
+        orbitSpeed: 0.7, companionHue: [140, 190, 255], companionR: 0.85 },
+      { id: "bh-core", label: "Eventide · 黑洞", kind: "blackhole", featured: true, th: 0.95, ph: 0.04, distLy: 4.6, rSun: 5.2, hue: [255, 170, 70], spin: 0 },
+      { id: "pulsar", label: "PSR-Δ · 中子星", kind: "neutron", featured: true, th: -0.78, ph: 0.16, distLy: 3.6, rSun: 0.22, spin: 0, spinRate: 0.18, hue: [200, 230, 255] },
+      { id: "dyson", label: "Helios Cage · 戴森球文明", kind: "dyson", featured: true, th: -0.18, ph: -0.06, distLy: 3.2, rSun: 1.2, hue: [255, 220, 150], shell: 2.55 },
+      { id: "mega", label: "Titan-α · 超大类地", kind: "planet", featured: true, biome: "mediterranean", th: 0.18, ph: 0.09, distLy: 1.55, rSun: 4.6 },
+      { id: "gas-mega", label: "Leviathan · 巨型气态", kind: "planet", featured: true, biome: "gas_cream", th: -0.32, ph: -0.04, distLy: 2.0, rSun: 9.5, rings: true },
+      { id: "med", label: "Mediterranean", kind: "planet", biome: "mediterranean", th: 0.5, ph: -0.15, distLy: 2.2, rSun: 0.55 },
+      { id: "lava", label: "Lava World", kind: "planet", biome: "lava", th: 0.65, ph: 0.12, distLy: 2.5, rSun: 0.6 },
+      { id: "ice", label: "Ice World", kind: "planet", biome: "ice", th: -0.7, ph: 0.18, distLy: 2.9, rSun: 0.5, rings: true, ringTint: [180, 210, 255] },
     ];
-    systems = catalog.map(placeSystem);
 
-    const biomes = ["mediterranean", "arid", "ice", "lava", "ocean", "ashen", "pandora", "gas", "gas_blue", "gas_cream"];
-    for (let i = 0; i < 24; i++) {
+    systems = catalog.map((opts) => {
+      const body = placeSystem(opts);
+      if (body.kind === "binary") {
+        body.sep = body.radius * 2.6;
+        body.orbitA = 0;
+        body.comp = {
+          x: body.x, y: body.y, z: body.z,
+          radius: R_SUN * (opts.companionR || 0.9),
+          hue: opts.companionHue || [180, 210, 255],
+          kind: "star",
+        };
+      }
+      return body;
+    });
+
+    // filler worlds
+    const biomes = ["mediterranean", "arid", "ice", "lava", "ocean", "ashen", "pandora", "gas_blue"];
+    for (let i = 0; i < 16; i++) {
       const biome = biomes[i % biomes.length];
       systems.push(placeSystem({
         id: `p-${i}`,
-        label: `${biome.replace("_", " ")} #${i + 1}`,
+        label: `${biome} #${i + 1}`,
         kind: "planet",
         biome,
-        th: rand(-1.3, 1.3),
-        ph: rand(-0.45, 0.45),
-        distLy: rand(4, 40),
-        rSun: String(biome).startsWith("gas") ? rand(1.8, 3.2) : rand(0.4, 0.7),
+        th: rand(-1.2, 1.2),
+        ph: rand(-0.4, 0.4),
+        distLy: rand(6, 35),
+        rSun: String(biome).startsWith("gas") ? rand(2, 4) : rand(0.4, 0.8),
       }));
     }
-
-    const spectral = [
-      { tag: "O", hue: [150, 185, 255], r: [5, 12] },
-      { tag: "B", hue: [175, 205, 255], r: [2.2, 7] },
-      { tag: "A", hue: [210, 225, 255], r: [1.3, 2.4] },
-      { tag: "G", hue: [255, 220, 150], r: [0.85, 1.15] },
-      { tag: "K", hue: [255, 170, 110], r: [0.6, 0.95] },
-      { tag: "M", hue: [255, 120, 90], r: [0.4, 0.7] },
-    ];
-    for (let i = 0; i < 28; i++) {
-      const sp = spectral[i % spectral.length];
+    for (let i = 0; i < 12; i++) {
       systems.push(placeSystem({
         id: `s-${i}`,
-        label: `${sp.tag}-type #${i + 1}`,
+        label: `Field star #${i + 1}`,
         kind: "star",
-        th: rand(-1.4, 1.4),
-        ph: rand(-0.5, 0.5),
-        distLy: rand(8, 60),
-        rSun: rand(sp.r[0], sp.r[1]),
-        hue: sp.hue.map((c) => clamp(c + rand(-12, 12), 90, 255)),
-      }));
-    }
-    for (let i = 0; i < 4; i++) {
-      systems.push(placeSystem({
-        id: `bh-${i}`, label: `BH #${i + 1}`, kind: "blackhole",
-        th: rand(-1.4, 1.4), ph: rand(-0.35, 0.35), distLy: rand(18, 70),
-        rSun: rand(2.2, 5.5), hue: [255, 160, 60], spin: rand(0, 3),
-      }));
-    }
-    for (let i = 0; i < 5; i++) {
-      systems.push(placeSystem({
-        id: `ns-${i}`, label: `Pulsar #${i + 1}`, kind: "neutron",
-        th: rand(-1.4, 1.4), ph: rand(-0.4, 0.4), distLy: rand(12, 55),
-        rSun: rand(0.09, 0.15), spin: rand(0, 3),
-        spinRate: rand(0.04, 0.12) * (Math.random() > 0.5 ? 1 : -1),
+        th: rand(-1.3, 1.3),
+        ph: rand(-0.45, 0.45),
+        distLy: rand(10, 50),
+        rSun: rand(0.7, 2.5),
+        hue: [255, 220, 160].map((c) => clamp(c + rand(-40, 20), 100, 255)),
       }));
     }
 
     if (window.DSPTextures) {
-      // bake offline-style atlas into memory once
-      window.DSPTextures.warm(systems);
+      window.DSPTextures.warm(systems.slice(0, 14));
+      const rest = systems.slice(14);
+      const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 200));
+      idle(() => window.DSPTextures.warm(rest));
     }
   }
 
-  function warpProject(x, y, z) {
-    const k = DEPTH / Math.max(z, 0.001);
+  function lerpAngle(a, b, t) {
+    let d = b - a;
+    while (d > Math.PI) d -= Math.PI * 2;
+    while (d < -Math.PI) d += Math.PI * 2;
+    return a + d * t;
+  }
+
+  /** Camera basis: forward / right / up in world space. */
+  function getBasis() {
+    const cp = Math.cos(pitch);
+    const sp = Math.sin(pitch);
+    const cy = Math.cos(yaw);
+    const sy = Math.sin(yaw);
+    const forward = { x: sy * cp, y: sp, z: cy * cp };
+    // right = normalize(forward × worldUp) with worldUp=(0,1,0) → (-forward.z, 0, forward.x) when level
+    let rx = -forward.z;
+    let rz = forward.x;
+    let rLen = Math.hypot(rx, rz) || 1;
+    rx /= rLen;
+    rz /= rLen;
+    const right = { x: rx, y: 0, z: rz };
+    // up = right × forward
+    const up = {
+      x: right.y * forward.z - right.z * forward.y,
+      y: right.z * forward.x - right.x * forward.z,
+      z: right.x * forward.y - right.y * forward.x,
+    };
+    return { forward, right, up, focal: H * FOCAL_K };
+  }
+
+  function anglesTo(wx, wy, wz) {
+    const dx = wx - camX;
+    const dy = wy - camY;
+    const dz = wz - camZ;
+    const dist = Math.hypot(dx, dy, dz) || 1;
     return {
-      x: x * k + cx + (smoothTX - cx) * 0.35,
-      y: y * k + cy + (smoothTY - cy) * 0.35,
+      yaw: Math.atan2(dx, dz),
+      pitch: Math.asin(clamp(dy / dist, -0.99, 0.99)),
+      dist,
+      dx,
+      dy,
+      dz,
     };
   }
 
-  /** World body → screen (camera looks +Z, mouse offsets view). */
+  /** Snap / ease camera to face a world point (puts it at view center). */
+  function faceWorld(wx, wy, wz, t) {
+    const a = anglesTo(wx, wy, wz);
+    if (t >= 1) {
+      yaw = a.yaw;
+      pitch = a.pitch;
+    } else {
+      yaw = lerpAngle(yaw, a.yaw, t);
+      pitch += (a.pitch - pitch) * t;
+    }
+    pitch = clamp(pitch, -MAX_PITCH, MAX_PITCH);
+    return a;
+  }
+
+  /** Warp VFX live in view space — streaks always rush toward screen center (true forward). */
+  function warpProject(x, y, z) {
+    const k = DEPTH / Math.max(z, 0.001);
+    return { x: x * k + cx, y: y * k + cy };
+  }
+
+  /** World body → screen via real camera orientation. */
   function projectWorld(wx, wy, wz) {
     const dx = wx - camX;
     const dy = wy - camY;
     const dz = wz - camZ;
-    if (dz <= 2) return { x: 0, y: 0, visible: false, depth: dz, dist: Math.hypot(dx, dy, dz) };
-    const lookX = (smoothTX - cx) / Math.max(W, 1);
-    const lookY = (smoothTY - cy) / Math.max(H, 1);
-    const sx = cx + (dx / dz) * (H * 0.72) - lookX * 90;
-    const sy = cy + (dy / dz) * (H * 0.72) - lookY * 70;
     const dist = Math.hypot(dx, dy, dz);
-    return { x: sx, y: sy, visible: true, depth: dz, dist };
+    const { forward, right, up, focal } = getBasis();
+    const vx = dx * right.x + dy * right.y + dz * right.z;
+    const vy = dx * up.x + dy * up.y + dz * up.z;
+    const vz = dx * forward.x + dy * forward.y + dz * forward.z;
+    if (vz <= 2) return { x: 0, y: 0, visible: false, depth: vz, dist };
+    return {
+      x: cx + (vx / vz) * focal,
+      y: cy - (vy / vz) * focal,
+      visible: true,
+      depth: vz,
+      dist,
+    };
+  }
+
+  function applyLookDelta(dx, dy) {
+    yaw += dx * LOOK_SENS;
+    pitch = clamp(pitch - dy * LOOK_SENS, -MAX_PITCH, MAX_PITCH);
   }
 
   function screenRadius(radius, dist) {
@@ -221,7 +291,7 @@
   }
 
   function proximityDetail(size) {
-    return clamp((size - 10) / Math.max(160, Math.min(W, H) * 0.42), 0, 1);
+    return clamp((size - 8) / Math.max(140, Math.min(W, H) * 0.38), 0, 1);
   }
 
   function systemScreen(sys) {
@@ -256,10 +326,6 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     cx = W * 0.5;
     cy = H * 0.5;
-    targetX = cx;
-    targetY = cy;
-    smoothTX = cx;
-    smoothTY = cy;
     pointerX = cx;
     pointerY = cy;
     if (!stars.length) initStars();
@@ -324,18 +390,182 @@
     return map[biome] || [140, 190, 255];
   }
 
+  function isGasBiome(biome) {
+    return biome === "gas" || String(biome || "").startsWith("gas_");
+  }
+
+  /** Saturn-style ring: pass "back" before sphere, "front" after. */
+  function drawPlanetRing(sys, p, size, prox, pass) {
+    if (!sys.rings && !(isGasBiome(sys.biome) && (sys.featured || (sys.rSun || 0) > 3))) return;
+    const tint = sys.ringTint || (isGasBiome(sys.biome) ? [230, 210, 170] : [200, 210, 230]);
+    const [rr, gg, bb] = tint;
+    const tilt = sys.ringTilt ?? 0.38;
+    const outer = size * (sys.ringScale || 1.85);
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(tilt);
+    ctx.scale(1, 0.3);
+    // half-plane clip: back = top, front = bottom (appears behind / in front of globe)
+    ctx.beginPath();
+    if (pass === "back") ctx.rect(-outer * 3, -outer * 3, outer * 6, outer * 3);
+    else ctx.rect(-outer * 3, 0, outer * 6, outer * 3);
+    ctx.clip();
+
+    const bands = [
+      [1.18, 0.1, 0.22],
+      [1.38, 0.14, 0.35],
+      [1.58, 0.09, 0.18],
+      [1.78, 0.06, 0.12],
+    ];
+    for (const [mul, w, a] of bands) {
+      ctx.beginPath();
+      ctx.arc(0, 0, size * mul, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(${rr},${gg},${bb},${(a + prox * 0.25) * (pass === "front" ? 1 : 0.75)})`;
+      ctx.lineWidth = Math.max(1.2, size * w);
+      ctx.stroke();
+    }
+    // Cassini gap feel
+    ctx.beginPath();
+    ctx.arc(0, 0, size * 1.48, 0, Math.PI * 2);
+    ctx.strokeStyle = `rgba(5,8,20,${0.35 + prox * 0.2})`;
+    ctx.lineWidth = Math.max(1.5, size * 0.07);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  /** Scrolling cloud / band overlay clipped to disk (near approach only). */
+  function drawNearSurfaceDetail(sys, p, size, prox) {
+    if (sys.kind !== "planet" || prox < 0.28 || size < 16) return;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, size * 0.99, 0, Math.PI * 2);
+    ctx.clip();
+
+    if (isGasBiome(sys.biome)) {
+      const [ar, ag, ab] = atmoColor(sys.biome);
+      for (let i = 0; i < 7; i++) {
+        const y = p.y - size + (i / 6) * size * 2 + Math.sin(time * 0.4 + i) * size * 0.02;
+        const h = size * (0.06 + (i % 3) * 0.02);
+        const drift = ((time * (8 + i) + i * 40) % (size * 2.4)) - size * 1.2;
+        const g = ctx.createLinearGradient(p.x - size, y, p.x + size, y);
+        g.addColorStop(0, "rgba(0,0,0,0)");
+        g.addColorStop(0.35, `rgba(${ar},${ag},${ab},${0.04 + prox * 0.08})`);
+        g.addColorStop(0.5, `rgba(255,255,255,${0.05 + prox * 0.1})`);
+        g.addColorStop(0.65, `rgba(${ar},${ag},${ab},${0.04 + prox * 0.08})`);
+        g.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = g;
+        ctx.fillRect(p.x - size + drift * 0.15, y - h / 2, size * 2, h);
+      }
+    } else if (sys.biome === "lava") {
+      for (let i = 0; i < 10; i++) {
+        const a = hash01(i * 11 + 2) * Math.PI * 2 + time * 0.35;
+        const rad = size * (0.2 + hash01(i * 5) * 0.7);
+        const px = p.x + Math.cos(a) * rad * 0.85;
+        const py = p.y + Math.sin(a) * rad * 0.75;
+        const glow = ctx.createRadialGradient(px, py, 0, px, py, size * 0.12);
+        const pulse = 0.5 + 0.5 * Math.sin(time * 3 + i);
+        glow.addColorStop(0, `rgba(255,200,80,${(0.25 + prox * 0.35) * pulse})`);
+        glow.addColorStop(1, "rgba(255,60,0,0)");
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(px, py, size * 0.12, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    } else {
+      // soft nephogram clouds drifting
+      const [ar, ag, ab] = atmoColor(sys.biome);
+      for (let i = 0; i < 5; i++) {
+        const base = hash01(i * 17 + (sys.id || "").length);
+        const cx0 = p.x + (base - 0.5) * size * 1.4 + Math.sin(time * 0.25 + i) * size * 0.08;
+        const cy0 = p.y + (hash01(i * 9) - 0.5) * size * 1.1;
+        const rw = size * (0.28 + hash01(i * 3) * 0.25);
+        const rh = size * (0.1 + hash01(i * 4) * 0.08);
+        const cloud = ctx.createRadialGradient(cx0, cy0, 0, cx0, cy0, rw);
+        cloud.addColorStop(0, `rgba(255,255,255,${0.1 + prox * 0.22})`);
+        cloud.addColorStop(0.5, `rgba(${ar},${ag},${ab},${0.06 + prox * 0.1})`);
+        cloud.addColorStop(1, "rgba(255,255,255,0)");
+        ctx.fillStyle = cloud;
+        ctx.beginPath();
+        ctx.ellipse(cx0, cy0, rw, rh, base * 0.8, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // night-side city lights (terrestrial / mega)
+      if (prox > 0.45 && (sys.biome === "mediterranean" || sys.biome === "ocean" || sys.biome === "pandora" || sys.featured)) {
+        ctx.globalCompositeOperation = "lighter";
+        for (let i = 0; i < 18; i++) {
+          const u = hash01(i * 13 + 1);
+          const v = hash01(i * 7 + 3);
+          // prefer right limb as "night"
+          if (u < 0.42) continue;
+          const px = p.x - size + u * size * 2;
+          const py = p.y - size + v * size * 2;
+          const dx = (px - p.x) / size;
+          const dy = (py - p.y) / size;
+          if (dx * dx + dy * dy > 0.92) continue;
+          const twinkle = 0.55 + 0.45 * Math.sin(time * 5 + i * 1.7);
+          ctx.fillStyle = `rgba(255, 220, 140, ${(0.15 + prox * 0.35) * twinkle})`;
+          ctx.fillRect(px, py, Math.max(1, size * 0.015), Math.max(1, size * 0.015));
+        }
+        ctx.globalCompositeOperation = "source-over";
+      }
+    }
+    ctx.restore();
+  }
+
+  /** Soft terminator + rim light — cheap sphere shading on top of bake. */
+  function drawTerminator(p, size, prox) {
+    if (size < 8) return;
+    const g = ctx.createLinearGradient(p.x - size * 0.9, p.y - size * 0.3, p.x + size * 0.85, p.y + size * 0.2);
+    g.addColorStop(0, `rgba(0,0,0,${0.22 + prox * 0.18})`);
+    g.addColorStop(0.42, "rgba(0,0,0,0)");
+    g.addColorStop(0.72, "rgba(255,255,255,0)");
+    g.addColorStop(1, `rgba(255,255,255,${0.06 + prox * 0.08})`);
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, size * 0.995, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function drawRedGiantProminence(p, size, prox, hue) {
+    const [r, g, b] = hue;
+    for (let i = 0; i < 5; i++) {
+      const a = time * 0.3 + i * 1.3;
+      const len = size * (0.35 + 0.25 * Math.sin(time * 1.2 + i));
+      const x0 = p.x + Math.cos(a) * size * 0.92;
+      const y0 = p.y + Math.sin(a) * size * 0.92;
+      const x1 = p.x + Math.cos(a) * (size + len);
+      const y1 = p.y + Math.sin(a) * (size + len);
+      const grd = ctx.createLinearGradient(x0, y0, x1, y1);
+      grd.addColorStop(0, `rgba(${r},${g},${b},${0.35 + prox * 0.3})`);
+      grd.addColorStop(1, "rgba(255,80,40,0)");
+      ctx.strokeStyle = grd;
+      ctx.lineWidth = Math.max(2, size * 0.04);
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(x0, y0);
+      ctx.quadraticCurveTo(
+        p.x + Math.cos(a + 0.4) * (size + len * 0.5),
+        p.y + Math.sin(a + 0.4) * (size + len * 0.5),
+        x1, y1
+      );
+      ctx.stroke();
+    }
+  }
+
   /** Runtime: baked texture + cheap corona/atmosphere (DSP look, low CPU). */
   function drawBody(sys, p, size, prox) {
     const tex = window.DSPTextures ? window.DSPTextures.get(sys) : null;
     const hue = sys.hue || atmoColor(sys.biome) || [255, 220, 150];
     const [r, g, b] = hue;
+    const isGiant = sys.kind === "star" && (sys.rSun || 0) >= 8;
 
-    // star / neutron corona — gradients only
-    if (sys.kind === "star" || sys.kind === "neutron") {
-      const layers = 2 + Math.floor(prox * 3);
+    // star / neutron / binary primary corona
+    if (sys.kind === "star" || sys.kind === "neutron" || sys.kind === "binary" || sys.kind === "dyson") {
+      const layers = 2 + Math.floor(prox * 3) + (isGiant ? 2 : 0);
+      const stretch = isGiant ? 1.55 : 1;
       for (let i = layers; i >= 1; i--) {
-        const glowR = size * (1.25 + i * (0.55 + prox * 0.5));
-        const alpha = (0.16 + prox * 0.28) / i;
+        const glowR = size * (1.25 + i * (0.55 + prox * 0.5) * stretch);
+        const alpha = ((0.16 + prox * 0.28) / i) * (isGiant ? 0.85 : 1);
         const glow = ctx.createRadialGradient(p.x, p.y, size * 0.85, p.x, p.y, glowR);
         glow.addColorStop(0, `rgba(${r},${g},${b},${alpha})`);
         glow.addColorStop(0.55, `rgba(${r},${g},${b},${alpha * 0.25})`);
@@ -345,16 +575,17 @@
         ctx.arc(p.x, p.y, glowR, 0, Math.PI * 2);
         ctx.fill();
       }
+      if (isGiant && prox > 0.2) drawRedGiantProminence(p, size, prox, hue);
     }
 
-    // planet atmosphere halo (DSP nephogram / ionosphere feel)
+    // planet atmosphere halo
     if (sys.kind === "planet" && size > 6) {
       const [ar, ag, ab] = atmoColor(sys.biome);
-      const atmoR = size * (1.08 + prox * 0.12);
-      const atmo = ctx.createRadialGradient(p.x, p.y, size * 0.92, p.x, p.y, atmoR);
+      const atmoR = size * (1.08 + prox * 0.14 + ((sys.rSun || 1) > 3 ? 0.08 : 0));
+      const atmo = ctx.createRadialGradient(p.x, p.y, size * 0.9, p.x, p.y, atmoR);
       atmo.addColorStop(0, "rgba(0,0,0,0)");
-      atmo.addColorStop(0.7, `rgba(${ar},${ag},${ab},${0.05 + prox * 0.12})`);
-      atmo.addColorStop(0.92, `rgba(${ar},${ag},${ab},${0.35 + prox * 0.4})`);
+      atmo.addColorStop(0.65, `rgba(${ar},${ag},${ab},${0.04 + prox * 0.1})`);
+      atmo.addColorStop(0.9, `rgba(${ar},${ag},${ab},${0.32 + prox * 0.42})`);
       atmo.addColorStop(1, "rgba(0,0,0,0)");
       ctx.fillStyle = atmo;
       ctx.beginPath();
@@ -362,40 +593,141 @@
       ctx.fill();
     }
 
-    // blackhole accretion disk (procedural, cheap)
+    // —— black hole: Doppler disk + flickering photon ring ——
     if (sys.kind === "blackhole") {
-      sys.spin = (sys.spin || 0) + 0.004 + speed * 0.001;
+      sys.spin = (sys.spin || 0) + 0.008 + speed * 0.002;
       ctx.save();
       ctx.translate(p.x, p.y);
-      ctx.rotate(sys.spin);
-      ctx.scale(1, 0.34);
-      const disk = ctx.createRadialGradient(0, 0, size * 0.55, 0, 0, size * 2.5);
+      ctx.rotate(sys.spin * 0.15);
+      ctx.scale(1, 0.32);
+      // outer disk
+      const disk = ctx.createRadialGradient(0, 0, size * 0.5, 0, 0, size * 3.0);
       disk.addColorStop(0, "rgba(255,210,120,0)");
-      disk.addColorStop(0.4, `rgba(255,160,60,${0.35 + prox * 0.35})`);
-      disk.addColorStop(0.75, "rgba(180,50,30,0.25)");
+      disk.addColorStop(0.28, `rgba(255,190,90,${0.5 + prox * 0.35})`);
+      disk.addColorStop(0.45, `rgba(255,100,40,${0.4 + prox * 0.3})`);
+      disk.addColorStop(0.7, "rgba(140,30,50,0.28)");
       disk.addColorStop(1, "rgba(0,0,0,0)");
       ctx.fillStyle = disk;
       ctx.beginPath();
-      ctx.arc(0, 0, size * 2.5, 0, Math.PI * 2);
+      ctx.arc(0, 0, size * 3.0, 0, Math.PI * 2);
       ctx.fill();
+      // Doppler bright crescent
+      const dop = ctx.createRadialGradient(size * 1.1, 0, 0, size * 1.1, 0, size * 1.4);
+      dop.addColorStop(0, `rgba(255,255,220,${0.45 + prox * 0.35})`);
+      dop.addColorStop(1, "rgba(255,120,40,0)");
+      ctx.fillStyle = dop;
+      ctx.beginPath();
+      ctx.arc(size * 1.1, 0, size * 1.4, 0, Math.PI * 2);
+      ctx.fill();
+      // spiral hotspots
+      for (let i = 0; i < 4; i++) {
+        const a = sys.spin * 2.2 + i * 1.6;
+        const rad = size * (1.1 + (i % 2) * 0.45);
+        const hx = Math.cos(a) * rad;
+        const hy = Math.sin(a) * rad;
+        const hg = ctx.createRadialGradient(hx, hy, 0, hx, hy, size * 0.35);
+        hg.addColorStop(0, `rgba(255,240,180,${0.35 + prox * 0.25})`);
+        hg.addColorStop(1, "rgba(255,80,20,0)");
+        ctx.fillStyle = hg;
+        ctx.beginPath();
+        ctx.arc(hx, hy, size * 0.35, 0, Math.PI * 2);
+        ctx.fill();
+      }
       ctx.restore();
+      const flicker = 0.7 + 0.3 * Math.sin(time * 11);
+      ctx.strokeStyle = `rgba(255, 230, 180, ${(0.5 + prox * 0.4) * flicker})`;
+      ctx.lineWidth = Math.max(1.4, size * 0.07);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, size * 1.08, 0, Math.PI * 2);
+      ctx.stroke();
+      // secondary faint ring
+      ctx.strokeStyle = `rgba(255, 160, 80, ${0.2 + prox * 0.2})`;
+      ctx.lineWidth = Math.max(1, size * 0.03);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, size * 1.22, 0, Math.PI * 2);
+      ctx.stroke();
+      const lens = ctx.createRadialGradient(p.x, p.y, size * 0.85, p.x, p.y, size * 2.1);
+      lens.addColorStop(0, "rgba(0,0,0,0)");
+      lens.addColorStop(0.5, `rgba(60,20,30,${0.14 + prox * 0.18})`);
+      lens.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = lens;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, size * 2.1, 0, Math.PI * 2);
+      ctx.fill();
     }
 
-    // neutron jets
+    // neutron jets + pulse flash
     if (sys.kind === "neutron") {
       sys.spin = (sys.spin || 0) + (sys.spinRate || 0.06);
       ctx.save();
       ctx.translate(p.x, p.y);
       ctx.rotate(sys.spin);
-      const bh = Math.max(size * 9, 40);
+      const bh = Math.max(size * 14, 56);
       const beam = ctx.createLinearGradient(0, -bh, 0, bh);
       beam.addColorStop(0, "rgba(140,200,255,0)");
-      beam.addColorStop(0.5, `rgba(255,255,255,${0.55 + prox * 0.3})`);
+      beam.addColorStop(0.5, `rgba(255,255,255,${0.65 + prox * 0.3})`);
       beam.addColorStop(1, "rgba(140,200,255,0)");
       ctx.fillStyle = beam;
-      ctx.fillRect(-Math.max(size * 0.12, 1), -bh, Math.max(size * 0.24, 2), bh * 2);
+      ctx.fillRect(-Math.max(size * 0.18, 1.4), -bh, Math.max(size * 0.36, 2.8), bh * 2);
+      // cone soft edges
+      ctx.fillStyle = `rgba(160,210,255,${0.12 + prox * 0.15})`;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(-size * 0.5, -bh * 0.7);
+      ctx.lineTo(size * 0.5, -bh * 0.7);
+      ctx.closePath();
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(-size * 0.5, bh * 0.7);
+      ctx.lineTo(size * 0.5, bh * 0.7);
+      ctx.closePath();
+      ctx.fill();
       ctx.restore();
+      const pulse = Math.pow(0.5 + 0.5 * Math.sin(time * 18), 3);
+      const flash = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size * 4);
+      flash.addColorStop(0, `rgba(220,240,255,${0.35 * pulse})`);
+      flash.addColorStop(1, "rgba(120,180,255,0)");
+      ctx.fillStyle = flash;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, size * 4, 0, Math.PI * 2);
+      ctx.fill();
     }
+
+    // binary companion + Roche bridge
+    if (sys.kind === "binary" && sys.comp) {
+      const cp = projectWorld(sys.comp.x, sys.comp.y, sys.comp.z);
+      if (cp.visible) {
+        const csize = screenRadius(sys.comp.radius, cp.dist);
+        const ctex = window.DSPTextures
+          ? window.DSPTextures.get({ kind: "star", hue: sys.comp.hue, id: sys.id + "-b" })
+          : null;
+        const midX = (p.x + cp.x) * 0.5;
+        const midY = (p.y + cp.y) * 0.5;
+        const bridge = ctx.createLinearGradient(p.x, p.y, cp.x, cp.y);
+        bridge.addColorStop(0, `rgba(${r},${g},${b},${0.15 + prox * 0.2})`);
+        bridge.addColorStop(0.5, `rgba(200,220,255,${0.2 + prox * 0.25})`);
+        const [cr0, cg0, cb0] = sys.comp.hue;
+        bridge.addColorStop(1, `rgba(${cr0},${cg0},${cb0},${0.15 + prox * 0.2})`);
+        ctx.strokeStyle = bridge;
+        ctx.lineWidth = Math.max(2, (size + csize) * 0.08);
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.quadraticCurveTo(midX, midY - size * 0.25, cp.x, cp.y);
+        ctx.stroke();
+        if (ctex) ctx.drawImage(ctex, cp.x - csize, cp.y - csize, csize * 2, csize * 2);
+        const cg = ctx.createRadialGradient(cp.x, cp.y, csize * 0.8, cp.x, cp.y, csize * 2.6);
+        cg.addColorStop(0, `rgba(${cr0},${cg0},${cb0},${0.28 + prox * 0.3})`);
+        cg.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = cg;
+        ctx.beginPath();
+        ctx.arc(cp.x, cp.y, csize * 2.6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // ring back (behind globe)
+    if (sys.kind === "planet") drawPlanetRing(sys, p, size, prox, "back");
 
     // main sphere from prebaked texture
     if (tex) {
@@ -407,13 +739,37 @@
       ctx.fill();
     }
 
+    if (sys.kind === "planet") {
+      drawTerminator(p, size, prox);
+      drawNearSurfaceDetail(sys, p, size, prox);
+    }
+
+    // Sol granulation shimmer when close
+    if (sys.id === "sol" && prox > 0.35 && size > 20) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, size * 0.98, 0, Math.PI * 2);
+      ctx.clip();
+      for (let i = 0; i < 12; i++) {
+        const a = hash01(i * 3) * Math.PI * 2 + time * 0.15;
+        const rad = size * hash01(i * 8) * 0.85;
+        const px = p.x + Math.cos(a) * rad;
+        const py = p.y + Math.sin(a) * rad;
+        ctx.fillStyle = `rgba(255,180,80,${0.04 + prox * 0.06})`;
+        ctx.beginPath();
+        ctx.arc(px, py, size * 0.08, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
     // proximity specular sheen on planets
-    if (sys.kind === "planet" && prox > 0.35) {
+    if (sys.kind === "planet" && prox > 0.3) {
       const spec = ctx.createRadialGradient(
         p.x - size * 0.28, p.y - size * 0.32, 0,
         p.x - size * 0.28, p.y - size * 0.32, size * 0.55
       );
-      spec.addColorStop(0, `rgba(255,255,255,${0.08 + prox * 0.18})`);
+      spec.addColorStop(0, `rgba(255,255,255,${0.08 + prox * 0.2})`);
       spec.addColorStop(1, "rgba(255,255,255,0)");
       ctx.fillStyle = spec;
       ctx.beginPath();
@@ -421,8 +777,75 @@
       ctx.fill();
     }
 
+    // ring front
+    if (sys.kind === "planet") drawPlanetRing(sys, p, size, prox, "front");
+
+    // —— Dyson: denser lattice + energy spokes + beacons ——
+    if (sys.kind === "dyson") {
+      const shellR = size * (sys.shell || 2.2);
+      ctx.save();
+      // energy spokes from star to shell
+      for (let i = 0; i < 10; i++) {
+        const a = (i / 10) * Math.PI * 2 + time * 0.08;
+        const pulse = 0.4 + 0.6 * Math.sin(time * 2.5 + i);
+        ctx.strokeStyle = `rgba(120, 220, 255, ${(0.08 + prox * 0.18) * pulse})`;
+        ctx.lineWidth = Math.max(1, size * 0.02);
+        ctx.beginPath();
+        ctx.moveTo(p.x + Math.cos(a) * size, p.y + Math.sin(a) * size);
+        ctx.lineTo(p.x + Math.cos(a) * shellR, p.y + Math.sin(a) * shellR * 0.92);
+        ctx.stroke();
+      }
+      ctx.strokeStyle = `rgba(255, 200, 120, ${0.42 + prox * 0.45})`;
+      ctx.lineWidth = Math.max(1, size * 0.045);
+      for (let i = -4; i <= 4; i++) {
+        const k = i / 4.2;
+        const ry = shellR * Math.sqrt(Math.max(0.04, 1 - k * k));
+        ctx.beginPath();
+        ctx.ellipse(p.x, p.y + k * shellR * 0.12, ry, ry * 0.26, 0, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, shellR, 0, Math.PI * 2);
+      ctx.stroke();
+      for (let i = 0; i < 10; i++) {
+        const a = (i / 10) * Math.PI + time * 0.07;
+        ctx.beginPath();
+        ctx.ellipse(p.x, p.y, shellR * Math.abs(Math.cos(a)), shellR, a, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(100, 210, 255, ${0.2 + prox * 0.32})`;
+        ctx.stroke();
+      }
+      if (prox > 0.15) {
+        for (let i = 0; i < 36; i++) {
+          const a = hash01(i * 7 + 3) * Math.PI * 2 + time * 0.12;
+          const b = (hash01(i * 3) - 0.5) * 1.55;
+          const px = p.x + Math.cos(a) * shellR * Math.cos(b);
+          const py = p.y + Math.sin(a) * shellR * Math.cos(b) * 0.88;
+          const pr = size * 0.085;
+          const lit = 0.5 + 0.5 * Math.sin(time * 3 + i);
+          ctx.fillStyle = `rgba(255, 230, 160, ${(0.06 + prox * 0.1) * lit})`;
+          ctx.fillRect(px - pr, py - pr * 0.35, pr * 2, pr * 0.7);
+        }
+        for (let i = 0; i < 5; i++) {
+          const a = time * 0.4 + i * 1.25;
+          const bx = p.x + Math.cos(a) * shellR * 0.92;
+          const by = p.y + Math.sin(a) * shellR * 0.75;
+          const blink = 0.45 + 0.55 * Math.sin(time * 5 + i * 2);
+          ctx.fillStyle = `rgba(80, 230, 255, ${0.4 * blink + prox * 0.25})`;
+          ctx.beginPath();
+          ctx.arc(bx, by, Math.max(2, size * 0.055), 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = `rgba(120, 240, 255, ${0.25 * blink})`;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.arc(bx, by, size * 0.14, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      }
+      ctx.restore();
+    }
+
     // star diffraction when distant
-    if (sys.kind === "star" && size < 18 && prox < 0.15) {
+    if ((sys.kind === "star" || sys.kind === "binary") && size < 18 && prox < 0.15) {
       const spike = size * 5;
       ctx.strokeStyle = `rgba(${r},${g},${b},0.3)`;
       ctx.lineWidth = Math.max(0.7, size * 0.05);
@@ -430,6 +853,14 @@
       ctx.moveTo(p.x - spike, p.y); ctx.lineTo(p.x + spike, p.y);
       ctx.moveTo(p.x, p.y - spike * 0.65); ctx.lineTo(p.x, p.y + spike * 0.65);
       ctx.stroke();
+    }
+
+    // featured tag
+    if (sys.featured && size > 4 && size < H * 0.4) {
+      ctx.font = "600 10px 'IBM Plex Sans', sans-serif";
+      ctx.fillStyle = "rgba(240,193,75,0.75)";
+      ctx.textAlign = "center";
+      ctx.fillText("★ FEATURED", p.x, p.y - size - 8);
     }
   }
 
@@ -511,27 +942,52 @@
     }
   }
 
+  function aimAtLocked(t) {
+    if (!locked) return null;
+    return faceWorld(locked.x, locked.y, locked.z, t);
+  }
+
   function fly(dt) {
-    // mouse steer gently drifts lateral camera
-    const steerX = (smoothTX - cx) / Math.max(W, 1);
-    const steerY = (smoothTY - cy) / Math.max(H, 1);
-    camX += steerX * speed * 2.2 * dt * 60;
-    camY += steerY * speed * 2.2 * dt * 60;
+    const step = speed * (LY * 0.0045) * dt * 60;
 
-    // forward flight — boost rushes you toward worlds
-    const forward = (boost ? 1.0 : 0.12) * speed * (LY * 0.0045) * dt * 60;
-    camZ += forward;
+    // Target lock aims the camera — but RMB look drag takes priority (stable free aim)
+    if (locked && !rmbHeld) {
+      const aim = aimAtLocked(boost ? 1 : 0.45);
+      if (boost && aim) {
+        const dist = aim.dist || 1;
+        const move = step * 1.6;
+        const stopAt = locked.radius * (locked.kind === "blackhole" ? 1.35 : 1.08);
+        if (dist > stopAt) {
+          const go = Math.min(move, dist - stopAt);
+          camX += (aim.dx / dist) * go;
+          camY += (aim.dy / dist) * go;
+          camZ += (aim.dz / dist) * go;
+        }
+      } else if (!boost) {
+        const { forward } = getBasis();
+        const creep = step * 0.08;
+        camX += forward.x * creep;
+        camY += forward.y * creep;
+        camZ += forward.z * creep;
+      }
+    } else {
+      // yaw/pitch only change while RMB-drag; otherwise angle stays put
+      const { forward } = getBasis();
+      const forwardScale = boost ? 1.15 : 0.12;
+      const go = step * forwardScale;
+      camX += forward.x * go;
+      camY += forward.y * go;
+      camZ += forward.z * go;
+    }
 
-    // pull toward locked target while boosting
-    if (locked && boost) {
-      const dx = locked.x - camX;
-      const dy = locked.y - camY;
-      const dz = locked.z - camZ;
-      const dist = Math.hypot(dx, dy, dz) || 1;
-      const pull = speed * 0.35 * dt * 60;
-      camX += (dx / dist) * pull;
-      camY += (dy / dist) * pull;
-      camZ += (dz / dist) * pull;
+    // companion orbits for binaries (barycenter fixed)
+    for (const sys of systems) {
+      if (sys.kind !== "binary" || !sys.comp) continue;
+      sys.orbitA = (sys.orbitA || 0) + dt * (sys.orbitSpeed || 0.35);
+      const r = sys.sep || sys.radius * 2.2;
+      sys.comp.x = sys.x + Math.cos(sys.orbitA) * r;
+      sys.comp.y = sys.y + Math.sin(sys.orbitA) * r * 0.35;
+      sys.comp.z = sys.z + Math.sin(sys.orbitA) * r * 0.2;
     }
 
     collide();
@@ -551,8 +1007,10 @@
       return;
     }
     const dist = Math.hypot(locked.x - camX, locked.y - camY, locked.z - camZ);
-    const surface = Math.max(0, dist - locked.radius * 1.03);
-    const closing = boost ? speed * LY * 0.0045 * 60 : speed * LY * 0.00055 * 60;
+    const surface = Math.max(0, dist - locked.radius * 1.08);
+    const closing = boost
+      ? speed * LY * 0.0045 * 60 * (locked ? 1.35 : 1)
+      : speed * LY * 0.00055 * 60;
     if (hudLock) hudLock.textContent = locked.label;
     if (hudRange) hudRange.textContent = formatDist(dist / LY);
     if (hudEta) hudEta.textContent = closing > 1e-6 ? formatEta(surface / closing) : "—";
@@ -564,24 +1022,22 @@
     frame._last = ts;
     time += dt;
 
-    smoothTX += (targetX - smoothTX) * 0.12;
-    smoothTY += (targetY - smoothTY) * 0.12;
-
     // original click-boost speed model
     if (brake) targetSpeed = 0.2;
     else if (boost) targetSpeed = 2.8;
     else targetSpeed = 0.55;
     speed += (targetSpeed - speed) * (brake ? 0.12 : 0.08);
 
-    drawWarpStars();
+    // orientation + motion first so projection matches where we look/fly
     fly(dt);
+    drawWarpStars();
     drawBodies();
     updateHud();
 
-    // center cue
-    ctx.fillStyle = `rgba(240,200,100,${0.25 + (boost ? 0.35 : 0)})`;
+    // center cue (= lock aim point)
+    ctx.fillStyle = `rgba(240,200,100,${0.25 + (boost ? 0.35 : 0) + (locked ? 0.35 : 0)})`;
     ctx.beginPath();
-    ctx.arc(cx, cy, 2, 0, Math.PI * 2);
+    ctx.arc(cx, cy, locked ? 3 : 2, 0, Math.PI * 2);
     ctx.fill();
 
     const hover = pickSystem(pointerX, pointerY);
@@ -597,11 +1053,12 @@
   }
 
   window.addEventListener("resize", () => {
-    const keep = { stars, systems, locked, camX, camY, camZ };
+    const keep = { stars, systems, locked, camX, camY, camZ, yaw, pitch };
     resize();
     stars = keep.stars.length ? keep.stars : stars;
     systems = keep.systems.length ? keep.systems : systems;
     camX = keep.camX; camY = keep.camY; camZ = keep.camZ;
+    yaw = keep.yaw; pitch = keep.pitch;
     locked = keep.locked
       ? systems.find((s) => s.id === keep.locked.id) || null
       : null;
@@ -610,24 +1067,62 @@
   window.addEventListener("pointermove", (e) => {
     pointerX = e.clientX;
     pointerY = e.clientY;
-    targetX = e.clientX;
-    targetY = e.clientY;
+    if (!rmbHeld) return;
+    const dx = e.clientX - lookLastX;
+    const dy = e.clientY - lookLastY;
+    lookLastX = e.clientX;
+    lookLastY = e.clientY;
+    const total = Math.hypot(e.clientX - lookStartX, e.clientY - lookStartY);
+    if (!lookDragged && total > CLICK_SLOP) {
+      lookDragged = true;
+      // break target-lock so drag can free-aim without fighting faceWorld
+      if (locked) locked = null;
+      document.body.style.cursor = "grabbing";
+    }
+    if (lookDragged || total > 0) {
+      // only turn after we commit to a drag (keeps click crisp)
+      if (lookDragged) applyLookDelta(dx, dy);
+    }
   }, { passive: true });
+
+  function setLock(body) {
+    locked = body;
+    if (locked) faceWorld(locked.x, locked.y, locked.z, 1);
+  }
 
   window.addEventListener("pointerdown", (e) => {
     if (e.target.closest("a, button, .panel, .section, .hud")) return;
     if (e.button === 2) {
-      // right-click lock
-      const hit = pickSystem(e.clientX, e.clientY);
-      locked = hit ? (locked && locked.id === hit.id ? null : hit) : null;
+      rmbHeld = true;
+      lookDragged = false;
+      lookStartX = e.clientX;
+      lookStartY = e.clientY;
+      lookLastX = e.clientX;
+      lookLastY = e.clientY;
       return;
     }
-    if (e.button === 0) boost = true; // original: hold click to warp
+    if (e.button === 0) boost = true;
   });
   window.addEventListener("pointerup", (e) => {
     if (e.button === 0) boost = false;
+    if (e.button === 2 && rmbHeld) {
+      // short click = toggle body lock; drag = look only (angle already applied)
+      if (!lookDragged) {
+        const hit = pickSystem(e.clientX, e.clientY);
+        if (hit && locked && locked.id === hit.id) setLock(null);
+        else setLock(hit || null);
+      }
+      rmbHeld = false;
+      lookDragged = false;
+      document.body.style.cursor = "";
+    }
   });
-  window.addEventListener("pointercancel", () => { boost = false; });
+  window.addEventListener("pointercancel", () => {
+    boost = false;
+    rmbHeld = false;
+    lookDragged = false;
+    document.body.style.cursor = "";
+  });
   window.addEventListener("contextmenu", (e) => {
     if (!e.target.closest("a, button, .panel, .section")) e.preventDefault();
   });
@@ -650,6 +1145,9 @@
   window.addEventListener("blur", () => {
     boost = false;
     brake = false;
+    rmbHeld = false;
+    lookDragged = false;
+    document.body.style.cursor = "";
   });
 
   resize();

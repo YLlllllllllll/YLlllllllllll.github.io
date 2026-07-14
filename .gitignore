@@ -1,0 +1,5 @@
+orchestrator.pid
+.DS_Store
+*.log
+.idea/
+.vscode/
