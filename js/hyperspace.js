@@ -285,11 +285,25 @@
   }
 
   function screenRadius(radius, dist) {
-    return (H * 0.55) * radius / Math.sqrt(radius * radius + dist * dist);
+    // True perspective: hugging the surface → angular size blows past the viewport
+    const d = Math.max(dist, radius * 0.015, 1e-3);
+    const raw = (H * FOCAL_K) * (radius / d);
+    // allow overflow so close approaches fill / exceed the screen
+    return Math.min(raw, Math.max(W, H) * 2.2);
+  }
+
+  /** How close the camera may get (multiple of body radius). */
+  function approachLimit(sys) {
+    if (sys.kind === "blackhole") return sys.radius * 1.055; // skim the horizon
+    if (sys.kind === "neutron") return sys.radius * 1.8;
+    if (sys.kind === "star" || sys.kind === "binary" || sys.kind === "dyson") {
+      return sys.radius * 1.035;
+    }
+    return sys.radius * 1.018; // planets / giants — almost surface
   }
 
   function proximityDetail(size) {
-    return clamp((size - 8) / Math.max(140, Math.min(W, H) * 0.38), 0, 1);
+    return clamp((size - 8) / Math.max(100, Math.min(W, H) * 0.28), 0, 1);
   }
 
   function systemScreen(sys) {
@@ -555,7 +569,9 @@
 
   /** Runtime: baked texture + cheap corona/atmosphere (DSP look, low CPU). */
   function drawBody(sys, p, size, prox) {
-    const tex = window.DSPTextures ? window.DSPTextures.get(sys, { lazy: true }) : null;
+    const tex = window.DSPTextures
+      ? window.DSPTextures.get(sys, { lazy: true, priority: Math.floor(prox * 200 + size) })
+      : null;
     const hue = sys.hue || atmoColor(sys.biome) || [255, 220, 150];
     const [r, g, b] = hue;
     const isGiant = sys.kind === "star" && (sys.rSun || 0) >= 8;
@@ -935,13 +951,17 @@
     for (const sys of sorted) {
       const { p, size, dist } = systemScreen(sys);
       if (!p.visible || size < 0.35) continue;
-      if (p.depth < sys.radius * 0.5) continue;
+      // only cull when truly inside the body
+      if (dist < sys.radius * 0.96) continue;
 
       const proxScreen = proximityDetail(size);
-      const proxPhys = clamp(1 - (dist - sys.radius) / (sys.radius * 90), 0, 1);
-      const prox = Math.max(proxScreen, proxPhys * 0.85);
+      const proxPhys = clamp(1 - (dist - sys.radius) / (sys.radius * 50), 0, 1);
+      const prox = Math.max(proxScreen, proxPhys * 0.9);
 
       drawBody(sys, p, size, prox);
+
+      // hide chrome when the body dominates the frame
+      if (size > H * 0.55) continue;
 
       if (locked && locked.id === sys.id) drawLockReticle(p.x, p.y, size, sys.label);
       else if (size < H * 0.42) {
@@ -959,14 +979,16 @@
       const dy = camY - sys.y;
       const dz = camZ - sys.z;
       const dist = Math.hypot(dx, dy, dz);
-      const minD = sys.radius * (sys.kind === "blackhole" ? 1.45 : 1.03);
+      const minD = approachLimit(sys);
       if (dist < minD && dist > 1e-6) {
         const n = minD / dist;
         camX = sys.x + dx * n;
         camY = sys.y + dy * n;
         camZ = sys.z + dz * n;
-        targetSpeed = Math.min(targetSpeed, 0.45);
-        speed = Math.min(speed, 0.45);
+        if (speed > 0.6) {
+          targetSpeed = Math.min(targetSpeed, 0.35);
+          speed = Math.min(speed, 0.35);
+        }
       }
     }
   }
@@ -982,13 +1004,11 @@
       const rs = sys.radius;
       const influence = rs * 140;
       if (dist > influence) continue;
-      const stopAt = rs * 1.5;
+      const stopAt = approachLimit(sys);
       if (dist <= stopAt) continue;
-      // mass parameter — tuned so within ~12 radii, pull > max reverse (~2.4c thrust)
       const mass = sys.mass || 40;
       const soft = dist * dist + rs * rs * 4;
       let pull = (mass * rs * rs * LY * 0.0045 * dt * 60) / soft;
-      // steep near-horizon ramp
       const near = clamp(1 - (dist - rs) / (rs * 28), 0, 1);
       pull *= 0.55 + near * near * 3.2;
       const maxPull = 5.2 * LY * 0.0045 * dt * 60;
@@ -996,7 +1016,6 @@
       camX += (dx / dist) * go;
       camY += (dy / dist) * go;
       camZ += (dz / dist) * go;
-      // bleed forward speed when deep in the well
       if (near > 0.55 && speed > 0) {
         speed *= 1 - near * 0.04;
       }
@@ -1022,10 +1041,10 @@
         const ux = aim.dx / dist;
         const uy = aim.dy / dist;
         const uz = aim.dz / dist;
-        const stopAt = locked.radius * (locked.kind === "blackhole" ? 1.5 : 1.08);
+        const stopAt = approachLimit(locked);
 
         if (boost && !brake) {
-          // approach along LOS
+          // approach along LOS — allow hugging the limit for max angular size
           if (dist > stopAt) {
             const go = Math.min(Math.abs(signedStep) * 1.6, dist - stopAt);
             camX += ux * go;
@@ -1091,7 +1110,7 @@
       return;
     }
     const dist = Math.hypot(locked.x - camX, locked.y - camY, locked.z - camZ);
-    const surface = Math.max(0, dist - locked.radius * 1.08);
+    const surface = Math.max(0, dist - approachLimit(locked));
     let closing;
     if (boost && !brake) {
       closing = Math.abs(speed) * LY * 0.0045 * 60 * 1.35;
