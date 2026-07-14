@@ -128,6 +128,7 @@
   }
 
   function initSystems() {
+    if (systems.length) return;
     const catalog = [
       // —— featured destinations (closer, distinctive) ——
       { id: "sol", label: "Sol · G2V 恒星", kind: "star", featured: true, th: 0.06, ph: -0.02, distLy: 2.4, rSun: 1.15, hue: [255, 214, 140] },
@@ -189,12 +190,8 @@
       }));
     }
 
-    if (window.DSPTextures) {
-      window.DSPTextures.warm(systems.slice(0, 14));
-      const rest = systems.slice(14);
-      const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 200));
-      idle(() => window.DSPTextures.warm(rest));
-    }
+    // progressive idle bake — do not block first frames
+    if (window.DSPTextures) window.DSPTextures.warm(systems);
   }
 
   function lerpAngle(a, b, t) {
@@ -558,7 +555,7 @@
 
   /** Runtime: baked texture + cheap corona/atmosphere (DSP look, low CPU). */
   function drawBody(sys, p, size, prox) {
-    const tex = window.DSPTextures ? window.DSPTextures.get(sys) : null;
+    const tex = window.DSPTextures ? window.DSPTextures.get(sys, { lazy: true }) : null;
     const hue = sys.hue || atmoColor(sys.biome) || [255, 220, 150];
     const [r, g, b] = hue;
     const isGiant = sys.kind === "star" && (sys.rSun || 0) >= 8;
@@ -733,7 +730,7 @@
       if (cp.visible) {
         const csize = screenRadius(sys.comp.radius, cp.dist);
         const ctex = window.DSPTextures
-          ? window.DSPTextures.get({ kind: "star", hue: sys.comp.hue, id: sys.id + "-b" })
+          ? window.DSPTextures.get({ kind: "star", hue: sys.comp.hue, id: sys.id + "-b" }, { lazy: true })
           : null;
         const midX = (p.x + cp.x) * 0.5;
         const midY = (p.y + cp.y) * 0.5;
@@ -1247,8 +1244,7 @@
   });
 
   resize();
-  initStars();
-  initSystems();
+  // stars/systems created inside resize — avoid double initSystems (was sync-baking twice)
 
   if (reduced) {
     ctx.fillStyle = "#050814";
@@ -1257,6 +1253,7 @@
     const hint = document.getElementById("warp-hint");
     if (hint) hint.hidden = true;
   } else {
+    // paint immediately; textures fill in via idle bake
     requestAnimationFrame(frame);
   }
 

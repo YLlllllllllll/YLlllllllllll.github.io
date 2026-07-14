@@ -276,17 +276,74 @@ window.DSPTextures = (() => {
     return bakeStar([200, 220, 255], seed + 99);
   }
 
-  function get(sys) {
+  function get(sys, opts = {}) {
     const seed = (sys.id || "x").split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+    let key;
+    if (sys.kind === "planet") key = `planet:${sys.biome || "mediterranean"}:${seed}`;
+    else if (sys.kind === "blackhole") key = `bh:${seed}`;
+    else if (sys.kind === "neutron") key = `ns:${seed}`;
+    else key = `star:${(sys.hue || [255, 220, 150]).join(",")}:${seed}`;
+
+    if (cache.has(key)) return cache.get(key);
+
+    // Lazy: never block the render loop — queue bake and return null (solid fallback)
+    if (opts.lazy) {
+      enqueueWarm(sys, opts.priority || 0);
+      return null;
+    }
+
     if (sys.kind === "planet") return bakePlanet(sys.biome || "mediterranean", seed);
     if (sys.kind === "blackhole") return bakeBlackHole(seed);
     if (sys.kind === "neutron") return bakeNeutron(seed);
     return bakeStar(sys.hue || [255, 220, 150], seed);
   }
 
+  /** @type {{ sys: object, priority: number }[]} */
+  const warmQueue = [];
+  const warmQueued = new Set();
+  let warmScheduled = false;
+
+  function enqueueWarm(sys, priority) {
+    const id = sys.id || JSON.stringify(sys.hue) + sys.kind;
+    if (warmQueued.has(id)) {
+      // bump priority if already queued
+      const item = warmQueue.find((q) => (q.sys.id || "") === (sys.id || ""));
+      if (item && priority > item.priority) item.priority = priority;
+      return;
+    }
+    warmQueued.add(id);
+    warmQueue.push({ sys, priority: priority || 0 });
+    scheduleWarm();
+  }
+
+  function scheduleWarm() {
+    if (warmScheduled || !warmQueue.length) return;
+    warmScheduled = true;
+    const ric = window.requestIdleCallback
+      || ((cb) => requestAnimationFrame(() => cb({ timeRemaining: () => 5, didTimeout: true })));
+    ric((deadline) => {
+      warmScheduled = false;
+      // featured / high-priority first
+      warmQueue.sort((a, b) => b.priority - a.priority);
+      const t0 = performance.now();
+      const budget = Math.min(
+        8,
+        typeof deadline.timeRemaining === "function" ? Math.max(3, deadline.timeRemaining()) : 5
+      );
+      while (warmQueue.length && performance.now() - t0 < budget) {
+        const { sys } = warmQueue.shift();
+        get(sys); // sync bake one body inside idle budget
+      }
+      if (warmQueue.length) scheduleWarm();
+    }, { timeout: 120 });
+  }
+
+  /** Enqueue systems for idle baking — never blocks first paint. */
   function warm(systems) {
-    // bake everything up-front so first approach is smooth
-    for (const sys of systems) get(sys);
+    for (let i = 0; i < systems.length; i++) {
+      const sys = systems[i];
+      enqueueWarm(sys, sys.featured ? 100 - i : Math.max(0, 40 - i));
+    }
   }
 
   return { get, warm, SIZE, bakePlanet, bakeStar };
