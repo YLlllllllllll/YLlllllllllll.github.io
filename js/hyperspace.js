@@ -4,7 +4,7 @@
  * - Approachable planets/stars in world space
  *
  * LMB / Space = warp boost · RMB hold+drag = look (angle stays on release)
- * RMB click = lock body · Ctrl = brake
+ * RMB click = lock body · Ctrl = reverse thrust (can go negative / flee)
  */
 (() => {
   const canvas = document.getElementById("hyperspace");
@@ -135,8 +135,9 @@
       { id: "supergiant", label: "UY-Analog · 超巨星", kind: "star", featured: true, th: 0.72, ph: 0.08, distLy: 5.5, rSun: 42, hue: [255, 140, 110] },
       { id: "binary", label: "Sirius-pair · 双星", kind: "binary", featured: true, th: 0.28, ph: -0.1, distLy: 2.8, rSun: 1.45, hue: [255, 235, 190],
         orbitSpeed: 0.7, companionHue: [140, 190, 255], companionR: 0.85 },
-      { id: "bh-core", label: "Eventide · 黑洞", kind: "blackhole", featured: true, th: 0.95, ph: 0.04, distLy: 4.6, rSun: 5.2, hue: [255, 170, 70], spin: 0 },
-      { id: "pulsar", label: "PSR-Δ · 中子星", kind: "neutron", featured: true, th: -0.78, ph: 0.16, distLy: 3.6, rSun: 0.22, spin: 0, spinRate: 0.18, hue: [200, 230, 255] },
+      { id: "bh-core", label: "Eventide · 黑洞", kind: "blackhole", featured: true, th: 0.95, ph: 0.04, distLy: 4.6, rSun: 5.2, hue: [255, 170, 70], spin: 0, mass: 48 },
+      // DSP-like: tiny luminous core + huge jets / magnetic particle flow (not a fat ball)
+      { id: "pulsar", label: "PSR-Δ · 中子星", kind: "neutron", featured: true, th: -0.78, ph: 0.16, distLy: 3.6, rSun: 0.045, spin: 0, spinRate: 0.22, hue: [210, 235, 255] },
       { id: "dyson", label: "Helios Cage · 戴森球文明", kind: "dyson", featured: true, th: -0.18, ph: -0.06, distLy: 3.2, rSun: 1.2, hue: [255, 220, 150], shell: 2.55 },
       { id: "mega", label: "Titan-α · 超大类地", kind: "planet", featured: true, biome: "mediterranean", th: 0.18, ph: 0.09, distLy: 1.55, rSun: 4.6 },
       { id: "gas-mega", label: "Leviathan · 巨型气态", kind: "planet", featured: true, biome: "gas_cream", th: -0.32, ph: -0.04, distLy: 2.0, rSun: 9.5, rings: true },
@@ -334,16 +335,20 @@
 
   function drawWarpStars() {
     // original motion-blur wash
-    ctx.fillStyle = `rgba(5, 8, 20, ${boost ? 0.26 : 0.4})`;
+    const reverse = speed < 0;
+    ctx.fillStyle = `rgba(5, 8, 20, ${boost || reverse ? 0.26 : 0.4})`;
     ctx.fillRect(0, 0, W, H);
 
+    const zStep = Math.abs(speed) * (boost || reverse ? 18 : 7.5);
     for (let i = 0; i < stars.length; i++) {
       const star = stars[i];
       star.pz = star.z;
-      star.z -= speed * (boost ? 18 : 7.5);
+      // reverse thrust: streaks rush outward from center
+      star.z += reverse ? zStep : -zStep;
 
-      if (star.z < 1) {
+      if (star.z < 1 || star.z > DEPTH) {
         resetStar(star, false);
+        if (reverse) star.z = 1 + Math.random() * 40;
         continue;
       }
 
@@ -358,7 +363,6 @@
       const alpha = map(star.z, 0, DEPTH, 1, 0.15);
       const color = `rgba(${star.r},${star.g},${star.b},${alpha})`;
 
-      // classic hyperspace streak
       ctx.beginPath();
       ctx.moveTo(pp.x, pp.y);
       ctx.lineTo(p.x, p.y);
@@ -656,41 +660,70 @@
       ctx.fill();
     }
 
-    // neutron jets + pulse flash
+    // neutron — DSP-style: tiny core + bipolar jets + magnetic particle flow
     if (sys.kind === "neutron") {
       sys.spin = (sys.spin || 0) + (sys.spinRate || 0.06);
+      // magnetic susceptibility particle flow (DSP 0.9.27 look)
+      const flowR = Math.max(size * 18, 36);
+      for (let i = 0; i < 28; i++) {
+        const phase = time * 1.8 + i * 0.55 + sys.spin;
+        const lobe = (i % 2 === 0) ? 1 : -1;
+        const t = (hash01(i * 9 + 1) + time * 0.35) % 1;
+        const a = lobe * (0.35 + t * 1.1) + Math.sin(phase) * 0.15;
+        const rad = flowR * (0.15 + t * 0.85);
+        const px = p.x + Math.cos(a + sys.spin) * rad * 0.35;
+        const py = p.y + Math.sin(sys.spin) * rad * lobe * 0.15 + Math.cos(a) * rad * 0.55 * lobe;
+        const alpha = (1 - t) * (0.35 + prox * 0.4);
+        ctx.fillStyle = `rgba(160, 210, 255, ${alpha})`;
+        ctx.beginPath();
+        ctx.arc(px, py, Math.max(0.7, size * 0.35 * (1 - t * 0.6)), 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // field-line arcs
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(sys.spin * 0.4);
+      for (let i = 0; i < 6; i++) {
+        const s = (i / 6) * Math.PI * 2 + time * 0.5;
+        ctx.strokeStyle = `rgba(140, 200, 255, ${0.12 + prox * 0.2})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, flowR * 0.45, flowR * 0.12, s, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      ctx.restore();
+
       ctx.save();
       ctx.translate(p.x, p.y);
       ctx.rotate(sys.spin);
-      const bh = Math.max(size * 14, 56);
+      const bh = Math.max(size * 55, 90);
       const beam = ctx.createLinearGradient(0, -bh, 0, bh);
       beam.addColorStop(0, "rgba(140,200,255,0)");
-      beam.addColorStop(0.5, `rgba(255,255,255,${0.65 + prox * 0.3})`);
+      beam.addColorStop(0.5, `rgba(255,255,255,${0.75 + prox * 0.25})`);
       beam.addColorStop(1, "rgba(140,200,255,0)");
       ctx.fillStyle = beam;
-      ctx.fillRect(-Math.max(size * 0.18, 1.4), -bh, Math.max(size * 0.36, 2.8), bh * 2);
-      // cone soft edges
-      ctx.fillStyle = `rgba(160,210,255,${0.12 + prox * 0.15})`;
+      ctx.fillRect(-Math.max(size * 0.55, 1.2), -bh, Math.max(size * 1.1, 2.2), bh * 2);
+      ctx.fillStyle = `rgba(160,210,255,${0.14 + prox * 0.18})`;
       ctx.beginPath();
       ctx.moveTo(0, 0);
-      ctx.lineTo(-size * 0.5, -bh * 0.7);
-      ctx.lineTo(size * 0.5, -bh * 0.7);
+      ctx.lineTo(-size * 2.2, -bh * 0.75);
+      ctx.lineTo(size * 2.2, -bh * 0.75);
       ctx.closePath();
       ctx.fill();
       ctx.beginPath();
       ctx.moveTo(0, 0);
-      ctx.lineTo(-size * 0.5, bh * 0.7);
-      ctx.lineTo(size * 0.5, bh * 0.7);
+      ctx.lineTo(-size * 2.2, bh * 0.75);
+      ctx.lineTo(size * 2.2, bh * 0.75);
       ctx.closePath();
       ctx.fill();
       ctx.restore();
-      const pulse = Math.pow(0.5 + 0.5 * Math.sin(time * 18), 3);
-      const flash = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size * 4);
-      flash.addColorStop(0, `rgba(220,240,255,${0.35 * pulse})`);
+      const pulse = Math.pow(0.5 + 0.5 * Math.sin(time * 22), 4);
+      const flash = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, Math.max(size * 12, 40));
+      flash.addColorStop(0, `rgba(230,245,255,${0.55 * pulse})`);
       flash.addColorStop(1, "rgba(120,180,255,0)");
       ctx.fillStyle = flash;
       ctx.beginPath();
-      ctx.arc(p.x, p.y, size * 4, 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, Math.max(size * 12, 40), 0, Math.PI * 2);
       ctx.fill();
     }
 
@@ -929,15 +962,46 @@
       const dy = camY - sys.y;
       const dz = camZ - sys.z;
       const dist = Math.hypot(dx, dy, dz);
-      const minD = sys.radius * 1.03;
+      const minD = sys.radius * (sys.kind === "blackhole" ? 1.45 : 1.03);
       if (dist < minD && dist > 1e-6) {
         const n = minD / dist;
         camX = sys.x + dx * n;
         camY = sys.y + dy * n;
         camZ = sys.z + dz * n;
-        // dump forward speed on contact
         targetSpeed = Math.min(targetSpeed, 0.45);
         speed = Math.min(speed, 0.45);
+      }
+    }
+  }
+
+  /** Black-hole gravity: near-field pull can exceed reverse thrust — hard to flee. */
+  function applyGravity(dt) {
+    for (const sys of systems) {
+      if (sys.kind !== "blackhole") continue;
+      const dx = sys.x - camX;
+      const dy = sys.y - camY;
+      const dz = sys.z - camZ;
+      const dist = Math.hypot(dx, dy, dz) || 1;
+      const rs = sys.radius;
+      const influence = rs * 140;
+      if (dist > influence) continue;
+      const stopAt = rs * 1.5;
+      if (dist <= stopAt) continue;
+      // mass parameter — tuned so within ~12 radii, pull > max reverse (~2.4c thrust)
+      const mass = sys.mass || 40;
+      const soft = dist * dist + rs * rs * 4;
+      let pull = (mass * rs * rs * LY * 0.0045 * dt * 60) / soft;
+      // steep near-horizon ramp
+      const near = clamp(1 - (dist - rs) / (rs * 28), 0, 1);
+      pull *= 0.55 + near * near * 3.2;
+      const maxPull = 5.2 * LY * 0.0045 * dt * 60;
+      const go = Math.min(pull, maxPull);
+      camX += (dx / dist) * go;
+      camY += (dy / dist) * go;
+      camZ += (dz / dist) * go;
+      // bleed forward speed when deep in the well
+      if (near > 0.55 && speed > 0) {
+        speed *= 1 - near * 0.04;
       }
     }
   }
@@ -948,33 +1012,51 @@
   }
 
   function fly(dt) {
-    const step = speed * (LY * 0.0045) * dt * 60;
+    const signedStep = speed * (LY * 0.0045) * dt * 60;
+    const reverse = speed < -0.05;
 
     // Target lock aims the camera — but RMB look drag takes priority (stable free aim)
     if (locked && !rmbHeld) {
-      const aim = aimAtLocked(boost ? 1 : 0.45);
-      if (boost && aim) {
+      const aim = aimAtLocked(boost || reverse ? 1 : 0.45);
+      if (!aim) {
+        // fall through
+      } else {
         const dist = aim.dist || 1;
-        const move = step * 1.6;
-        const stopAt = locked.radius * (locked.kind === "blackhole" ? 1.35 : 1.08);
-        if (dist > stopAt) {
-          const go = Math.min(move, dist - stopAt);
-          camX += (aim.dx / dist) * go;
-          camY += (aim.dy / dist) * go;
-          camZ += (aim.dz / dist) * go;
+        const ux = aim.dx / dist;
+        const uy = aim.dy / dist;
+        const uz = aim.dz / dist;
+        const stopAt = locked.radius * (locked.kind === "blackhole" ? 1.5 : 1.08);
+
+        if (boost && !brake) {
+          // approach along LOS
+          if (dist > stopAt) {
+            const go = Math.min(Math.abs(signedStep) * 1.6, dist - stopAt);
+            camX += ux * go;
+            camY += uy * go;
+            camZ += uz * go;
+          }
+        } else if (reverse || brake) {
+          // Ctrl reverse: flee along -LOS (away from lock)
+          const go = Math.abs(signedStep) * 1.45;
+          camX -= ux * go;
+          camY -= uy * go;
+          camZ -= uz * go;
+        } else if (speed > 0.08) {
+          const creep = signedStep * 0.08;
+          if (dist > stopAt) {
+            camX += ux * Math.min(creep, dist - stopAt);
+            camY += uy * Math.min(creep, dist - stopAt);
+            camZ += uz * Math.min(creep, dist - stopAt);
+          }
         }
-      } else if (!boost) {
-        const { forward } = getBasis();
-        const creep = step * 0.08;
-        camX += forward.x * creep;
-        camY += forward.y * creep;
-        camZ += forward.z * creep;
       }
     } else {
-      // yaw/pitch only change while RMB-drag; otherwise angle stays put
       const { forward } = getBasis();
-      const forwardScale = boost ? 1.15 : 0.12;
-      const go = step * forwardScale;
+      let scale;
+      if (boost && !brake) scale = 1.15;
+      else if (reverse || brake) scale = 1.05;
+      else scale = 0.12;
+      const go = signedStep * scale;
       camX += forward.x * go;
       camY += forward.y * go;
       camZ += forward.z * go;
@@ -990,15 +1072,20 @@
       sys.comp.z = sys.z + Math.sin(sys.orbitA) * r * 0.2;
     }
 
+    applyGravity(dt);
     collide();
   }
 
   function updateHud() {
-    const warp = boost ? speed / 0.55 : speed / 2.5;
     if (hudVel) {
-      hudVel.textContent = boost
-        ? `${Math.min(2, 0.4 + warp * 0.35).toFixed(2)} c · WARP`
-        : `${(speed * 0.08).toFixed(2)} c`;
+      if (brake || speed < -0.05) {
+        hudVel.textContent = `${(speed * 0.08).toFixed(2)} c · REV`;
+      } else if (boost) {
+        const warp = speed / 0.55;
+        hudVel.textContent = `${Math.min(2, 0.4 + warp * 0.35).toFixed(2)} c · WARP`;
+      } else {
+        hudVel.textContent = `${(speed * 0.08).toFixed(2)} c`;
+      }
     }
     if (!locked) {
       if (hudLock) hudLock.textContent = "—";
@@ -1008,12 +1095,21 @@
     }
     const dist = Math.hypot(locked.x - camX, locked.y - camY, locked.z - camZ);
     const surface = Math.max(0, dist - locked.radius * 1.08);
-    const closing = boost
-      ? speed * LY * 0.0045 * 60 * (locked ? 1.35 : 1)
-      : speed * LY * 0.00055 * 60;
+    let closing;
+    if (boost && !brake) {
+      closing = Math.abs(speed) * LY * 0.0045 * 60 * 1.35;
+    } else if (brake || speed < 0) {
+      closing = -Math.abs(speed) * LY * 0.0045 * 60 * 1.45; // negative = opening
+    } else {
+      closing = speed * LY * 0.00055 * 60;
+    }
     if (hudLock) hudLock.textContent = locked.label;
     if (hudRange) hudRange.textContent = formatDist(dist / LY);
-    if (hudEta) hudEta.textContent = closing > 1e-6 ? formatEta(surface / closing) : "—";
+    if (hudEta) {
+      if (closing > 1e-6) hudEta.textContent = formatEta(surface / closing);
+      else if (closing < -1e-6) hudEta.textContent = `flee ${formatEta(Math.abs(surface / closing))}`;
+      else hudEta.textContent = "—";
+    }
   }
 
   function frame(ts) {
@@ -1022,11 +1118,11 @@
     frame._last = ts;
     time += dt;
 
-    // original click-boost speed model
-    if (brake) targetSpeed = 0.2;
+    // speed model: Ctrl reverses through zero into negative thrust
+    if (brake) targetSpeed = -2.4;
     else if (boost) targetSpeed = 2.8;
     else targetSpeed = 0.55;
-    speed += (targetSpeed - speed) * (brake ? 0.12 : 0.08);
+    speed += (targetSpeed - speed) * (brake ? 0.14 : 0.08);
 
     // orientation + motion first so projection matches where we look/fly
     fly(dt);
@@ -1035,7 +1131,7 @@
     updateHud();
 
     // center cue (= lock aim point)
-    ctx.fillStyle = `rgba(240,200,100,${0.25 + (boost ? 0.35 : 0) + (locked ? 0.35 : 0)})`;
+    ctx.fillStyle = `rgba(240,200,100,${0.25 + (boost ? 0.35 : 0) + (locked ? 0.35 : 0) + (brake ? 0.2 : 0)})`;
     ctx.beginPath();
     ctx.arc(cx, cy, locked ? 3 : 2, 0, Math.PI * 2);
     ctx.fill();
