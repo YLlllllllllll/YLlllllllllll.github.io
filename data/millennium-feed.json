@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-10-20T09:08:16Z",
+  "generated_at": "2026-10-20T09:12:55Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
@@ -13,16 +13,7 @@
     },
     "arxiv": {
       "ok": true,
-      "count": 14,
-      "reused_from_previous": [
-        "pnp",
-        "riemann",
-        "yangmills",
-        "navier",
-        "hodge",
-        "bsd",
-        "poincare"
-      ]
+      "count": 14
     }
   },
   "wire": [
@@ -69,36 +60,35 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Puzznic is PSPACE-Complete",
-          "url": "https://arxiv.org/abs/2610.23639v1",
-          "published": "2026-10-16T15:41:28Z",
-          "summary": "We prove that deciding solvability of Puzznic, a falling-block puzzle game originally developed by Taito, is PSPACE-complete. To show hardness we construct a self-closing door gadget using Puzznic's game mechanics. For membership, we show that the configuration space is exponentially bounded and apply Savitch's theorem",
+          "title": "Controllability of polynomial systems is undecidable and not recursively enumerable",
+          "url": "https://arxiv.org/abs/2610.26832v1",
+          "published": "2026-10-19T17:56:42Z",
+          "summary": "Sontag conjectured in 1988 that global controllability of polynomial control systems with rational coefficients is undecidable, but that the controllable systems form a recursively enumerable set. We prove the first part of the conjecture and disprove the second. For every homogeneous polynomial vector field $F$ of odd",
           "authors": [
-            "Jake Anderson",
-            "Lars Magnus Hvattum",
-            "András Z. Salamon"
+            "Jun Liu",
+            "Ivan O. Shevchenko"
           ],
           "tags": [
+            "math.OC",
             "cs.CC",
-            "cs.CG"
+            "eess.SY"
           ],
-          "relevance": "paper",
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Triangle Covers of Polygons: Approximation Algorithms and Complexity",
-          "url": "https://arxiv.org/abs/2610.23634v1",
-          "published": "2026-10-16T15:38:21Z",
-          "summary": "We study the geometric set cover problems of covering and partitioning a polygon into a minimum number of triangles. While the decision version of the covering problem is known to be APX-hard and $\\exists\\mathbb R$-complete (even for polygons without holes and vertices in general position), the computational complexity",
+          "title": "Tight Inapproximability for Generalized Circuits",
+          "url": "https://arxiv.org/abs/2610.26772v1",
+          "published": "2026-10-19T17:28:45Z",
+          "summary": "Generalized circuits are a fundamental tool for establishing PPAD-hardness and membership of approximate equilibrium problems. Despite their importance, the complexity of finding approximate solutions has remained unresolved for a wide range of approximation parameters. We settle this question by establishing a tight t",
           "authors": [
-            "Linda Kleist",
-            "Lena Scherzer"
+            "Panagiotis Kanellopoulos",
+            "Themistoklis Melissourgos"
           ],
           "tags": [
-            "cs.CG"
+            "cs.GT",
+            "cs.CC"
           ],
-          "relevance": "paper",
           "kind": "paper"
         }
       ],
@@ -114,34 +104,31 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "More than 8/9 zeros of the Riemann zeta function are simple or on the critical line",
-          "url": "https://arxiv.org/abs/2610.23467v1",
-          "published": "2026-10-16T13:46:43Z",
-          "summary": "We prove unconditionally that the lower limiting proportion of nontrivial zeros of the Riemann zeta function, which are simple or lie on the critical line, is greater than $8/9$, with zeros counted with multiplicity.",
+          "title": "Isolated zeros of the Riemann zeta function and zeros of linear combinations of Dirichlet $L$-functions",
+          "url": "https://arxiv.org/abs/2610.26841v1",
+          "published": "2026-10-19T17:58:53Z",
+          "summary": "Let $0 0$. We say that a non-trivial zero $ρ_n=β_n+iγ_n$ is $c$-isolated if $\\min(γ_{n+1}-γ_n, γ_n-γ_{n-1})>2πc/\\log γ_n$. Note that any isolated zero is necessarily simple and on the critical line. We prove unconditionally that more than $50.87\\%$ half of the non-trivial zeros are $1/6$-isolated. Previously, it was no",
           "authors": [
-            "Cristian Cobeli",
-            "Alexandru Zaharescu"
+            "Youness Lamzouri"
           ],
           "tags": [
             "math.NT"
           ],
-          "relevance": "paper",
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "A $\\mathrm{GL}_3$ level analog of Selberg's result for $S(t)$",
-          "url": "https://arxiv.org/abs/2610.23201v1",
-          "published": "2026-10-16T09:38:15Z",
-          "summary": "Let $π$ be a spherical cuspidal $\\mathrm{GL}_3$ newform of prime level $N$ and trivial central character, and define $S(t,π)=π^{-1}\\arg L(1/2+\\textrm{i}t,π)$. Assuming the generalized Riemann hypothesis for $L(s,π)$, we establish an asymptotic formula for each fixed weighted moment of $S(t,π)$ as $N\\to\\infty$, for fixe",
+          "title": "Fourth moments of prime exponential sums and exceptional sets for sums and differences of primes",
+          "url": "https://arxiv.org/abs/2610.26756v1",
+          "published": "2026-10-19T17:16:57Z",
+          "summary": "We prove a square root bound for the exceptional sets in the binary Goldbach and prime difference problems under quasi Riemann Hypothesis. If every nontrivial zero of every primitive Dirichlet $L$-function has real part at most a fixed $1/2\\leqΘ<11/12$, then $E_+(N)\\ll_ΘN^{1/2}(\\log N)^{100}$ and $E_-(N)\\ll_ΘN^{1/2}(\\l",
           "authors": [
-            "Qingfeng Sun",
-            "Hui Wang"
+            "Huixi Li",
+            "Zhixin Liu"
           ],
           "tags": [
             "math.NT"
           ],
-          "relevance": "paper",
           "kind": "paper"
         }
       ],
@@ -169,7 +156,6 @@
           "tags": [
             "hep-th"
           ],
-          "relevance": "paper",
           "kind": "paper"
         },
         {
@@ -187,7 +173,6 @@
             "hep-th",
             "gr-qc"
           ],
-          "relevance": "paper",
           "kind": "paper"
         }
       ],
@@ -203,36 +188,32 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Regularity Aspects of Temperature in Heat-Conducting Fluid Systems via De Giorgi Methods",
-          "url": "https://arxiv.org/abs/2610.23802v1",
-          "published": "2026-10-16T17:26:36Z",
-          "summary": "This paper is concerned with the conditional Hölder regularity of the temperature for the heat-conducting compressible Navier-Stokes system, where the pressure takes a complete form that includes the Stefan-radiation correction. Under minimal assumptions on the density and velocity, we prove that any weak solution auto",
+          "title": "Assisted Turbulence Modeling via Data Assimilation and Machine Learning for Turbomachinery Flows",
+          "url": "https://arxiv.org/abs/2610.26567v1",
+          "published": "2026-10-19T15:22:49Z",
+          "summary": "This work presents the development and assessment of a hybrid framework coupling numerical simulation, experimental samples, data assimilation (DA) and machine learning (ML) to investigate the flow within an axial compressor stage. The methodology first implements a Multi-Fidelity Ensemble Kalman Filter (MFEnKF) which",
           "authors": [
-            "Nilasis Chaudhuri",
-            "Piotr B. Mucha",
-            "Tomasz Piasecki"
+            "Tom Moussie",
+            "Pierric Joseph",
+            "Marcello Meldi"
           ],
           "tags": [
-            "math.AP"
+            "physics.flu-dyn"
           ],
-          "relevance": "paper",
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Gaussian measures under the Navier-Stokes and heat flows are mutually singular",
-          "url": "https://arxiv.org/abs/2610.23591v1",
-          "published": "2026-10-16T15:12:01Z",
-          "summary": "We consider the incompressible Navier-Stokes equations on the torus $\\mathbb{T}^d$, $d \\ge 2$, with translation invariant Gaussian random initial data. We show that, for the Gaussian measure formally given by $μ_0 \\sim \\exp(-\\frac12 \\| u \\|_{\\dot H^α}^2)$ on divergence-free fields, its nonlinear evolution $ν_t$ and its",
+          "title": "How stagnation lines move, persist and break up in fluid flows",
+          "url": "https://arxiv.org/abs/2610.26164v1",
+          "published": "2026-10-19T10:56:05Z",
+          "summary": "Stagnation curves of arbitrary shape (zeros of $\\mathbf v(\\mathbf x,t)$) are non-generic yet common; we derive their motion. Differentiating $\\mathbf v=\\mathbf0$ gives $\\mathbf L\\mathbf U=-\\mathbf a$ ($\\mathbf U$ curve velocity, $\\mathbf a=\\mathbf v_t$, $\\mathbf L=\\nabla\\mathbf v$ kills tangent, acts on normal plane vi",
           "authors": [
-            "Niko Nikov",
-            "Leonardo Tolomeo"
+            "Prabakaran Rajamanickam"
           ],
           "tags": [
-            "math.AP",
-            "math.PR"
+            "physics.flu-dyn"
           ],
-          "relevance": "paper",
           "kind": "paper"
         },
         {
@@ -280,7 +261,6 @@
           "tags": [
             "math.AG"
           ],
-          "relevance": "paper",
           "kind": "paper"
         },
         {
@@ -295,7 +275,6 @@
           "tags": [
             "math.AG"
           ],
-          "relevance": "paper",
           "kind": "paper"
         }
       ],
@@ -321,7 +300,6 @@
           "tags": [
             "math.NT"
           ],
-          "relevance": "paper",
           "kind": "paper"
         },
         {
@@ -336,7 +314,6 @@
           "tags": [
             "math.NT"
           ],
-          "relevance": "paper",
           "kind": "paper"
         }
       ],
@@ -352,6 +329,22 @@
       "items": [
         {
           "source": "arxiv",
+          "title": "The Yau Geometric Conjecture for Isolated Hypersurface Singularities",
+          "url": "https://arxiv.org/abs/2610.24636v1",
+          "published": "2026-10-17T11:26:11Z",
+          "summary": "This paper presents a proof of the long-standing Yau Geometric Conjecture.",
+          "authors": [
+            "Siyuan Fu",
+            "Stephen S. -T. Yau",
+            "Huaiqing Zuo"
+          ],
+          "tags": [
+            "math.AG"
+          ],
+          "kind": "paper"
+        },
+        {
+          "source": "arxiv",
           "title": "A Lean Formalization of the Hamilton--Perelman Proof of Thurston's Geometrization Conjecture",
           "url": "https://arxiv.org/abs/2610.13897v1",
           "published": "2026-10-09T17:43:01Z",
@@ -364,25 +357,6 @@
           "tags": [
             "math.DG"
           ],
-          "relevance": "paper",
-          "kind": "paper"
-        },
-        {
-          "source": "arxiv",
-          "title": "An AI-Assisted Formalization of the Poincaré Conjecture",
-          "url": "https://arxiv.org/abs/2610.08329v1",
-          "published": "2026-10-06T13:27:51Z",
-          "summary": "We present an AI-assisted Lean 4 formalization of the Poincaré conjecture. The project began with limited reusable formal infrastructure for the geometric analysis behind the proof. To organize this work, we combined a proof blueprint prepared by mathematicians with explicit milestone statements. These milestones enabl",
-          "authors": [
-            "Zhiyuan Zhang",
-            "Axel Delaval",
-            "Leheng Chen"
-          ],
-          "tags": [
-            "cs.AI",
-            "math.GT"
-          ],
-          "relevance": "paper",
           "kind": "paper"
         }
       ],
