@@ -1,5 +1,8 @@
 orchestrator.pid
 .DS_Store
 *.log
+__pycache__/
+*.pyc
+data/*.json.tmp
 .idea/
 .vscode/

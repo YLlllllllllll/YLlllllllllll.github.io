@@ -1,0 +1,397 @@
+{
+  "schema_version": 2,
+  "generated_at": "2026-10-20T09:08:16Z",
+  "refresh_hours": 6,
+  "sources": {
+    "openai": {
+      "ok": true,
+      "count": 1300
+    },
+    "clay": {
+      "ok": true,
+      "count": 10
+    },
+    "arxiv": {
+      "ok": true,
+      "count": 14,
+      "reused_from_previous": [
+        "pnp",
+        "riemann",
+        "yangmills",
+        "navier",
+        "hodge",
+        "bsd",
+        "poincare"
+      ]
+    }
+  },
+  "wire": [
+    {
+      "source": "openai",
+      "title": "Sharing AI progress in mathematics",
+      "url": "https://openai.com/index/sharing-ai-progress-in-mathematics",
+      "published": "2026-10-06T12:00:00Z",
+      "summary": "OpenAI publishes new results on open problems in mathematics from an internal frontier model and shares Lean proof formalizations and research details on GitHub.",
+      "tags": [
+        "Research"
+      ],
+      "kind": "official",
+      "topic": "Mathematics"
+    },
+    {
+      "source": "openai",
+      "title": "Advisory Group on Mathematics and Artificial Intelligence",
+      "url": "https://openai.com/index/advisory-group-on-mathematics-and-ai",
+      "published": "2026-09-21T12:00:00Z",
+      "summary": "OpenAI is working with an independent Advisory Group on Mathematics and Artificial Intelligence to guide the review and communication of emerging AI results.",
+      "tags": [
+        "Company"
+      ],
+      "kind": "official",
+      "topic": "Mathematics"
+    },
+    {
+      "source": "openai",
+      "title": "How GPT-5.6 Sol helps run quantum computing experiments",
+      "url": "https://openai.com/index/codex-quantum-computing-experiments",
+      "published": "2026-09-08T17:00:00Z",
+      "summary": "See how an MIT researcher uses GPT-5.6 Sol with Codex to autonomously run quantum computing experiments, analyze results, and calibrate qubits.",
+      "tags": [
+        "Applied AI"
+      ],
+      "kind": "official",
+      "topic": "Quantum"
+    }
+  ],
+  "problems": {
+    "pnp": {
+      "name": "P vs NP",
+      "items": [
+        {
+          "source": "arxiv",
+          "title": "Puzznic is PSPACE-Complete",
+          "url": "https://arxiv.org/abs/2610.23639v1",
+          "published": "2026-10-16T15:41:28Z",
+          "summary": "We prove that deciding solvability of Puzznic, a falling-block puzzle game originally developed by Taito, is PSPACE-complete. To show hardness we construct a self-closing door gadget using Puzznic's game mechanics. For membership, we show that the configuration space is exponentially bounded and apply Savitch's theorem",
+          "authors": [
+            "Jake Anderson",
+            "Lars Magnus Hvattum",
+            "András Z. Salamon"
+          ],
+          "tags": [
+            "cs.CC",
+            "cs.CG"
+          ],
+          "relevance": "paper",
+          "kind": "paper"
+        },
+        {
+          "source": "arxiv",
+          "title": "Triangle Covers of Polygons: Approximation Algorithms and Complexity",
+          "url": "https://arxiv.org/abs/2610.23634v1",
+          "published": "2026-10-16T15:38:21Z",
+          "summary": "We study the geometric set cover problems of covering and partitioning a polygon into a minimum number of triangles. While the decision version of the covering problem is known to be APX-hard and $\\exists\\mathbb R$-complete (even for polygons without holes and vertices in general position), the computational complexity",
+          "authors": [
+            "Linda Kleist",
+            "Lena Scherzer"
+          ],
+          "tags": [
+            "cs.CG"
+          ],
+          "relevance": "paper",
+          "kind": "paper"
+        }
+      ],
+      "source_counts": {
+        "openai": 0,
+        "clay": 0,
+        "arxiv": 2
+      },
+      "openai_exact": false
+    },
+    "riemann": {
+      "name": "Riemann Hypothesis",
+      "items": [
+        {
+          "source": "arxiv",
+          "title": "More than 8/9 zeros of the Riemann zeta function are simple or on the critical line",
+          "url": "https://arxiv.org/abs/2610.23467v1",
+          "published": "2026-10-16T13:46:43Z",
+          "summary": "We prove unconditionally that the lower limiting proportion of nontrivial zeros of the Riemann zeta function, which are simple or lie on the critical line, is greater than $8/9$, with zeros counted with multiplicity.",
+          "authors": [
+            "Cristian Cobeli",
+            "Alexandru Zaharescu"
+          ],
+          "tags": [
+            "math.NT"
+          ],
+          "relevance": "paper",
+          "kind": "paper"
+        },
+        {
+          "source": "arxiv",
+          "title": "A $\\mathrm{GL}_3$ level analog of Selberg's result for $S(t)$",
+          "url": "https://arxiv.org/abs/2610.23201v1",
+          "published": "2026-10-16T09:38:15Z",
+          "summary": "Let $π$ be a spherical cuspidal $\\mathrm{GL}_3$ newform of prime level $N$ and trivial central character, and define $S(t,π)=π^{-1}\\arg L(1/2+\\textrm{i}t,π)$. Assuming the generalized Riemann hypothesis for $L(s,π)$, we establish an asymptotic formula for each fixed weighted moment of $S(t,π)$ as $N\\to\\infty$, for fixe",
+          "authors": [
+            "Qingfeng Sun",
+            "Hui Wang"
+          ],
+          "tags": [
+            "math.NT"
+          ],
+          "relevance": "paper",
+          "kind": "paper"
+        }
+      ],
+      "source_counts": {
+        "openai": 0,
+        "clay": 0,
+        "arxiv": 2
+      },
+      "openai_exact": false
+    },
+    "yangmills": {
+      "name": "Yang-Mills & Mass Gap",
+      "items": [
+        {
+          "source": "arxiv",
+          "title": "Cornering the Heterotic String",
+          "url": "https://arxiv.org/abs/2610.12318v1",
+          "published": "2026-10-08T17:01:59Z",
+          "summary": "We study tree-level completions of four-dimensional $\\mathcal N=4$ Yang--Mills theory coupled to $\\mathcal N=4$ supergravity. Six-point factorization and supersymmetry Ward identities, supplemented by a peculiar-parity restriction on scalar contact terms, impose nonlinear relations between the single- and double-trace",
+          "authors": [
+            "Li-Yuan Chiang",
+            "Yu-tin Huang",
+            "He-Chen Weng"
+          ],
+          "tags": [
+            "hep-th"
+          ],
+          "relevance": "paper",
+          "kind": "paper"
+        },
+        {
+          "source": "arxiv",
+          "title": "Nonlinear electroweak sphaleron clouds around Kerr black holes",
+          "url": "https://arxiv.org/abs/2609.31845v1",
+          "published": "2026-09-25T18:00:12Z",
+          "summary": "Kerr black holes and electroweak sphalerons are remarkable solutions of two pillars of modern physics: General Relativity and the Standard Model of particle physics, respectively. In this work, we investigate their interplay by constructing nonlinear sphaleron clouds around Schwarzschild and Kerr black holes in the pro",
+          "authors": [
+            "Carlos Herdeiro",
+            "Jutta Kunz",
+            "Hendrik Mennenga"
+          ],
+          "tags": [
+            "hep-th",
+            "gr-qc"
+          ],
+          "relevance": "paper",
+          "kind": "paper"
+        }
+      ],
+      "source_counts": {
+        "openai": 0,
+        "clay": 0,
+        "arxiv": 2
+      },
+      "openai_exact": false
+    },
+    "navier": {
+      "name": "Navier-Stokes",
+      "items": [
+        {
+          "source": "arxiv",
+          "title": "Regularity Aspects of Temperature in Heat-Conducting Fluid Systems via De Giorgi Methods",
+          "url": "https://arxiv.org/abs/2610.23802v1",
+          "published": "2026-10-16T17:26:36Z",
+          "summary": "This paper is concerned with the conditional Hölder regularity of the temperature for the heat-conducting compressible Navier-Stokes system, where the pressure takes a complete form that includes the Stefan-radiation correction. Under minimal assumptions on the density and velocity, we prove that any weak solution auto",
+          "authors": [
+            "Nilasis Chaudhuri",
+            "Piotr B. Mucha",
+            "Tomasz Piasecki"
+          ],
+          "tags": [
+            "math.AP"
+          ],
+          "relevance": "paper",
+          "kind": "paper"
+        },
+        {
+          "source": "arxiv",
+          "title": "Gaussian measures under the Navier-Stokes and heat flows are mutually singular",
+          "url": "https://arxiv.org/abs/2610.23591v1",
+          "published": "2026-10-16T15:12:01Z",
+          "summary": "We consider the incompressible Navier-Stokes equations on the torus $\\mathbb{T}^d$, $d \\ge 2$, with translation invariant Gaussian random initial data. We show that, for the Gaussian measure formally given by $μ_0 \\sim \\exp(-\\frac12 \\| u \\|_{\\dot H^α}^2)$ on divergence-free fields, its nonlinear evolution $ν_t$ and its",
+          "authors": [
+            "Niko Nikov",
+            "Leonardo Tolomeo"
+          ],
+          "tags": [
+            "math.AP",
+            "math.PR"
+          ],
+          "relevance": "paper",
+          "kind": "paper"
+        },
+        {
+          "source": "clay",
+          "title": "Navier-Stokes Announcement",
+          "url": "https://www.claymath.org/news/navier-stokes-announcement/",
+          "published": "2026-09-11T07:08:02Z",
+          "summary": "The Millennium Prize Problems were unveiled by the Clay Mathematics Institute (CMI) at a meeting in Paris in 2000 to celebrate “The Universality of Mathematical Thought”. These problems encapsulate some of the most difficult challenges that mathematicians were grappling with at the turn of the millennium. CMI’s purpose in articulating these problems and atta",
+          "tags": [],
+          "kind": "official"
+        },
+        {
+          "source": "openai",
+          "title": "On the Navier–Stokes Millennium Prize Problem",
+          "url": "https://openai.com/index/navier-stokes-solution",
+          "published": "2026-09-08T10:00:00Z",
+          "summary": "We’re sharing an AI-generated solution to the Navier–Stokes Millennium Prize Problem, including a writeup and a formal proof in Lean.",
+          "tags": [
+            "Research"
+          ],
+          "kind": "official"
+        }
+      ],
+      "source_counts": {
+        "openai": 1,
+        "clay": 1,
+        "arxiv": 2
+      },
+      "openai_exact": true
+    },
+    "hodge": {
+      "name": "Hodge Conjecture",
+      "items": [
+        {
+          "source": "arxiv",
+          "title": "Lengths of Hodge characters in Fermat varieties",
+          "url": "https://arxiv.org/abs/2609.27301v2",
+          "published": "2026-09-23T03:35:28Z",
+          "summary": "We revisit the Hodge conjecture for Fermat (and weighted Fermat) varieties. We review the reduction of the Hodge conjecture in terms of Hodge characters introduced by Shioda and its further reduction in terms of the formal module of tuples introduced by Aoki. Following Aoki, we introduce several lengths on this formal",
+          "authors": [
+            "Maximiliano Miranda",
+            "Hossein Movasati",
+            "Lucas Rufino"
+          ],
+          "tags": [
+            "math.AG"
+          ],
+          "relevance": "paper",
+          "kind": "paper"
+        },
+        {
+          "source": "arxiv",
+          "title": "Discriminants of Hermitian forms, maximal degenerations and Kontsevich's tropical approach to the Hodge conjecture",
+          "url": "https://arxiv.org/abs/2609.14169v1",
+          "published": "2026-09-12T22:00:34Z",
+          "summary": "Motivated by Markman's work and by Kontsevich's tropical approach to disproving the Hodge conjecture, this note explains why families of Weil type abelian 2n-folds only have maximal unipotent degeneration when the discriminant is $(-1)^n$. Along the way, it explains what the discriminant is and collects various facts a",
+          "authors": [
+            "Patrick Brosnan"
+          ],
+          "tags": [
+            "math.AG"
+          ],
+          "relevance": "paper",
+          "kind": "paper"
+        }
+      ],
+      "source_counts": {
+        "openai": 0,
+        "clay": 0,
+        "arxiv": 2
+      },
+      "openai_exact": false
+    },
+    "bsd": {
+      "name": "Birch-Swinnerton-Dyer",
+      "items": [
+        {
+          "source": "arxiv",
+          "title": "On the algebraic and analytic ranks of the twin-prime elliptic curve $y^2=x(x-2)(x-p)$",
+          "url": "https://arxiv.org/abs/2610.09370v1",
+          "published": "2026-10-07T03:24:10Z",
+          "summary": "Let $p\\ge 7$ and suppose that $p$ and $p-2$ are prime. We study $E_p:y^2=x(x-2)(x-p)$ using the classical $2$-Selmer calculation of Qiu-Zhang and the Cassels-Tate pairing. These give $2^\\infty$-Selmer corank one for $p\\equiv 3,5\\pmod{8}$ and corank zero for $p\\equiv 7\\pmod{8}$. Assuming the low-corank Birch-Swinnerton-",
+          "authors": [
+            "Ruihan Chen"
+          ],
+          "tags": [
+            "math.NT"
+          ],
+          "relevance": "paper",
+          "kind": "paper"
+        },
+        {
+          "source": "arxiv",
+          "title": "When the BSD Real Period Remembers Elliptic Curves over $\\mathbb{Q}$",
+          "url": "https://arxiv.org/abs/2610.06015v1",
+          "published": "2026-10-05T09:12:57Z",
+          "summary": "We study the extent to which the invariants appearing in the Birch and Swinnerton-Dyer conjecture remember the elliptic curve, and we give several affirmative answers to this question. For example, the real period $Ω_E =\\frac{Γ(1/4)^2}{2\\sqrtπ\\,17^{1/4}}$ and the Tate--Shafarevich group $ \\Sha(E/\\mathbb{Q})\\cong \\mathb",
+          "authors": [
+            "Asuka Shiga"
+          ],
+          "tags": [
+            "math.NT"
+          ],
+          "relevance": "paper",
+          "kind": "paper"
+        }
+      ],
+      "source_counts": {
+        "openai": 0,
+        "clay": 0,
+        "arxiv": 2
+      },
+      "openai_exact": false
+    },
+    "poincare": {
+      "name": "Poincare Conjecture",
+      "items": [
+        {
+          "source": "arxiv",
+          "title": "A Lean Formalization of the Hamilton--Perelman Proof of Thurston's Geometrization Conjecture",
+          "url": "https://arxiv.org/abs/2610.13897v1",
+          "published": "2026-10-09T17:43:01Z",
+          "summary": "We formalize the Hamilton--Perelman Ricci-flow proof of Thurston's geometrization conjecture. The public Lean declaration is reproduced in this paper. Its geometric interpretation follows, and verification is recorded in 4.",
+          "authors": [
+            "Yuan Liao",
+            "Ziyang Qin",
+            "Jui-Hui Chung"
+          ],
+          "tags": [
+            "math.DG"
+          ],
+          "relevance": "paper",
+          "kind": "paper"
+        },
+        {
+          "source": "arxiv",
+          "title": "An AI-Assisted Formalization of the Poincaré Conjecture",
+          "url": "https://arxiv.org/abs/2610.08329v1",
+          "published": "2026-10-06T13:27:51Z",
+          "summary": "We present an AI-assisted Lean 4 formalization of the Poincaré conjecture. The project began with limited reusable formal infrastructure for the geometric analysis behind the proof. To organize this work, we combined a proof blueprint prepared by mathematicians with explicit milestone statements. These milestones enabl",
+          "authors": [
+            "Zhiyuan Zhang",
+            "Axel Delaval",
+            "Leheng Chen"
+          ],
+          "tags": [
+            "cs.AI",
+            "math.GT"
+          ],
+          "relevance": "paper",
+          "kind": "paper"
+        }
+      ],
+      "source_counts": {
+        "openai": 0,
+        "clay": 0,
+        "arxiv": 2
+      },
+      "openai_exact": false
+    }
+  }
+}
