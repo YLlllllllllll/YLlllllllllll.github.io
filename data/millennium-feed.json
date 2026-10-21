@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-10-21T11:57:05Z",
+  "generated_at": "2026-10-21T17:16:56Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
       "ok": true,
-      "count": 1303
+      "count": 1308
     },
     "clay": {
       "ok": true,
@@ -13,18 +13,7 @@
     },
     "arxiv": {
       "ok": true,
-      "count": 14,
-      "partial": true,
-      "failures": [
-        "riemann: Unable to fetch https://export.arxiv.org/api/query?search_query=all%3A%22Riemann+hypothesis%22+OR+all%3A%22Riemann+zeta+",
-        "yangmills: Unable to fetch https://export.arxiv.org/api/query?search_query=all%3A%22Yang-Mills%22+AND+all%3A%22mass+gap%22&sortBy=s",
-        "navier: Unable to fetch https://export.arxiv.org/api/query?search_query=all%3A%22Navier-Stokes%22+AND+%28all%3Aregularity+OR+all"
-      ],
-      "reused_from_previous": [
-        "riemann",
-        "yangmills",
-        "navier"
-      ]
+      "count": 14
     }
   },
   "wire": [
