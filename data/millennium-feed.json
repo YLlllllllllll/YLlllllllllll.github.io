@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-10-20T21:41:13Z",
+  "generated_at": "2026-10-21T04:55:58Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
       "ok": true,
-      "count": 1302
+      "count": 1303
     },
     "clay": {
       "ok": true,
@@ -60,34 +60,33 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Controllability of polynomial systems is undecidable and not recursively enumerable",
-          "url": "https://arxiv.org/abs/2610.26832v1",
-          "published": "2026-10-19T17:56:42Z",
-          "summary": "Sontag conjectured in 1988 that global controllability of polynomial control systems with rational coefficients is undecidable, but that the controllable systems form a recursively enumerable set. We prove the first part of the conjecture and disprove the second. For every homogeneous polynomial vector field $F$ of odd",
+          "title": "Matrix Multiplication from Polynomial Packings: A Constructive and Elementary Proof of $ω\\le9/4$",
+          "url": "https://arxiv.org/abs/2610.28627v1",
+          "published": "2026-10-20T17:59:14Z",
+          "summary": "We give a self-contained constructive proof that the matrix multiplication exponent satisfies $ω\\le9/4$. This bound was recently claimed by OpenAI~\\cite{original} through non-constructive arguments in Strassen's asymptotic spectral framework, counting exact scalar arithmetic operations over the complex numbers. We expl",
           "authors": [
-            "Jun Liu",
-            "Ivan O. Shevchenko"
+            "Rafael Pass"
           ],
           "tags": [
-            "math.OC",
-            "cs.CC",
-            "eess.SY"
+            "cs.CC"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Tight Inapproximability for Generalized Circuits",
-          "url": "https://arxiv.org/abs/2610.26772v1",
-          "published": "2026-10-19T17:28:45Z",
-          "summary": "Generalized circuits are a fundamental tool for establishing PPAD-hardness and membership of approximate equilibrium problems. Despite their importance, the complexity of finding approximate solutions has remained unresolved for a wide range of approximation parameters. We settle this question by establishing a tight t",
+          "title": "Two $\\operatorname{ReLU}$ Layers is All You Need",
+          "url": "https://arxiv.org/abs/2610.28587v1",
+          "published": "2026-10-20T17:40:21Z",
+          "summary": "We prove that every $\\operatorname{ReLU}$ network can be exactly simulated by a $\\operatorname{ReLU}$ network with two hidden layers. We present two proofs: one that is based on fillings in homological algebra and a direct combinatorial proof.",
           "authors": [
-            "Panagiotis Kanellopoulos",
-            "Themistoklis Melissourgos"
+            "Florestan Brunck",
+            "Christoph Hertrich",
+            "Kilian Ruess"
           ],
           "tags": [
-            "cs.GT",
-            "cs.CC"
+            "cs.CC",
+            "cs.CG",
+            "cs.LG"
           ],
           "kind": "paper"
         }
@@ -104,12 +103,13 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Isolated zeros of the Riemann zeta function and zeros of linear combinations of Dirichlet $L$-functions",
-          "url": "https://arxiv.org/abs/2610.26841v1",
-          "published": "2026-10-19T17:58:53Z",
-          "summary": "Let $0 0$. We say that a non-trivial zero $ρ_n=β_n+iγ_n$ is $c$-isolated if $\\min(γ_{n+1}-γ_n, γ_n-γ_{n-1})>2πc/\\log γ_n$. Note that any isolated zero is necessarily simple and on the critical line. We prove unconditionally that more than $50.87\\%$ half of the non-trivial zeros are $1/6$-isolated. Previously, it was no",
+          "title": "Small and large gaps between zeros of Dirichlet $L$-functions",
+          "url": "https://arxiv.org/abs/2610.28527v1",
+          "published": "2026-10-20T17:00:31Z",
+          "summary": "For every fixed primitive Dirichlet $L$-function and every $\\varepsilon>0$, we prove unconditionally that infinitely many consecutive zeros have spacing less than $1/2+\\varepsilon$ times the mean. Assuming the Riemann Hypothesis, we also prove a positive proportion of such spacings for the Riemann zeta-function, and in",
           "authors": [
-            "Youness Lamzouri"
+            "Benjamin Durkan",
+            "Andrew Pearce-Crump"
           ],
           "tags": [
             "math.NT"
@@ -118,13 +118,12 @@
         },
         {
           "source": "arxiv",
-          "title": "Fourth moments of prime exponential sums and exceptional sets for sums and differences of primes",
-          "url": "https://arxiv.org/abs/2610.26756v1",
-          "published": "2026-10-19T17:16:57Z",
-          "summary": "We prove a square root bound for the exceptional sets in the binary Goldbach and prime difference problems under quasi Riemann Hypothesis. If every nontrivial zero of every primitive Dirichlet $L$-function has real part at most a fixed $1/2\\leqΘ<11/12$, then $E_+(N)\\ll_ΘN^{1/2}(\\log N)^{100}$ and $E_-(N)\\ll_ΘN^{1/2}(\\l",
+          "title": "Primes in short intervals assuming the Riemann hypothesis",
+          "url": "https://arxiv.org/abs/2610.27830v1",
+          "published": "2026-10-20T08:19:43Z",
+          "summary": "In 2001 Baker, Harman, and Pintz proved, for $x$ sufficiently large, the existence of at least one prime in the sub-linear interval $[x,x+x^{\\frac{1}{2} +\\frac{1}{40}}]$. But just how large is sufficiently large? In the current note I shall make the Baker--Harman--Pintz theorem effective, but at an extremely high price",
           "authors": [
-            "Huixi Li",
-            "Zhixin Liu"
+            "Matt Visser"
           ],
           "tags": [
             "math.NT"
@@ -188,31 +187,32 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Assisted Turbulence Modeling via Data Assimilation and Machine Learning for Turbomachinery Flows",
-          "url": "https://arxiv.org/abs/2610.26567v1",
-          "published": "2026-10-19T15:22:49Z",
-          "summary": "This work presents the development and assessment of a hybrid framework coupling numerical simulation, experimental samples, data assimilation (DA) and machine learning (ML) to investigate the flow within an axial compressor stage. The methodology first implements a Multi-Fidelity Ensemble Kalman Filter (MFEnKF) which",
+          "title": "Near-blowup asymptotic analysis and analytical extension for the inviscid primitive equations",
+          "url": "https://arxiv.org/abs/2610.28403v1",
+          "published": "2026-10-20T15:47:57Z",
+          "summary": "The primitive equations widely approximate the Navier--Stokes equations in large-scale geophysical fluid dynamics. Their finite-time singularity formation-which occurs exclusively in the inviscid case-sheds light on the mechanisms driving small-scale creation. Building on \\cite{Collot2023}, which constructed 2D horizon",
           "authors": [
-            "Tom Moussie",
-            "Pierric Joseph",
-            "Marcello Meldi"
+            "Charles Collot",
+            "Slim Ibrahim",
+            "Lingjun Qian"
           ],
           "tags": [
-            "physics.flu-dyn"
+            "math.AP"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "How stagnation lines move, persist and break up in fluid flows",
-          "url": "https://arxiv.org/abs/2610.26164v1",
-          "published": "2026-10-19T10:56:05Z",
-          "summary": "Stagnation curves of arbitrary shape (zeros of $\\mathbf v(\\mathbf x,t)$) are non-generic yet common; we derive their motion. Differentiating $\\mathbf v=\\mathbf0$ gives $\\mathbf L\\mathbf U=-\\mathbf a$ ($\\mathbf U$ curve velocity, $\\mathbf a=\\mathbf v_t$, $\\mathbf L=\\nabla\\mathbf v$ kills tangent, acts on normal plane vi",
+          "title": "Small Viscosity Limit of Navier-Stokes Equations in A Quarter Plane with Navier Slip Conditions",
+          "url": "https://arxiv.org/abs/2610.28261v1",
+          "published": "2026-10-20T14:17:42Z",
+          "summary": "We study the vanishing-viscosity limit of Leray solutions to the two-dimensional incompressible Navier--Stokes equations in a quarter plane with Navier slip boundary conditions on both edges for a class of compatible well-prepared initial data. By multi-scale analysis, we deduce that a boundary layer of order $O(\\sqrtε",
           "authors": [
-            "Prabakaran Rajamanickam"
+            "Wen Guo",
+            "Ya-Guang Wang"
           ],
           "tags": [
-            "physics.flu-dyn"
+            "math.AP"
           ],
           "kind": "paper"
         },
