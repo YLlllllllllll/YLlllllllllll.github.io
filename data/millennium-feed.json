@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-10-21T21:46:32Z",
+  "generated_at": "2026-10-22T04:56:08Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
       "ok": true,
-      "count": 1310
+      "count": 1312
     },
     "clay": {
       "ok": true,
@@ -60,33 +60,38 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Matrix Multiplication from Polynomial Packings: A Constructive and Elementary Proof of $ω\\le9/4$",
-          "url": "https://arxiv.org/abs/2610.28627v1",
-          "published": "2026-10-20T17:59:14Z",
-          "summary": "We give a self-contained constructive proof that the matrix multiplication exponent satisfies $ω\\le9/4$. This bound was recently claimed by OpenAI~\\cite{original} through non-constructive arguments in Strassen's asymptotic spectral framework, counting exact scalar arithmetic operations over the complex numbers. We expl",
+          "title": "Temporal Exploration and Rendezvous via Weisfeiler-Leman Colorings",
+          "url": "https://arxiv.org/abs/2610.30123v1",
+          "published": "2026-10-21T17:57:42Z",
+          "summary": "Temporal graphs are graphs whose edge relation changes in discrete time steps. The Temporal Exploration Problem (TEXP) asks for a temporal walk that visits all vertices. We show that every connected temporal graph with $n$ vertices can be explored in $O(qn\\log^3(n))$ time steps, where $q$ is the number of vertex color",
           "authors": [
-            "Rafael Pass"
+            "Frank Kammer",
+            "Sandra Kiefer",
+            "Johannes Meintrup"
           ],
           "tags": [
-            "cs.CC"
+            "cs.DS",
+            "cs.CC",
+            "cs.DM",
+            "math.CO"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Two $\\operatorname{ReLU}$ Layers is All You Need",
-          "url": "https://arxiv.org/abs/2610.28587v1",
-          "published": "2026-10-20T17:40:21Z",
-          "summary": "We prove that every $\\operatorname{ReLU}$ network can be exactly simulated by a $\\operatorname{ReLU}$ network with two hidden layers. We present two proofs: one that is based on fillings in homological algebra and a direct combinatorial proof.",
+          "title": "A Quasipolynomial Algorithm for $\\ell_\\infty$ Contractions",
+          "url": "https://arxiv.org/abs/2610.30122v1",
+          "published": "2026-10-21T17:57:19Z",
+          "summary": "We give an algorithm for computing an $\\eps$-approximate fixed point of any $d$-dimensional nonexpansion with respect to the $\\ell_\\infty$ norm in time $\\log(1/\\eps)^{O(\\log^2 d)}$. At its core, our method uses a boosting argument to geometrically shrink a search region. Among other consequences, our algorithm implies",
           "authors": [
-            "Florestan Brunck",
-            "Christoph Hertrich",
-            "Kilian Ruess"
+            "Ashkan Soleymani",
+            "Gabriele Farina"
           ],
           "tags": [
+            "cs.GT",
             "cs.CC",
-            "cs.CG",
-            "cs.LG"
+            "cs.LG",
+            "math.OC"
           ],
           "kind": "paper"
         }
@@ -187,14 +192,12 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Near-blowup asymptotic analysis and analytical extension for the inviscid primitive equations",
-          "url": "https://arxiv.org/abs/2610.28403v1",
-          "published": "2026-10-20T15:47:57Z",
-          "summary": "The primitive equations widely approximate the Navier--Stokes equations in large-scale geophysical fluid dynamics. Their finite-time singularity formation-which occurs exclusively in the inviscid case-sheds light on the mechanisms driving small-scale creation. Building on \\cite{Collot2023}, which constructed 2D horizon",
+          "title": "A logarithmic regularity criterion for the axisymmetric Navier-Stokes equations",
+          "url": "https://arxiv.org/abs/2610.29012v1",
+          "published": "2026-10-21T00:25:46Z",
+          "summary": "For axisymmetric solutions of the Navier-Stokes equations in $\\mathbb R^3$, the circulation $Γ=ru^θ$ obeys a maximum principle, and the resulting a priori bound on $Γ$ is scale-invariant. Nonetheless, the global regularity problem remains completely open. The sharpest known regularity criteria in terms of the circulati",
           "authors": [
-            "Charles Collot",
-            "Slim Ibrahim",
-            "Lingjun Qian"
+            "Stan Palasek"
           ],
           "tags": [
             "math.AP"
@@ -203,13 +206,14 @@
         },
         {
           "source": "arxiv",
-          "title": "Small Viscosity Limit of Navier-Stokes Equations in A Quarter Plane with Navier Slip Conditions",
-          "url": "https://arxiv.org/abs/2610.28261v1",
-          "published": "2026-10-20T14:17:42Z",
-          "summary": "We study the vanishing-viscosity limit of Leray solutions to the two-dimensional incompressible Navier--Stokes equations in a quarter plane with Navier slip boundary conditions on both edges for a class of compatible well-prepared initial data. By multi-scale analysis, we deduce that a boundary layer of order $O(\\sqrtε",
+          "title": "Near-blowup asymptotic analysis and analytical extension for the inviscid primitive equations",
+          "url": "https://arxiv.org/abs/2610.28403v1",
+          "published": "2026-10-20T15:47:57Z",
+          "summary": "The primitive equations widely approximate the Navier--Stokes equations in large-scale geophysical fluid dynamics. Their finite-time singularity formation-which occurs exclusively in the inviscid case-sheds light on the mechanisms driving small-scale creation. Building on \\cite{Collot2023}, which constructed 2D horizon",
           "authors": [
-            "Wen Guo",
-            "Ya-Guang Wang"
+            "Charles Collot",
+            "Slim Ibrahim",
+            "Lingjun Qian"
           ],
           "tags": [
             "math.AP"
