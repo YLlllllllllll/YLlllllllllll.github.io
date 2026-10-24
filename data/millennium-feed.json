@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-10-24T11:08:40Z",
+  "generated_at": "2026-10-24T16:00:54Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
