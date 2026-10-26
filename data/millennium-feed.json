@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-10-25T20:55:19Z",
+  "generated_at": "2026-10-26T04:54:09Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
@@ -60,32 +60,35 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "No Perfect Randomized Composition",
-          "url": "https://arxiv.org/abs/2610.31638v1",
-          "published": "2026-10-22T17:52:26Z",
-          "summary": "Does computing a composition of total Boolean functions require the product of the randomized query complexities of its factors? We give a negative answer. There are families of total functions $f,g$ such that $R(f\\circ g) =Θ\\!\\left(\\frac1{\\log R(g)}\\right)R(f)R(g)$ This result requires first separating linearized quer",
+          "title": "Low-Complexity Wideband Channel Estimation for ISAC in Analog Millimeter-Wave Systems",
+          "url": "https://arxiv.org/abs/2610.32953v1",
+          "published": "2026-10-23T17:47:31Z",
+          "summary": "Accurate wideband channel estimation is a key enabler for millimeter-wave (mmWave) integrated sensing and communication (ISAC) systems. In the narrowband scenario, the Transformed Spatial Domain Channel Estimation (TSDCE) method was previously shown to provide fast and accurate angle estimation with substantially lower",
           "authors": [
-            "Alexander Meiburg"
+            "Hamza Touati",
+            "Raffaele Viterbo",
+            "Mattia Brambilla"
           ],
           "tags": [
-            "cs.CC",
-            "math.CO"
+            "eess.SP"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Hardness and Approximation for Compressing Deterministic Finite Automata",
-          "url": "https://arxiv.org/abs/2610.31273v1",
-          "published": "2026-10-22T13:43:44Z",
-          "summary": "The delayed deterministic finite automaton ($\\text{D}^2\\text{FA}$) is a powerful tool for compressing the prohibitively large deterministic finite automata (DFAs) used in modern signature-based deep packet inspection systems. A $\\text{D}^2\\text{FA}$ augments a DFA with unlabeled default transitions to remove transition",
+          "title": "Structure and Exact Certification of Nonnegative Tensor Decompositions",
+          "url": "https://arxiv.org/abs/2610.32787v1",
+          "published": "2026-10-23T15:35:01Z",
+          "summary": "We study the structure and exact certification of nonnegative tensor decompositions supplied through rational factor matrices. Every failure of minimality or essential uniqueness contains an irreducible positive exchange between $p$ supplied terms and $q$ competing terms. A dimension count based on the Lovitz--Petrov s",
           "authors": [
-            "Philip Bille",
-            "Inge Li Gørtz",
-            "Christoffer Krogh"
+            "Haoming Wang",
+            "Ming Yuan"
           ],
           "tags": [
-            "cs.DS"
+            "cs.DS",
+            "cs.CC",
+            "math.AG",
+            "math.CO"
           ],
           "kind": "paper"
         }
@@ -102,13 +105,12 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Small and large gaps between zeros of Dirichlet $L$-functions",
-          "url": "https://arxiv.org/abs/2610.28527v1",
-          "published": "2026-10-20T17:00:31Z",
-          "summary": "For every fixed primitive Dirichlet $L$-function and every $\\varepsilon>0$, we prove unconditionally that infinitely many consecutive zeros have spacing less than $1/2+\\varepsilon$ times the mean. Assuming the Riemann Hypothesis, we also prove a positive proportion of such spacings for the Riemann zeta-function, and in",
+          "title": "Spectral convergence associated with Weil's quadratic form",
+          "url": "https://arxiv.org/abs/2610.32704v1",
+          "published": "2026-10-23T14:28:31Z",
+          "summary": "Assuming the Riemann hypothesis, we study a distinguished self-adjoint extension of the differentiation operator on a Hilbert space defined by the Weil quadratic form localized to a finite interval. The local quadratic form is determined by data from finitely many places, without requiring the zeros of the Riemann zeta",
           "authors": [
-            "Benjamin Durkan",
-            "Andrew Pearce-Crump"
+            "Masatoshi Suzuki"
           ],
           "tags": [
             "math.NT"
@@ -117,12 +119,12 @@
         },
         {
           "source": "arxiv",
-          "title": "Primes in short intervals assuming the Riemann hypothesis",
-          "url": "https://arxiv.org/abs/2610.27830v1",
-          "published": "2026-10-20T08:19:43Z",
-          "summary": "In 2001 Baker, Harman, and Pintz proved, for $x$ sufficiently large, the existence of at least one prime in the sub-linear interval $[x,x+x^{\\frac{1}{2} +\\frac{1}{40}}]$. But just how large is sufficiently large? In the current note I shall make the Baker--Harman--Pintz theorem effective, but at an extremely high price",
+          "title": "The Hardy--Littlewood asymptotic for primes $p$ and $p+4$ from a uniform zeta-ratios conjecture",
+          "url": "https://arxiv.org/abs/2610.32672v1",
+          "published": "2026-10-23T14:14:23Z",
+          "summary": "We prove the Hardy--Littlewood asymptotic for prime pairs of difference four from a restricted uniform two-over-two zeta-ratios formula. The formula has error $O_\\varepsilon(U^{1/2+\\varepsilon})$, real parts of all four shifts in $[3/64,5/64]$, and imaginary parts of absolute value at most $U^{1/4}$. For a fixed real s",
           "authors": [
-            "Matt Visser"
+            "SeungJu Lee"
           ],
           "tags": [
             "math.NT"
@@ -186,31 +188,35 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Extended-regularized lattice Boltzmann method",
-          "url": "https://arxiv.org/abs/2610.31072v1",
-          "published": "2026-10-22T10:49:39Z",
-          "summary": "Regularized lattice Boltzmann methods improve numerical stability by projecting the nonequilibrium distribution onto its hydrodynamic second-order Hermite sector and filtering the remaining kinetic modes. We introduce a separate relaxation time for the complete complementary kinetic subspace. The resulting extended-reg",
+          "title": "When does boundary-condition uncertainty outweigh thermal and vegetation effects in street canyon flow? A global sensitivity analysis of input uncertainty",
+          "url": "https://arxiv.org/abs/2610.32631v1",
+          "published": "2026-10-23T13:43:27Z",
+          "summary": "Computational Fluid Dynamics (CFD) is increasingly used to resolve wind, heat, and pollution patterns in cities with high fidelity but high computational cost. Thermal effects and vegetation are often neglected despite being important drivers, yet their influence may be masked by variability from other uncertain inputs",
           "authors": [
-            "Luís Orlando Emerich dos Santos",
-            "Diogo Nardelli Siebert"
+            "Albert Moreno Català",
+            "Joan Calafell Sandiumenge",
+            "Nikolaj T. Mücke"
           ],
           "tags": [
-            "physics.comp-ph",
+            "physics.ao-ph",
             "physics.flu-dyn"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "A logarithmic regularity criterion for the axisymmetric Navier-Stokes equations",
-          "url": "https://arxiv.org/abs/2610.29012v1",
-          "published": "2026-10-21T00:25:46Z",
-          "summary": "For axisymmetric solutions of the Navier-Stokes equations in $\\mathbb R^3$, the circulation $Γ=ru^θ$ obeys a maximum principle, and the resulting a priori bound on $Γ$ is scale-invariant. Nonetheless, the global regularity problem remains completely open. The sharpest known regularity criteria in terms of the circulati",
+          "title": "Let's Do Turbulence Right: In Space and Time!",
+          "url": "https://arxiv.org/abs/2610.32601v1",
+          "published": "2026-10-23T13:26:50Z",
+          "summary": "The three-dimensional Navier-Stokes equations govern fluid turbulence, a chaotic and non-linear physical phenomenon characterized by complex eddies interacting across vast spatial and temporal scales. A numerically accurate modeling of this multi-scale energy cascade requires fully resolving both the fine spatial struc",
           "authors": [
-            "Stan Palasek"
+            "Maximilian Plattner",
+            "Fabian Paischer",
+            "Johannes Brandstetter"
           ],
           "tags": [
-            "math.AP"
+            "physics.flu-dyn",
+            "cs.LG"
           ],
           "kind": "paper"
         },
@@ -247,6 +253,21 @@
       "items": [
         {
           "source": "arxiv",
+          "title": "On the Hodge conjecture for hyper-Kähler varieties of generalized Kummer type of dimension divisible by four",
+          "url": "https://arxiv.org/abs/2610.31740v1",
+          "published": "2026-10-22T17:11:57Z",
+          "summary": "We prove the Hodge conjecture for all hyper-Kähler varieties of generalized Kummer type of dimension $2n$ with $n+1$ a prime number, and all powers of these varieties. For any variety $X$ of generalized Kummer type of dimension divisible by 4, we show that the Lefschetz standard conjecture for $X$ implies the Hodge con",
+          "authors": [
+            "Salvatore Floccari",
+            "Lie Fu"
+          ],
+          "tags": [
+            "math.AG"
+          ],
+          "kind": "paper"
+        },
+        {
+          "source": "arxiv",
           "title": "Rigidity, flexibility, and a sign error",
           "url": "https://arxiv.org/abs/2610.30976v1",
           "published": "2026-10-22T09:18:40Z",
@@ -258,21 +279,6 @@
           "tags": [
             "math.SG",
             "math.AG"
-          ],
-          "kind": "paper"
-        },
-        {
-          "source": "arxiv",
-          "title": "Asymptotics of local height pairing without Hodge conjecture",
-          "url": "https://arxiv.org/abs/2610.30574v1",
-          "published": "2026-10-22T01:06:24Z",
-          "summary": "We remove the assumption of the Hodge conjecture from the asymptotic formula for the Archimedean local height established in our previous work. We also remove other minor assumptions. We achieve this by exploiting the cohomological nature of Beilinson's local intersection index rather than arguing motivically.",
-          "authors": [
-            "Yuta Nakayama"
-          ],
-          "tags": [
-            "math.AG",
-            "math.NT"
           ],
           "kind": "paper"
         }
