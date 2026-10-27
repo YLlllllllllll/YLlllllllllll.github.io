@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-10-26T22:43:32Z",
+  "generated_at": "2026-10-27T05:11:46Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
@@ -60,34 +60,31 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Low-Complexity Wideband Channel Estimation for ISAC in Analog Millimeter-Wave Systems",
-          "url": "https://arxiv.org/abs/2610.32953v1",
-          "published": "2026-10-23T17:47:31Z",
-          "summary": "Accurate wideband channel estimation is a key enabler for millimeter-wave (mmWave) integrated sensing and communication (ISAC) systems. In the narrowband scenario, the Transformed Spatial Domain Channel Estimation (TSDCE) method was previously shown to provide fast and accurate angle estimation with substantially lower",
+          "title": "A Robust, Explainable, and Efficient Deep Metric for Speech and General Audio Quality",
+          "url": "https://arxiv.org/abs/2610.35810v1",
+          "published": "2026-10-26T17:41:55Z",
+          "summary": "We present a robust Speech and Audio Quality Metric (SAQM) that merges features of traditional quality metrics with a CNN trained on a large amount of data using contrastive learning methods. To overcome the problem of limited amounts of human-labeled training data, we propose two pretraining strategies relying on pseu",
           "authors": [
-            "Hamza Touati",
-            "Raffaele Viterbo",
-            "Mattia Brambilla"
+            "Konstantin Schmidt",
+            "Pablo M. Delgado",
+            "Andreas Brendel"
           ],
           "tags": [
-            "eess.SP"
+            "eess.AS"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Structure and Exact Certification of Nonnegative Tensor Decompositions",
-          "url": "https://arxiv.org/abs/2610.32787v1",
-          "published": "2026-10-23T15:35:01Z",
-          "summary": "We study the structure and exact certification of nonnegative tensor decompositions supplied through rational factor matrices. Every failure of minimality or essential uniqueness contains an irreducible positive exchange between $p$ supplied terms and $q$ competing terms. A dimension count based on the Lovitz--Petrov s",
+          "title": "Computational complexity of the $H$-coloring problem in cubic graphs",
+          "url": "https://arxiv.org/abs/2610.35794v1",
+          "published": "2026-10-26T17:30:03Z",
+          "summary": "If $G$ and $H$ are two cubic graphs, then an $H$-coloring of $G$ is a mapping $f: E(G)\\rightarrow E(H)$, such that for every $v\\in V(G)$ there is a vertex $x\\in V(H)$, such that $f(\\partial_G(v))=\\partial_H(x)$. If $G$ admits an $H$-coloring then it is common to write $H\\prec G$. In this paper, for a fixed connected cu",
           "authors": [
-            "Haoming Wang",
-            "Ming Yuan"
+            "Vahan Mkrtchyan"
           ],
           "tags": [
-            "cs.DS",
             "cs.CC",
-            "math.AG",
             "math.CO"
           ],
           "kind": "paper"
@@ -188,35 +185,32 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "When does boundary-condition uncertainty outweigh thermal and vegetation effects in street canyon flow? A global sensitivity analysis of input uncertainty",
-          "url": "https://arxiv.org/abs/2610.32631v1",
-          "published": "2026-10-23T13:43:27Z",
-          "summary": "Computational Fluid Dynamics (CFD) is increasingly used to resolve wind, heat, and pollution patterns in cities with high fidelity but high computational cost. Thermal effects and vegetation are often neglected despite being important drivers, yet their influence may be masked by variability from other uncertain inputs",
+          "title": "Regularity of the solution map for the Oldroyd--B model with fractional stress dissipation",
+          "url": "https://arxiv.org/abs/2610.34498v1",
+          "published": "2026-10-25T18:55:24Z",
+          "summary": "The data-to-solution map of the incompressible Euler equations is continuous but not uniformly continuous on Sobolev spaces, whereas viscosity makes the Navier--Stokes solution map Lipschitz continuous on small data, uniformly in time. This paper identifies the behavior of the solution map for a hybrid system sitting b",
           "authors": [
-            "Albert Moreno Català",
-            "Joan Calafell Sandiumenge",
-            "Nikolaj T. Mücke"
+            "Gerard Misiołek",
+            "Jiahong Wu",
+            "Mingyu Yu"
           ],
           "tags": [
-            "physics.ao-ph",
-            "physics.flu-dyn"
+            "math.AP"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Let's Do Turbulence Right: In Space and Time!",
-          "url": "https://arxiv.org/abs/2610.32601v1",
-          "published": "2026-10-23T13:26:50Z",
-          "summary": "The three-dimensional Navier-Stokes equations govern fluid turbulence, a chaotic and non-linear physical phenomenon characterized by complex eddies interacting across vast spatial and temporal scales. A numerically accurate modeling of this multi-scale energy cascade requires fully resolving both the fine spatial struc",
+          "title": "Swirl ill-posedness for incompressible fluids in (sub)critical spaces",
+          "url": "https://arxiv.org/abs/2610.33973v1",
+          "published": "2026-10-25T01:11:16Z",
+          "summary": "For the 3D Navier-Stokes equations with sufficiently smooth initial data having zero swirl $u_{0θ}\\equiv 0$, Ladyzhenskaya \\cite{L1968} and Ukhovskii and Yudovich \\cite{UY1968} established global regularity. It has since remained open as to whether well-posedness still holds for smooth axisymmetric initial data, with t",
           "authors": [
-            "Maximilian Plattner",
-            "Fabian Paischer",
-            "Johannes Brandstetter"
+            "Tobias Barker",
+            "Ruilin Hu"
           ],
           "tags": [
-            "physics.flu-dyn",
-            "cs.LG"
+            "math.AP"
           ],
           "kind": "paper"
         },
