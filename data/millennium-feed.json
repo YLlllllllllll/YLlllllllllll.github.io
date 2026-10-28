@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-10-27T22:19:12Z",
+  "generated_at": "2026-10-28T05:49:05Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
       "ok": true,
-      "count": 1328
+      "count": 1331
     },
     "clay": {
       "ok": true,
@@ -60,32 +60,32 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "A Robust, Explainable, and Efficient Deep Metric for Speech and General Audio Quality",
-          "url": "https://arxiv.org/abs/2610.35810v1",
-          "published": "2026-10-26T17:41:55Z",
-          "summary": "We present a robust Speech and Audio Quality Metric (SAQM) that merges features of traditional quality metrics with a CNN trained on a large amount of data using contrastive learning methods. To overcome the problem of limited amounts of human-labeled training data, we propose two pretraining strategies relying on pseu",
+          "title": "UPP$^{\\text{cc}}$ is Not Closed Under Intersection",
+          "url": "https://arxiv.org/abs/2610.37634v1",
+          "published": "2026-10-27T17:54:01Z",
+          "summary": "The sign rank of a ${\\pm 1}$-valued matrix $A$ is the minimum rank of a real matrix that agrees with $A$ entrywise in sign. For every sufficiently large $d$, we give an explicit matrix $A$ with $2^{Θ(d^2)}$ rows and columns and sign rank $Θ(d)$ such that $A \\land A$ has sign rank $2^{Θ(d)}$. Here, $A \\land A$ is the co",
           "authors": [
-            "Konstantin Schmidt",
-            "Pablo M. Delgado",
-            "Andreas Brendel"
+            "Mark Bun",
+            "Mandar Juvekar"
           ],
           "tags": [
-            "eess.AS"
+            "cs.CC"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Computational complexity of the $H$-coloring problem in cubic graphs",
-          "url": "https://arxiv.org/abs/2610.35794v1",
-          "published": "2026-10-26T17:30:03Z",
-          "summary": "If $G$ and $H$ are two cubic graphs, then an $H$-coloring of $G$ is a mapping $f: E(G)\\rightarrow E(H)$, such that for every $v\\in V(G)$ there is a vertex $x\\in V(H)$, such that $f(\\partial_G(v))=\\partial_H(x)$. If $G$ admits an $H$-coloring then it is common to write $H\\prec G$. In this paper, for a fixed connected cu",
+          "title": "Classical Verification of Quantum Computation Beyond the Polynomial Hierarchy",
+          "url": "https://arxiv.org/abs/2610.37635v1",
+          "published": "2026-10-27T17:54:01Z",
+          "summary": "It is not known whether a classical polynomial-time verifier can verify arbitrary polynomial-time quantum computations with an efficient quantum honest prover without computational assumptions. We show that, relative to a classical oracle, such verification is possible for a language beyond the polynomial hierarchy tha",
           "authors": [
-            "Vahan Mkrtchyan"
+            "Atul Mantri"
           ],
           "tags": [
+            "quant-ph",
             "cs.CC",
-            "math.CO"
+            "cs.CR"
           ],
           "kind": "paper"
         }
@@ -102,26 +102,28 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Spectral convergence associated with Weil's quadratic form",
-          "url": "https://arxiv.org/abs/2610.32704v1",
-          "published": "2026-10-23T14:28:31Z",
-          "summary": "Assuming the Riemann hypothesis, we study a distinguished self-adjoint extension of the differentiation operator on a Hilbert space defined by the Weil quadratic form localized to a finite interval. The local quadratic form is determined by data from finitely many places, without requiring the zeros of the Riemann zeta",
+          "title": "Irreducibility Testing of Sparse Polynomials over Integers is NP-hard and Probabilistic Polynomial Time",
+          "url": "https://arxiv.org/abs/2610.37179v1",
+          "published": "2026-10-27T13:04:01Z",
+          "summary": "In this paper, we prove that irreducibility testing for sparse polynomials in $\\mathbb{Z}[X]$ is coNP-hard under deterministic polynomial-time many-one reductions. That is, there exists no polynomial-time irreducibility test algorithm unless $\\mathrm P=\\mathrm{NP}$. We also provide an upper bound for this problem by de",
           "authors": [
-            "Masatoshi Suzuki"
+            "Yichuan Cao",
+            "Xiao-Shan Gao",
+            "Qiao-Long Huang"
           ],
           "tags": [
-            "math.NT"
+            "cs.CC"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "The Hardy--Littlewood asymptotic for primes $p$ and $p+4$ from a uniform zeta-ratios conjecture",
-          "url": "https://arxiv.org/abs/2610.32672v1",
-          "published": "2026-10-23T14:14:23Z",
-          "summary": "We prove the Hardy--Littlewood asymptotic for prime pairs of difference four from a restricted uniform two-over-two zeta-ratios formula. The formula has error $O_\\varepsilon(U^{1/2+\\varepsilon})$, real parts of all four shifts in $[3/64,5/64]$, and imaginary parts of absolute value at most $U^{1/4}$. For a fixed real s",
+          "title": "Square-root logarithmic bounds for the arithmetic complexity of factorial multiples",
+          "url": "https://arxiv.org/abs/2610.36588v1",
+          "published": "2026-10-27T03:46:54Z",
+          "summary": "Assume that the Riemann zeta function has no zeros in $\\Re(s)>1-δ$, $s\\neq1$, for some fixed $0<δ\\leq1/2$. We prove that, for every sufficiently large integer $k$, a positive multiple $m_k k!$ has arithmetic complexity $τ(m_k k!)\\leq\\exp(C\\sqrt{\\log k\\log\\log k})$, where $C$ depends only on $δ$. We first establish a sm",
           "authors": [
-            "SeungJu Lee"
+            "Liang Zhang"
           ],
           "tags": [
             "math.NT"
@@ -185,29 +187,31 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Regularity of the solution map for the Oldroyd--B model with fractional stress dissipation",
-          "url": "https://arxiv.org/abs/2610.34498v1",
-          "published": "2026-10-25T18:55:24Z",
-          "summary": "The data-to-solution map of the incompressible Euler equations is continuous but not uniformly continuous on Sobolev spaces, whereas viscosity makes the Navier--Stokes solution map Lipschitz continuous on small data, uniformly in time. This paper identifies the behavior of the solution map for a hybrid system sitting b",
+          "title": "Generative Refinement Learning for Temporal Interpolation in Scientific Machine Learning",
+          "url": "https://arxiv.org/abs/2610.36751v1",
+          "published": "2026-10-27T07:08:23Z",
+          "summary": "Computationally expensive simulations and real-world observations often provide data at a lower temporal resolution than downstream tasks require. Averaging observations at fixed grid points can introduce errors, and motion estimates alone do not determine how the physical field values change. In this work, we study wh",
           "authors": [
-            "Gerard Misiołek",
-            "Jiahong Wu",
-            "Mingyu Yu"
+            "Pu Ren",
+            "Michael W. Mahoney",
+            "N. Benjamin Erichson"
           ],
           "tags": [
-            "math.AP"
+            "cs.LG",
+            "cs.AI",
+            "math-ph",
+            "stat.ML"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Swirl ill-posedness for incompressible fluids in (sub)critical spaces",
-          "url": "https://arxiv.org/abs/2610.33973v1",
-          "published": "2026-10-25T01:11:16Z",
-          "summary": "For the 3D Navier-Stokes equations with sufficiently smooth initial data having zero swirl $u_{0θ}\\equiv 0$, Ladyzhenskaya \\cite{L1968} and Ukhovskii and Yudovich \\cite{UY1968} established global regularity. It has since remained open as to whether well-posedness still holds for smooth axisymmetric initial data, with t",
+          "title": "Energy equality and renormalization of Navier-Stokes-Vlasov equations",
+          "url": "https://arxiv.org/abs/2610.36579v1",
+          "published": "2026-10-27T03:34:15Z",
+          "summary": "We study weak solutions of the incompressible and the compressible Navier--Stokes--Vlasov systems on a bounded domain, where a viscous fluid is coupled to a dispersed particle phase through a drag force; the fluid obeys the no-slip boundary condition and the particles are subject to specular reflection. For solutions w",
           "authors": [
-            "Tobias Barker",
-            "Ruilin Hu"
+            "Hanyu Teng"
           ],
           "tags": [
             "math.AP"
