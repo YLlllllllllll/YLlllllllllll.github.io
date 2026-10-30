@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-10-29T22:48:14Z",
+  "generated_at": "2026-10-30T05:55:09Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
@@ -60,32 +60,34 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "UPP$^{\\text{cc}}$ is Not Closed Under Intersection",
-          "url": "https://arxiv.org/abs/2610.37634v1",
-          "published": "2026-10-27T17:54:01Z",
-          "summary": "The sign rank of a ${\\pm 1}$-valued matrix $A$ is the minimum rank of a real matrix that agrees with $A$ entrywise in sign. For every sufficiently large $d$, we give an explicit matrix $A$ with $2^{Θ(d^2)}$ rows and columns and sign rank $Θ(d)$ such that $A \\land A$ has sign rank $2^{Θ(d)}$. Here, $A \\land A$ is the co",
+          "title": "What Can Be Computed with Indefinite Causal Structure?",
+          "url": "https://arxiv.org/abs/2610.40573v1",
+          "published": "2026-10-29T17:44:40Z",
+          "summary": "Can quantum computation become more powerful when operations do not need to follow a definite causal order? We study this question in the process matrix formalism of Oreshkov et al. (Nature Communications, 2012), which allows quantum operations to be connected without a fixed global order. In the computational model, a",
           "authors": [
-            "Mark Bun",
-            "Mandar Juvekar"
+            "Omri Shmueli"
           ],
           "tags": [
+            "quant-ph",
             "cs.CC"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Classical Verification of Quantum Computation Beyond the Polynomial Hierarchy",
-          "url": "https://arxiv.org/abs/2610.37635v1",
-          "published": "2026-10-27T17:54:01Z",
-          "summary": "It is not known whether a classical polynomial-time verifier can verify arbitrary polynomial-time quantum computations with an efficient quantum honest prover without computational assumptions. We show that, relative to a classical oracle, such verification is possible for a language beyond the polynomial hierarchy tha",
+          "title": "On the Quantum Chromatic Gap II",
+          "url": "https://arxiv.org/abs/2610.40571v1",
+          "published": "2026-10-29T17:44:20Z",
+          "summary": "We confirm a conjecture of the first author [SODA'26] on a strong form of pseudo-telepathy for Khot's $d$-to-$1$ games: for every $d\\geq 4$, every $ε>0$, and every $k\\in\\mathbb N$, there is a $d$-to-$1$ label-cover game of classical value less than $ε$ that admits a perfect quantum strategy using finite-dimensional sha",
           "authors": [
-            "Atul Mantri"
+            "Lorenzo Ciardo",
+            "Antoine Mottet"
           ],
           "tags": [
             "quant-ph",
             "cs.CC",
-            "cs.CR"
+            "cs.LO",
+            "math.CO"
           ],
           "kind": "paper"
         }
@@ -102,31 +104,32 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Irreducibility Testing of Sparse Polynomials over Integers is NP-hard and Probabilistic Polynomial Time",
-          "url": "https://arxiv.org/abs/2610.37179v1",
-          "published": "2026-10-27T13:04:01Z",
-          "summary": "In this paper, we prove that irreducibility testing for sparse polynomials in $\\mathbb{Z}[X]$ is coNP-hard under deterministic polynomial-time many-one reductions. That is, there exists no polynomial-time irreducibility test algorithm unless $\\mathrm P=\\mathrm{NP}$. We also provide an upper bound for this problem by de",
+          "title": "The asymptotic number of zonotopes",
+          "url": "https://arxiv.org/abs/2610.39900v1",
+          "published": "2026-10-29T12:11:03Z",
+          "summary": "We provide a sharp estimate for the asymptotic number of lattice zonotopes inscribed in [0, n] d as n tends to infinity. Our estimate refines the logarithmic equivalent established by B{á}r{á}ny, Bureaux, and Lund when the sum of the generators of the zonotope is prescribed. As we shall see, the exponential part of our",
           "authors": [
-            "Yichuan Cao",
-            "Xiao-Shan Gao",
-            "Qiao-Long Huang"
+            "Olivier Bodini",
+            "Théophile Buffière"
           ],
           "tags": [
-            "cs.CC"
+            "math.CO"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Square-root logarithmic bounds for the arithmetic complexity of factorial multiples",
-          "url": "https://arxiv.org/abs/2610.36588v1",
-          "published": "2026-10-27T03:46:54Z",
-          "summary": "Assume that the Riemann zeta function has no zeros in $\\Re(s)>1-δ$, $s\\neq1$, for some fixed $0<δ\\leq1/2$. We prove that, for every sufficiently large integer $k$, a positive multiple $m_k k!$ has arithmetic complexity $τ(m_k k!)\\leq\\exp(C\\sqrt{\\log k\\log\\log k})$, where $C$ depends only on $δ$. We first establish a sm",
+          "title": "Moments of characteristic polynomials at random matrix Gram points",
+          "url": "https://arxiv.org/abs/2610.39856v1",
+          "published": "2026-10-29T11:34:34Z",
+          "summary": "We evaluate the characteristic polynomial of a random unitary matrix at the points on the unit circle where the polynomial takes real values. In analogy to the Riemann zeta function we call these the ``random matrix Gram points''. On the random matrix side we answer in the affirmative a question of Richard Hall, who ex",
           "authors": [
-            "Liang Zhang"
+            "Christopher Hughes",
+            "Somin Kim"
           ],
           "tags": [
-            "math.NT"
+            "math.NT",
+            "math-ph"
           ],
           "kind": "paper"
         }
@@ -187,33 +190,31 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Generative Refinement Learning for Temporal Interpolation in Scientific Machine Learning",
-          "url": "https://arxiv.org/abs/2610.36751v1",
-          "published": "2026-10-27T07:08:23Z",
-          "summary": "Computationally expensive simulations and real-world observations often provide data at a lower temporal resolution than downstream tasks require. Averaging observations at fixed grid points can introduce errors, and motion estimates alone do not determine how the physical field values change. In this work, we study wh",
+          "title": "Moments propagation in the Vlasov equation and application to the Navier-Stokes-Vlasov equations",
+          "url": "https://arxiv.org/abs/2610.38274v1",
+          "published": "2026-10-28T04:42:45Z",
+          "summary": "In this paper, we study how the propagation of particle moments depends on the fluid velocity in the Vlasov equation. We present some new moment estimates involving the velocity in this equation. As an application, we establish Ladyzhenskaya-Prodi-Serrin-type regularity criteria involving only the velocity field for we",
           "authors": [
-            "Pu Ren",
-            "Michael W. Mahoney",
-            "N. Benjamin Erichson"
+            "Yanqing Wang",
+            "Wei Wei",
+            "Yulin Ye"
           ],
           "tags": [
-            "cs.LG",
-            "cs.AI",
-            "math-ph",
-            "stat.ML"
+            "math.AP"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Energy equality and renormalization of Navier-Stokes-Vlasov equations",
-          "url": "https://arxiv.org/abs/2610.36579v1",
-          "published": "2026-10-27T03:34:15Z",
-          "summary": "We study weak solutions of the incompressible and the compressible Navier--Stokes--Vlasov systems on a bounded domain, where a viscous fluid is coupled to a dispersed particle phase through a drag force; the fluid obeys the no-slip boundary condition and the particles are subject to specular reflection. For solutions w",
+          "title": "Regularizing the Navier-Stokes Equations via Additive Type Noise plus Small Linear Multiplicative Noise",
+          "url": "https://arxiv.org/abs/2610.38018v1",
+          "published": "2026-10-27T22:15:32Z",
+          "summary": "We derive a series of ``regularization by noise in high probability\" results for incompressible Navier-Stokes equations $(d\\geq3)$, via a new mechanism based on fixed point argument: For initial values in critical Besov space $\\dot{B}_{q,\\infty}^{-1+d/q}~ (1\\leq q 0$, if the equations are perturbed by a well-constructe",
           "authors": [
-            "Hanyu Teng"
+            "Weiquan Chen"
           ],
           "tags": [
+            "math.PR",
             "math.AP"
           ],
           "kind": "paper"
