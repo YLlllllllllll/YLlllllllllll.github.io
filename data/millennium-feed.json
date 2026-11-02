@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-01T22:06:36Z",
+  "generated_at": "2026-11-02T06:16:03Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
@@ -60,34 +60,32 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "What Can Be Computed with Indefinite Causal Structure?",
-          "url": "https://arxiv.org/abs/2610.40573v1",
-          "published": "2026-10-29T17:44:40Z",
-          "summary": "Can quantum computation become more powerful when operations do not need to follow a definite causal order? We study this question in the process matrix formalism of Oreshkov et al. (Nature Communications, 2012), which allows quantum operations to be connected without a fixed global order. In the computational model, a",
+          "title": "Approximate Polynomial Satisfiability and Integral Closure Membership in the Counting Hierarchy",
+          "url": "https://arxiv.org/abs/2610.42138v1",
+          "published": "2026-10-30T17:58:39Z",
+          "summary": "Andrews, Garg, and Schost recently, in a breakthrough result, placed Hilbert's Nullstellensatz (HN) in the Counting Hierarchy ($\\CH$) using constant-depth circuits for multivariate resultants. While HN deals with exact polynomial satisfiability, Guo, Saxena, and Sinhababu (CCC~2018; Theory of Computing~2019) introduced",
           "authors": [
-            "Omri Shmueli"
+            "Sanyam Agarwal",
+            "Archit Hari",
+            "Anurag Pandey"
           ],
           "tags": [
-            "quant-ph",
             "cs.CC"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "On the Quantum Chromatic Gap II",
-          "url": "https://arxiv.org/abs/2610.40571v1",
-          "published": "2026-10-29T17:44:20Z",
-          "summary": "We confirm a conjecture of the first author [SODA'26] on a strong form of pseudo-telepathy for Khot's $d$-to-$1$ games: for every $d\\geq 4$, every $ε>0$, and every $k\\in\\mathbb N$, there is a $d$-to-$1$ label-cover game of classical value less than $ε$ that admits a perfect quantum strategy using finite-dimensional sha",
+          "title": "Counting Square Tilings with a Fixed Set of Polyominoes Is #EXP-Complete",
+          "url": "https://arxiv.org/abs/2610.42063v1",
+          "published": "2026-10-30T17:25:15Z",
+          "summary": "The gap between feasibility and exact counting raises a fundamental question about how much information an input must carry to sustain computational hardness. We show that this separation persists even when the geometric rules are fixed and each instance is specified solely by the binary side length of a square. Specif",
           "authors": [
-            "Lorenzo Ciardo",
-            "Antoine Mottet"
+            "Qiuyu Chen",
+            "Baao Xie"
           ],
           "tags": [
-            "quant-ph",
-            "cs.CC",
-            "cs.LO",
-            "math.CO"
+            "cs.CC"
           ],
           "kind": "paper"
         }
@@ -104,32 +102,32 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "The asymptotic number of zonotopes",
-          "url": "https://arxiv.org/abs/2610.39900v1",
-          "published": "2026-10-29T12:11:03Z",
-          "summary": "We provide a sharp estimate for the asymptotic number of lattice zonotopes inscribed in [0, n] d as n tends to infinity. Our estimate refines the logarithmic equivalent established by B{á}r{á}ny, Bureaux, and Lund when the sum of the generators of the zonotope is prescribed. As we shall see, the exponential part of our",
+          "title": "Spectral Beurling-Selberg Approximation and Applications to Effective Motivic Chebotarev-Sato-Tate Estimates",
+          "url": "https://arxiv.org/abs/2610.42022v1",
+          "published": "2026-10-30T16:53:30Z",
+          "summary": "We establish a spectral Beurling-Selberg approximation theorem on compact connected Riemannian manifolds for sets whose boundaries have finite upper Minkowski content. Our majorants and minorants have controlled spectral coefficients and explicit stability under Hausdorff perturbations, uniformly over families satisfyi",
           "authors": [
-            "Olivier Bodini",
-            "Théophile Buffière"
+            "Yassine El Kaouni"
           ],
           "tags": [
-            "math.CO"
+            "math.NT",
+            "math.AG",
+            "math.DG",
+            "math.RT"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Moments of characteristic polynomials at random matrix Gram points",
-          "url": "https://arxiv.org/abs/2610.39856v1",
-          "published": "2026-10-29T11:34:34Z",
-          "summary": "We evaluate the characteristic polynomial of a random unitary matrix at the points on the unit circle where the polynomial takes real values. In analogy to the Riemann zeta function we call these the ``random matrix Gram points''. On the random matrix side we answer in the affirmative a question of Richard Hall, who ex",
+          "title": "Joint universality of the Riemann zeta-function with arbitrary real shift parameters",
+          "url": "https://arxiv.org/abs/2610.41600v1",
+          "published": "2026-10-30T11:34:27Z",
+          "summary": "We prove that the shifts $ζ(s+id_jτ)$, $1\\le j\\le n$, are jointly universal for any nonzero real parameters $d_j$ with pairwise distinct absolute values. These restrictions are best possible. As an immediate consequence, we obtain generalized strong recurrence for arbitrary finite families of nonzero real parameters. O",
           "authors": [
-            "Christopher Hughes",
-            "Somin Kim"
+            "Łukasz Pańkowski"
           ],
           "tags": [
-            "math.NT",
-            "math-ph"
+            "math.NT"
           ],
           "kind": "paper"
         }
@@ -190,31 +188,31 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Moments propagation in the Vlasov equation and application to the Navier-Stokes-Vlasov equations",
-          "url": "https://arxiv.org/abs/2610.38274v1",
-          "published": "2026-10-28T04:42:45Z",
-          "summary": "In this paper, we study how the propagation of particle moments depends on the fluid velocity in the Vlasov equation. We present some new moment estimates involving the velocity in this equation. As an application, we establish Ladyzhenskaya-Prodi-Serrin-type regularity criteria involving only the velocity field for we",
+          "title": "Turbulence on Hybrid Lattices: regular grids meet self similar cascade models",
+          "url": "https://arxiv.org/abs/2610.41947v1",
+          "published": "2026-10-30T16:05:05Z",
+          "summary": "Turbulent cascades in high Reynolds number regimes span many decades in scale, which can be challenging for numerical simulations. Cascade models that use logarithmic discretization can help, but these have limited capabilities to describe spatial structures or real space details. Hybrid Lattices (HLs) are proposed in",
           "authors": [
-            "Yanqing Wang",
-            "Wei Wei",
-            "Yulin Ye"
+            "Lorenzo Manfredini",
+            "Özgür D. Gürcan",
+            "Sai Swetha Venkata Kolluru"
           ],
           "tags": [
-            "math.AP"
+            "physics.flu-dyn",
+            "nlin.CD"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Regularizing the Navier-Stokes Equations via Additive Type Noise plus Small Linear Multiplicative Noise",
-          "url": "https://arxiv.org/abs/2610.38018v1",
-          "published": "2026-10-27T22:15:32Z",
-          "summary": "We derive a series of ``regularization by noise in high probability\" results for incompressible Navier-Stokes equations $(d\\geq3)$, via a new mechanism based on fixed point argument: For initial values in critical Besov space $\\dot{B}_{q,\\infty}^{-1+d/q}~ (1\\leq q 0$, if the equations are perturbed by a well-constructe",
+          "title": "Global existence and uniqueness of Lions' weak solutions for the 2D inhomogeneous Navier-Stokes equations in bounded domains",
+          "url": "https://arxiv.org/abs/2610.41637v1",
+          "published": "2026-10-30T12:14:20Z",
+          "summary": "The global well-posedness for Lions' weak solutions to the inhomogeneous incompressible Navier-Stokes equations in two-dimensional bounded domains is concerned. When the initial density $0\\leq ρ_0\\in L^\\infty(\\Om)$ (allowing for vacuum) and initial velocity $u_0\\in L^2_σ(Ω)$, the global existence, regularity, and expon",
           "authors": [
-            "Weiquan Chen"
+            "Hongyu Wang"
           ],
           "tags": [
-            "math.PR",
             "math.AP"
           ],
           "kind": "paper"
@@ -334,7 +332,7 @@
         {
           "source": "arxiv",
           "title": "The Yau Geometric Conjecture for Isolated Hypersurface Singularities",
-          "url": "https://arxiv.org/abs/2610.24636v1",
+          "url": "https://arxiv.org/abs/2610.24636v2",
           "published": "2026-10-17T11:26:11Z",
           "summary": "This paper presents a proof of the long-standing Yau Geometric Conjecture.",
           "authors": [
