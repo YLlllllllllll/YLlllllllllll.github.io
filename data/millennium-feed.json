@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-02T16:17:17Z",
+  "generated_at": "2026-11-03T01:01:58Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
       "ok": true,
-      "count": 1342
+      "count": 1346
     },
     "clay": {
       "ok": true,
@@ -13,7 +13,16 @@
     },
     "arxiv": {
       "ok": true,
-      "count": 14
+      "count": 14,
+      "partial": true,
+      "failures": [
+        "pnp: Unable to fetch https://export.arxiv.org/api/query?search_query=all%3A%22P+vs+NP%22+OR+all%3A%22P+versus+NP%22+OR+all%3A",
+        "riemann: Unable to fetch https://export.arxiv.org/api/query?search_query=all%3A%22Riemann+hypothesis%22+OR+all%3A%22Riemann+zeta+"
+      ],
+      "reused_from_previous": [
+        "pnp",
+        "riemann"
+      ]
     }
   },
   "wire": [
