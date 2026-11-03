@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-03T01:01:58Z",
+  "generated_at": "2026-11-03T14:24:08Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
       "ok": true,
-      "count": 1346
+      "count": 1349
     },
     "clay": {
       "ok": true,
@@ -13,16 +13,7 @@
     },
     "arxiv": {
       "ok": true,
-      "count": 14,
-      "partial": true,
-      "failures": [
-        "pnp: Unable to fetch https://export.arxiv.org/api/query?search_query=all%3A%22P+vs+NP%22+OR+all%3A%22P+versus+NP%22+OR+all%3A",
-        "riemann: Unable to fetch https://export.arxiv.org/api/query?search_query=all%3A%22Riemann+hypothesis%22+OR+all%3A%22Riemann+zeta+"
-      ],
-      "reused_from_previous": [
-        "pnp",
-        "riemann"
-      ]
+      "count": 14
     }
   },
   "wire": [
@@ -69,32 +60,33 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Approximate Polynomial Satisfiability and Integral Closure Membership in the Counting Hierarchy",
-          "url": "https://arxiv.org/abs/2610.42138v1",
-          "published": "2026-10-30T17:58:39Z",
-          "summary": "Andrews, Garg, and Schost recently, in a breakthrough result, placed Hilbert's Nullstellensatz (HN) in the Counting Hierarchy ($\\CH$) using constant-depth circuits for multivariate resultants. While HN deals with exact polynomial satisfiability, Guo, Saxena, and Sinhababu (CCC~2018; Theory of Computing~2019) introduced",
+          "title": "Get Permanent Results Faster by Counting Stars",
+          "url": "https://arxiv.org/abs/2611.03636v1",
+          "published": "2026-11-02T18:57:52Z",
+          "summary": "We show that $n \\times n$ permanents can be computed with $O^*{(2-\\varepsilon)^n}$ arithmetic operations over every commutative ring, for $\\varepsilon = 10^{-40}$. This solves a problem stated in Knuth's The Art of Computer Programming. Our algorithm implements the classical Binet--Minc identity with dynamic programmin",
           "authors": [
-            "Sanyam Agarwal",
-            "Archit Hari",
-            "Anurag Pandey"
+            "Radu Curticapean"
           ],
           "tags": [
-            "cs.CC"
+            "cs.DS",
+            "cs.CC",
+            "math.CO"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Counting Square Tilings with a Fixed Set of Polyominoes Is #EXP-Complete",
-          "url": "https://arxiv.org/abs/2610.42063v1",
-          "published": "2026-10-30T17:25:15Z",
-          "summary": "The gap between feasibility and exact counting raises a fundamental question about how much information an input must carry to sustain computational hardness. We show that this separation persists even when the geometric rules are fixed and each instance is specified solely by the binary side length of a square. Specif",
+          "title": "A Circuit Complexity Trichotomy For Regular Languages",
+          "url": "https://arxiv.org/abs/2611.03615v1",
+          "published": "2026-11-02T18:50:25Z",
+          "summary": "We establish a trichotomy for the non-uniform, unbounded-fan-in circuit complexity of regular languages: the complexity of every regular language lies in exactly one of $O(1)$, $Ω(\\log n)\\cap O(\\log n\\log\\log n)$, or $Ω(n)\\cap O(n)$. Our main technical contribution is a characterization of the sublinear class in terms",
           "authors": [
-            "Qiuyu Chen",
-            "Baao Xie"
+            "Stefan Göller",
+            "Amaldev Manuel"
           ],
           "tags": [
-            "cs.CC"
+            "cs.CC",
+            "cs.FL"
           ],
           "kind": "paper"
         }
@@ -111,29 +103,30 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Spectral Beurling-Selberg Approximation and Applications to Effective Motivic Chebotarev-Sato-Tate Estimates",
-          "url": "https://arxiv.org/abs/2610.42022v1",
-          "published": "2026-10-30T16:53:30Z",
-          "summary": "We establish a spectral Beurling-Selberg approximation theorem on compact connected Riemannian manifolds for sets whose boundaries have finite upper Minkowski content. Our majorants and minorants have controlled spectral coefficients and explicit stability under Hausdorff perturbations, uniformly over families satisfyi",
+          "title": "On some positivity properties of the Riemann $Ξ$ function",
+          "url": "https://arxiv.org/abs/2611.02944v1",
+          "published": "2026-11-02T11:10:18Z",
+          "summary": "We prove strict log-concavity of the positive functions $Θ$ and $Λ$ with one-sided and bilateral Laplace transforms $1/ξ(\\tfrac12+\\sqrt s)$ and $1/Ξ$, respectively, where $Ξ(z)=ξ(\\tfrac12+iz)$. For either function, log-concavity is the Pólya frequency property of order two (PF$_2$). Without assuming the Riemann hypothe",
           "authors": [
-            "Yassine El Kaouni"
+            "Suvrit Sra"
           ],
           "tags": [
+            "math.CA",
             "math.NT",
-            "math.AG",
-            "math.DG",
-            "math.RT"
+            "math.PR"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Joint universality of the Riemann zeta-function with arbitrary real shift parameters",
-          "url": "https://arxiv.org/abs/2610.41600v1",
-          "published": "2026-10-30T11:34:27Z",
-          "summary": "We prove that the shifts $ζ(s+id_jτ)$, $1\\le j\\le n$, are jointly universal for any nonzero real parameters $d_j$ with pairwise distinct absolute values. These restrictions are best possible. As an immediate consequence, we obtain generalized strong recurrence for arbitrary finite families of nonzero real parameters. O",
+          "title": "Extreme values of derivatives of Dedekind zeta functions on the $1$-line",
+          "url": "https://arxiv.org/abs/2611.02675v1",
+          "published": "2026-11-02T07:30:20Z",
+          "summary": "In this paper, we establish lower bounds for extreme values of derivatives of Dedekind zeta functions on the \\(1\\)-line over arbitrary fixed number fields. Our result extends Yang's corresponding estimate for the Riemann zeta function in 2024, with the leading constant involving residues of Dedekind zeta functions and",
           "authors": [
-            "Łukasz Pańkowski"
+            "Zikang Dong",
+            "Qiyu Yang",
+            "Shengbo Zhao"
           ],
           "tags": [
             "math.NT"
@@ -197,32 +190,36 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Turbulence on Hybrid Lattices: regular grids meet self similar cascade models",
-          "url": "https://arxiv.org/abs/2610.41947v1",
-          "published": "2026-10-30T16:05:05Z",
-          "summary": "Turbulent cascades in high Reynolds number regimes span many decades in scale, which can be challenging for numerical simulations. Cascade models that use logarithmic discretization can help, but these have limited capabilities to describe spatial structures or real space details. Hybrid Lattices (HLs) are proposed in",
+          "title": "Stability of negative-regularity mixing and applications to stochastic fluids",
+          "url": "https://arxiv.org/abs/2611.03519v1",
+          "published": "2026-11-02T17:54:30Z",
+          "summary": "We consider mixing for a scalar advected by random vector fields, such as solutions to stochastic fluid equations. Our main abstract result is that contraction in expectation of a negative Sobolev norm of the scalar (negative-regularity mixing) is stable under perturbations of the joint scalar-velocity process. We appl",
           "authors": [
-            "Lorenzo Manfredini",
-            "Özgür D. Gürcan",
-            "Sai Swetha Venkata Kolluru"
+            "Antonio Agresti",
+            "William Cooperman",
+            "Patrick Flynn"
           ],
           "tags": [
-            "physics.flu-dyn",
-            "nlin.CD"
+            "math.PR",
+            "math.AP",
+            "math.DS"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Global existence and uniqueness of Lions' weak solutions for the 2D inhomogeneous Navier-Stokes equations in bounded domains",
-          "url": "https://arxiv.org/abs/2610.41637v1",
-          "published": "2026-10-30T12:14:20Z",
-          "summary": "The global well-posedness for Lions' weak solutions to the inhomogeneous incompressible Navier-Stokes equations in two-dimensional bounded domains is concerned. When the initial density $0\\leq ρ_0\\in L^\\infty(\\Om)$ (allowing for vacuum) and initial velocity $u_0\\in L^2_σ(Ω)$, the global existence, regularity, and expon",
+          "title": "CFD-driven symbolic regression of RANS transition models",
+          "url": "https://arxiv.org/abs/2611.03210v1",
+          "published": "2026-11-02T14:34:00Z",
+          "summary": "Laminar-turbulent transition governs skin friction, heat transfer and losses in turbomachinery, yet Reynolds-averaged Navier-Stokes (RANS) transition models rely on empirical correlations and hand-calibrated activation functions whose structural deficiencies cannot be resolved by recalibration. We propose a CFD-driven",
           "authors": [
-            "Hongyu Wang"
+            "Louenas Zemmour",
+            "Xavier Gloerfelt",
+            "Paola Cinnella"
           ],
           "tags": [
-            "math.AP"
+            "physics.flu-dyn",
+            "cs.LG"
           ],
           "kind": "paper"
         },
