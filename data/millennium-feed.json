@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-03T23:27:13Z",
+  "generated_at": "2026-11-04T06:32:38Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
@@ -60,33 +60,35 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Get Permanent Results Faster by Counting Stars",
-          "url": "https://arxiv.org/abs/2611.03636v1",
-          "published": "2026-11-02T18:57:52Z",
-          "summary": "We show that $n \\times n$ permanents can be computed with $O^*{(2-\\varepsilon)^n}$ arithmetic operations over every commutative ring, for $\\varepsilon = 10^{-40}$. This solves a problem stated in Knuth's The Art of Computer Programming. Our algorithm implements the classical Binet--Minc identity with dynamic programmin",
+          "title": "GSCV++: Lightweight 3D Gaussian Splatting Sequence Compression via Standard Video Codecs",
+          "url": "https://arxiv.org/abs/2611.05359v1",
+          "published": "2026-11-03T18:54:29Z",
+          "summary": "This paper presents GSCV++, a lightweight pipeline for 3D {G}aussian {S}platting (GS) sequences {C}ompression with standard {V}ideo codecs. To meet the requirements of low-complexity and hardware compatibility from the industry, GSCV++ jointly improves preprocessing, 3D-to-2D mapping, and practical video compression co",
           "authors": [
-            "Radu Curticapean"
+            "Qi Yang",
+            "Yingzhan Xu",
+            "Kai Zhang"
           ],
           "tags": [
-            "cs.DS",
-            "cs.CC",
-            "math.CO"
+            "cs.CV"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "A Circuit Complexity Trichotomy For Regular Languages",
-          "url": "https://arxiv.org/abs/2611.03615v1",
-          "published": "2026-11-02T18:50:25Z",
-          "summary": "We establish a trichotomy for the non-uniform, unbounded-fan-in circuit complexity of regular languages: the complexity of every regular language lies in exactly one of $O(1)$, $Ω(\\log n)\\cap O(\\log n\\log\\log n)$, or $Ω(n)\\cap O(n)$. Our main technical contribution is a characterization of the sublinear class in terms",
+          "title": "Breaking the quantum barriers for Graph Collision",
+          "url": "https://arxiv.org/abs/2611.05356v1",
+          "published": "2026-11-03T18:53:06Z",
+          "summary": "In the graph collision problem, the task is to decide whether a known graph on $n$ vertices contains an edge with both endpoints marked, given query access to the input bits specifying the marked vertices. We first refute the conjectured $Ω(n^{2/3})$ query lower bound with a bounded error quantum algorithm using $\\wide",
           "authors": [
-            "Stefan Göller",
-            "Amaldev Manuel"
+            "Arjan Cornelissen",
+            "Amin Shiraz Gilani",
+            "Shiva Kintali"
           ],
           "tags": [
+            "quant-ph",
             "cs.CC",
-            "cs.FL"
+            "cs.DS"
           ],
           "kind": "paper"
         }
@@ -103,33 +105,32 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "On some positivity properties of the Riemann $Ξ$ function",
-          "url": "https://arxiv.org/abs/2611.02944v1",
-          "published": "2026-11-02T11:10:18Z",
-          "summary": "We prove strict log-concavity of the positive functions $Θ$ and $Λ$ with one-sided and bilateral Laplace transforms $1/ξ(\\tfrac12+\\sqrt s)$ and $1/Ξ$, respectively, where $Ξ(z)=ξ(\\tfrac12+iz)$. For either function, log-concavity is the Pólya frequency property of order two (PF$_2$). Without assuming the Riemann hypothe",
+          "title": "Almost primes in short intervals and averages of long Dirichlet polynomial approximations to $(ζ'/ζ)^{k}$",
+          "url": "https://arxiv.org/abs/2611.05000v1",
+          "published": "2026-11-03T14:50:20Z",
+          "summary": "We study the asymptotic behaviour of the mean square of long truncations of the Dirichlet series for $\\bigl(ζ'/ζ\\bigr)^{k}$ on the critical line; we establish the connection between this problem and the short-interval variance of the convoluted von Mangoldt function $Λ^{*k}$ in short intervals and in arithmetic progres",
           "authors": [
-            "Suvrit Sra"
+            "Siegfred Baluyot",
+            "John Brian Conrey",
+            "Ayesha Irfan"
           ],
           "tags": [
-            "math.CA",
             "math.NT",
-            "math.PR"
+            "math-ph"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Extreme values of derivatives of Dedekind zeta functions on the $1$-line",
-          "url": "https://arxiv.org/abs/2611.02675v1",
-          "published": "2026-11-02T07:30:20Z",
-          "summary": "In this paper, we establish lower bounds for extreme values of derivatives of Dedekind zeta functions on the \\(1\\)-line over arbitrary fixed number fields. Our result extends Yang's corresponding estimate for the Riemann zeta function in 2024, with the leading constant involving residues of Dedekind zeta functions and",
+          "title": "RH-Conditional Positivity in a Theta-Kernel Langevin Model",
+          "url": "https://arxiv.org/abs/2611.04359v1",
+          "published": "2026-11-03T05:41:31Z",
+          "summary": "A classical Brownian-bridge representation of Riemann's xi function defines an even, rapidly confining probability density and a reversible Langevin model. Our principal physical observable is the transient variance after a quadratic-potential quench; we also analyze a tilted bridge-range response and a sixth-order cum",
           "authors": [
-            "Zikang Dong",
-            "Qiyu Yang",
-            "Shengbo Zhao"
+            "U Jin Choi"
           ],
           "tags": [
-            "math.NT"
+            "math.PR"
           ],
           "kind": "paper"
         }
@@ -190,36 +191,33 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Stability of negative-regularity mixing and applications to stochastic fluids",
-          "url": "https://arxiv.org/abs/2611.03519v1",
-          "published": "2026-11-02T17:54:30Z",
-          "summary": "We consider mixing for a scalar advected by random vector fields, such as solutions to stochastic fluid equations. Our main abstract result is that contraction in expectation of a negative Sobolev norm of the scalar (negative-regularity mixing) is stable under perturbations of the joint scalar-velocity process. We appl",
+          "title": "From Random Advection to Transport Noise and the LU Framework for the Navier--Stokes Equations",
+          "url": "https://arxiv.org/abs/2611.05050v1",
+          "published": "2026-11-03T15:16:55Z",
+          "summary": "We consider the incompressible Navier--Stokes equations in a smooth bounded domain in dimension two or three, with Dirichlet boundary conditions, when the velocity is advected by a rapidly varying stationary Markov process $\\eps^{-1}m(t/\\eps^2)$. The fast field may be spatially inhomogeneous. We prove that, when $\\eps\\",
           "authors": [
-            "Antonio Agresti",
-            "William Cooperman",
-            "Patrick Flynn"
+            "Arnaud Debussche",
+            "Bérenger Hug",
+            "Etienne Mémin"
           ],
           "tags": [
             "math.PR",
-            "math.AP",
-            "math.DS"
+            "math.AP"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "CFD-driven symbolic regression of RANS transition models",
-          "url": "https://arxiv.org/abs/2611.03210v1",
-          "published": "2026-11-02T14:34:00Z",
-          "summary": "Laminar-turbulent transition governs skin friction, heat transfer and losses in turbomachinery, yet Reynolds-averaged Navier-Stokes (RANS) transition models rely on empirical correlations and hand-calibrated activation functions whose structural deficiencies cannot be resolved by recalibration. We propose a CFD-driven",
+          "title": "From Navier-Stokes to Measure-Valued Euler-Brinkman Equations: Homogenization in the Inviscid Limit",
+          "url": "https://arxiv.org/abs/2611.04881v1",
+          "published": "2026-11-03T13:32:16Z",
+          "summary": "We study the behaviour of the solution to the Navier-Stokes equations with vanishing viscosity and a no-slip condition in a periodically perforated domain. The behaviour depends on the particle size and the viscosity of the fluid. We prove convergence to a measure-valued solution, provided that the local Reynolds numbe",
           "authors": [
-            "Louenas Zemmour",
-            "Xavier Gloerfelt",
-            "Paola Cinnella"
+            "Richard M. Höfer",
+            "Eleni Hübner-Rosenau"
           ],
           "tags": [
-            "physics.flu-dyn",
-            "cs.LG"
+            "math.AP"
           ],
           "kind": "paper"
         },
