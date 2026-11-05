@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-04T19:49:19Z",
+  "generated_at": "2026-11-05T06:54:59Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
       "ok": true,
-      "count": 1356
+      "count": 1359
     },
     "clay": {
       "ok": true,
@@ -60,35 +60,30 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "GSCV++: Lightweight 3D Gaussian Splatting Sequence Compression via Standard Video Codecs",
-          "url": "https://arxiv.org/abs/2611.05359v1",
-          "published": "2026-11-03T18:54:29Z",
-          "summary": "This paper presents GSCV++, a lightweight pipeline for 3D {G}aussian {S}platting (GS) sequences {C}ompression with standard {V}ideo codecs. To meet the requirements of low-complexity and hardware compatibility from the industry, GSCV++ jointly improves preprocessing, 3D-to-2D mapping, and practical video compression co",
+          "title": "The determinantal complexity of the 4*4 permanent is 15",
+          "url": "https://arxiv.org/abs/2611.06658v1",
+          "published": "2026-11-04T15:34:13Z",
+          "summary": "The best known lower bound on the determinantal complexity of the 4x4 permanent is 10. In this short note, I prove that this value is exactly 15: the 4x4 permanent is the determinant of a 15x15 matrix of affine linear forms, and cannot be that of any smaller matrix. To do so, I must establish both a lower and upper bou",
           "authors": [
-            "Qi Yang",
-            "Yingzhan Xu",
-            "Kai Zhang"
+            "Karthik Sheshadri"
           ],
           "tags": [
-            "cs.CV"
+            "cs.CC"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Breaking the quantum barriers for Graph Collision",
-          "url": "https://arxiv.org/abs/2611.05356v1",
-          "published": "2026-11-03T18:53:06Z",
-          "summary": "In the graph collision problem, the task is to decide whether a known graph on $n$ vertices contains an edge with both endpoints marked, given query access to the input bits specifying the marked vertices. We first refute the conjectured $Ω(n^{2/3})$ query lower bound with a bounded error quantum algorithm using $\\wide",
+          "title": "A Width Hierarchy of Monotone Algebraic Branching Programs",
+          "url": "https://arxiv.org/abs/2611.06608v1",
+          "published": "2026-11-04T14:57:48Z",
+          "summary": "It is well known that $\\mathsf{VF} = \\mathsf{VBP}_{3}$ (Ben-Or-Cleve'92), i.e. the width of any constant-width algebraic branching program can be reduced to width $3$ with only a polynomial overhead to size. We prove that this is not the case for the monotone equivalents. In particular, we prove that there is an infini",
           "authors": [
-            "Arjan Cornelissen",
-            "Amin Shiraz Gilani",
-            "Shiva Kintali"
+            "Julian Dörfler",
+            "Alexander Rogovskyy"
           ],
           "tags": [
-            "quant-ph",
-            "cs.CC",
-            "cs.DS"
+            "cs.CC"
           ],
           "kind": "paper"
         }
@@ -105,6 +100,21 @@
       "items": [
         {
           "source": "arxiv",
+          "title": "3-manifold decision problems and Riemann hypotheses",
+          "url": "https://arxiv.org/abs/2611.06705v1",
+          "published": "2026-11-04T16:05:16Z",
+          "summary": "Beginning with Kuperberg's work on unknot recognition, several fundamental decision problems in 3-manifold topology have been shown to be in coNP assuming the generalized Riemann hypothesis. In this note, we explain how recent developments around the quasi-Riemann hypothesis yield unconditional versions of these result",
+          "authors": [
+            "John A. Baldwin",
+            "Steven Sivek"
+          ],
+          "tags": [
+            "math.GT"
+          ],
+          "kind": "paper"
+        },
+        {
+          "source": "arxiv",
           "title": "Almost primes in short intervals and averages of long Dirichlet polynomial approximations to $(ζ'/ζ)^{k}$",
           "url": "https://arxiv.org/abs/2611.05000v1",
           "published": "2026-11-03T14:50:20Z",
@@ -117,20 +127,6 @@
           "tags": [
             "math.NT",
             "math-ph"
-          ],
-          "kind": "paper"
-        },
-        {
-          "source": "arxiv",
-          "title": "RH-Conditional Positivity in a Theta-Kernel Langevin Model",
-          "url": "https://arxiv.org/abs/2611.04359v1",
-          "published": "2026-11-03T05:41:31Z",
-          "summary": "A classical Brownian-bridge representation of Riemann's xi function defines an even, rapidly confining probability density and a reversible Langevin model. Our principal physical observable is the transient variance after a quadratic-potential quench; we also analyze a tilted bridge-range response and a sixth-order cum",
-          "authors": [
-            "U Jin Choi"
-          ],
-          "tags": [
-            "math.PR"
           ],
           "kind": "paper"
         }
@@ -191,30 +187,30 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "From Random Advection to Transport Noise and the LU Framework for the Navier--Stokes Equations",
-          "url": "https://arxiv.org/abs/2611.05050v1",
-          "published": "2026-11-03T15:16:55Z",
-          "summary": "We consider the incompressible Navier--Stokes equations in a smooth bounded domain in dimension two or three, with Dirichlet boundary conditions, when the velocity is advected by a rapidly varying stationary Markov process $\\eps^{-1}m(t/\\eps^2)$. The fast field may be spatially inhomogeneous. We prove that, when $\\eps\\",
+          "title": "Odd Capillarity",
+          "url": "https://arxiv.org/abs/2611.06882v1",
+          "published": "2026-11-04T18:38:40Z",
+          "summary": "Capillarity governs interfacial relaxation and hydrodynamic motion in binary fluids through parity-even mechanical stresses. Here, we introduce \\emph{odd capillarity}, a parity-breaking interfacial mechanical response, by incorporating a symmetric, nonvariational, parity-odd capillary stress into the Cahn--Hilliard--Na",
           "authors": [
-            "Arnaud Debussche",
-            "Bérenger Hug",
-            "Etienne Mémin"
+            "Nadia Bihari Padhan",
+            "Axel Voigt"
           ],
           "tags": [
-            "math.PR",
-            "math.AP"
+            "physics.flu-dyn",
+            "cond-mat.soft",
+            "nlin.CD"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "From Navier-Stokes to Measure-Valued Euler-Brinkman Equations: Homogenization in the Inviscid Limit",
-          "url": "https://arxiv.org/abs/2611.04881v1",
-          "published": "2026-11-03T13:32:16Z",
-          "summary": "We study the behaviour of the solution to the Navier-Stokes equations with vanishing viscosity and a no-slip condition in a periodically perforated domain. The behaviour depends on the particle size and the viscosity of the fluid. We prove convergence to a measure-valued solution, provided that the local Reynolds numbe",
+          "title": "Finite-Time Blowup for Navier-Stokes with Smooth Forcing, Part II: Residual Correction via Oscillatory Pulses",
+          "url": "https://arxiv.org/abs/2611.06869v1",
+          "published": "2026-11-04T18:23:17Z",
+          "summary": "This paper is a companion to Part I: Construction of Self-Similar Solutions with Admissible Stress and Flat Remainder (arXiv:2609.35406). Part I constructs approximately self-similar flow profiles with a singular stress in divergence form. The associated velocity becomes unbounded as $t\\uparrow 1$. Here, localized osci",
           "authors": [
-            "Richard M. Höfer",
-            "Eleni Hübner-Rosenau"
+            "Zhen Lei",
+            "Xiao Ren"
           ],
           "tags": [
             "math.AP"
