@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-06T06:54:49Z",
+  "generated_at": "2026-11-06T19:28:00Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
       "ok": true,
-      "count": 1366
+      "count": 1368
     },
     "clay": {
       "ok": true,
