@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-05T20:00:23Z",
+  "generated_at": "2026-11-06T06:54:49Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
       "ok": true,
-      "count": 1361
+      "count": 1366
     },
     "clay": {
       "ok": true,
@@ -60,27 +60,32 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "The determinantal complexity of the 4*4 permanent is 15",
-          "url": "https://arxiv.org/abs/2611.06658v1",
-          "published": "2026-11-04T15:34:13Z",
-          "summary": "The best known lower bound on the determinantal complexity of the 4x4 permanent is 10. In this short note, I prove that this value is exactly 15: the 4x4 permanent is the determinant of a 15x15 matrix of affine linear forms, and cannot be that of any smaller matrix. To do so, I must establish both a lower and upper bou",
+          "title": "Polynomial-time classical simulation of boson and fermion sampling under thermal loss",
+          "url": "https://arxiv.org/abs/2611.08444v1",
+          "published": "2026-11-05T18:36:21Z",
+          "summary": "Sampling experiments are a leading approach to demonstrating quantum computational advantage, yet their robustness to experimental noise is not completely understood. We develop a common framework for classical simulation of boson and fermion sampling under thermal loss, including pure loss. For Fock-state boson sampli",
           "authors": [
-            "Karthik Sheshadri"
+            "Armando Angrisani",
+            "Hela Mhiri"
           ],
           "tags": [
-            "cs.CC"
+            "quant-ph",
+            "cs.CC",
+            "math-ph",
+            "physics.optics"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "A Width Hierarchy of Monotone Algebraic Branching Programs",
-          "url": "https://arxiv.org/abs/2611.06608v1",
-          "published": "2026-11-04T14:57:48Z",
-          "summary": "It is well known that $\\mathsf{VF} = \\mathsf{VBP}_{3}$ (Ben-Or-Cleve'92), i.e. the width of any constant-width algebraic branching program can be reduced to width $3$ with only a polynomial overhead to size. We prove that this is not the case for the monotone equivalents. In particular, we prove that there is an infini",
+          "title": "The Proof Analysis Problem for Constant-Depth Frege",
+          "url": "https://arxiv.org/abs/2611.08305v1",
+          "published": "2026-11-05T17:09:30Z",
+          "summary": "We give a parallel algorithm for the Proof Analysis Problem of Arteche, Atserias, de Rezende, and Khaniki (FOCS 2025). The problem asks, given a CNF formula $\\varphi$ on $n$ variables and a proof $π$ of a size-$s$ Resolution lower bound on $\\varphi$, encoded as $\\neg \\mathrm{Ref}_s(\\varphi)$, to extract a satisfying as",
           "authors": [
-            "Julian Dörfler",
-            "Alexander Rogovskyy"
+            "Noel Arteche",
+            "Susanna F. de Rezende",
+            "Erfan Khaniki"
           ],
           "tags": [
             "cs.CC"
@@ -187,30 +192,29 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Odd Capillarity",
-          "url": "https://arxiv.org/abs/2611.06882v1",
-          "published": "2026-11-04T18:38:40Z",
-          "summary": "Capillarity governs interfacial relaxation and hydrodynamic motion in binary fluids through parity-even mechanical stresses. Here, we introduce \\emph{odd capillarity}, a parity-breaking interfacial mechanical response, by incorporating a symmetric, nonvariational, parity-odd capillary stress into the Cahn--Hilliard--Na",
+          "title": "A characteristic mapping method for dissipative evolution equations",
+          "url": "https://arxiv.org/abs/2611.08261v1",
+          "published": "2026-11-05T16:36:36Z",
+          "summary": "The Characteristic Mapping (CM) method is a transport scheme which discretizes the Lagrangian flow map as a composition of spatial interpolants. This adaptive approximation technique has demonstrated novel resolution properties and the ability to efficiently simulate the fine scales of inviscid turbulent flows. In this",
           "authors": [
-            "Nadia Bihari Padhan",
-            "Axel Voigt"
+            "William Holman-Bissegger",
+            "Seth Taylor",
+            "Jean-Christophe Nave"
           ],
           "tags": [
-            "physics.flu-dyn",
-            "cond-mat.soft",
-            "nlin.CD"
+            "math.NA",
+            "physics.flu-dyn"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Finite-Time Blowup for Navier-Stokes with Smooth Forcing, Part II: Residual Correction via Oscillatory Pulses",
-          "url": "https://arxiv.org/abs/2611.06869v1",
-          "published": "2026-11-04T18:23:17Z",
-          "summary": "This paper is a companion to Part I: Construction of Self-Similar Solutions with Admissible Stress and Flat Remainder (arXiv:2609.35406). Part I constructs approximately self-similar flow profiles with a singular stress in divergence form. The associated velocity becomes unbounded as $t\\uparrow 1$. Here, localized osci",
+          "title": "Singular viscosity-exponent limit for one-dimensional compressible Navier-Stokes equations with far field vacuum",
+          "url": "https://arxiv.org/abs/2611.07790v1",
+          "published": "2026-11-05T10:30:30Z",
+          "summary": "We consider the limit $δ\\to1^+$ for the one-dimensional compressible Navier-Stokes equations with viscosity $μ(ρ)=ρ^δ$ and far field vacuum. To the best of our knowledge, this is the first result on the viscosity-exponent limit $δ\\to1^+$ for strong solutions with far field vacuum. With far field vacuum, the diffusion c",
           "authors": [
-            "Zhen Lei",
-            "Xiao Ren"
+            "Xingyang Zhang"
           ],
           "tags": [
             "math.AP"
