@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-08T22:11:39Z",
+  "generated_at": "2026-11-09T06:43:58Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
@@ -60,35 +60,33 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Polynomial-time classical simulation of boson and fermion sampling under thermal loss",
-          "url": "https://arxiv.org/abs/2611.08444v1",
-          "published": "2026-11-05T18:36:21Z",
-          "summary": "Sampling experiments are a leading approach to demonstrating quantum computational advantage, yet their robustness to experimental noise is not completely understood. We develop a common framework for classical simulation of boson and fermion sampling under thermal loss, including pure loss. For Fock-state boson sampli",
+          "title": "Beyond the $n/2$ Threshold: Quantum Query Complexity for Computing Hamming Weight and Symmetric Functions",
+          "url": "https://arxiv.org/abs/2611.09809v1",
+          "published": "2026-11-06T17:58:16Z",
+          "summary": "The oracle-interrogation algorithm [van Dam, FOCS '98] computes every $n$-bit Boolean function with bounded error using $n/2+O(\\sqrt n)$ quantum queries. In contrast, parity can be computed exactly using $\\lceil n/2\\rceil$ queries, but whether an additive overhead beyond $n/2$ is necessary for a single Boolean output h",
           "authors": [
-            "Armando Angrisani",
-            "Hela Mhiri"
+            "Yuan Deng",
+            "Zihan Hao",
+            "Honghao Lin"
           ],
           "tags": [
             "quant-ph",
-            "cs.CC",
-            "math-ph",
-            "physics.optics"
+            "cs.CC"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "The Proof Analysis Problem for Constant-Depth Frege",
-          "url": "https://arxiv.org/abs/2611.08305v1",
-          "published": "2026-11-05T17:09:30Z",
-          "summary": "We give a parallel algorithm for the Proof Analysis Problem of Arteche, Atserias, de Rezende, and Khaniki (FOCS 2025). The problem asks, given a CNF formula $\\varphi$ on $n$ variables and a proof $π$ of a size-$s$ Resolution lower bound on $\\varphi$, encoded as $\\neg \\mathrm{Ref}_s(\\varphi)$, to extract a satisfying as",
+          "title": "A proof of the Aaronson-Ambainis conjecture",
+          "url": "https://arxiv.org/abs/2611.09773v1",
+          "published": "2026-11-06T17:36:58Z",
+          "summary": "Aaronson and Ambainis conjectured that every bounded polynomial of low degree on the discrete cube has an influential variable. They showed that the conjecture implies that the acceptance probability of every quantum algorithm making $T$ queries can be approximated on most inputs by a classical algorithm making $\\mathr",
           "authors": [
-            "Noel Arteche",
-            "Susanna F. de Rezende",
-            "Erfan Khaniki"
+            "David Turturean"
           ],
           "tags": [
-            "cs.CC"
+            "cs.CC",
+            "quant-ph"
           ],
           "kind": "paper"
         }
@@ -105,6 +103,21 @@
       "items": [
         {
           "source": "arxiv",
+          "title": "The existence of small defining polynomials for number fields, II",
+          "url": "https://arxiv.org/abs/2611.09031v1",
+          "published": "2026-11-06T06:05:18Z",
+          "summary": "We prove that every number field of odd degree $n\\geq 3$ and absolute discriminant $D$ has an integral defining polynomial whose coefficients are $O_n(D^{(n-1)/(2n-1)})$ in size. This strengthens, in odd-degree cases, the recently established bound of $O_n(D^{1/2})$ for all degrees $n$, which was conjectured in 1998 by",
+          "authors": [
+            "Manjul Bhargava",
+            "Sameera Vemulapalli"
+          ],
+          "tags": [
+            "math.NT"
+          ],
+          "kind": "paper"
+        },
+        {
+          "source": "arxiv",
           "title": "3-manifold decision problems and Riemann hypotheses",
           "url": "https://arxiv.org/abs/2611.06705v1",
           "published": "2026-11-04T16:05:16Z",
@@ -115,23 +128,6 @@
           ],
           "tags": [
             "math.GT"
-          ],
-          "kind": "paper"
-        },
-        {
-          "source": "arxiv",
-          "title": "Almost primes in short intervals and averages of long Dirichlet polynomial approximations to $(ζ'/ζ)^{k}$",
-          "url": "https://arxiv.org/abs/2611.05000v1",
-          "published": "2026-11-03T14:50:20Z",
-          "summary": "We study the asymptotic behaviour of the mean square of long truncations of the Dirichlet series for $\\bigl(ζ'/ζ\\bigr)^{k}$ on the critical line; we establish the connection between this problem and the short-interval variance of the convoluted von Mangoldt function $Λ^{*k}$ in short intervals and in arithmetic progres",
-          "authors": [
-            "Siegfred Baluyot",
-            "John Brian Conrey",
-            "Ayesha Irfan"
-          ],
-          "tags": [
-            "math.NT",
-            "math-ph"
           ],
           "kind": "paper"
         }
@@ -192,29 +188,29 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "A characteristic mapping method for dissipative evolution equations",
-          "url": "https://arxiv.org/abs/2611.08261v1",
-          "published": "2026-11-05T16:36:36Z",
-          "summary": "The Characteristic Mapping (CM) method is a transport scheme which discretizes the Lagrangian flow map as a composition of spatial interpolants. This adaptive approximation technique has demonstrated novel resolution properties and the ability to efficiently simulate the fine scales of inviscid turbulent flows. In this",
+          "title": "Single-scale regularity from Dirichlet energy for the five-dimensional stationary Navier--Stokes equations",
+          "url": "https://arxiv.org/abs/2611.09289v1",
+          "published": "2026-11-06T10:42:31Z",
+          "summary": "We establish an interior $\\varepsilon$-regularity criterion for suitable weak solutions of the unforced stationary Navier--Stokes equations in an open set $Ω\\subset\\mathbb R^5$. There exists a universal constant $\\varepsilon_\\ast>0$ such that $x_0$ is regular if, for some ball $B_R(x_0)\\subsetΩ$ with $R>0$, \\[ \\frac1R\\",
           "authors": [
-            "William Holman-Bissegger",
-            "Seth Taylor",
-            "Jean-Christophe Nave"
+            "Shuai Li",
+            "Jianbo Yu"
           ],
           "tags": [
-            "math.NA",
-            "physics.flu-dyn"
+            "math.AP"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Singular viscosity-exponent limit for one-dimensional compressible Navier-Stokes equations with far field vacuum",
-          "url": "https://arxiv.org/abs/2611.07790v1",
-          "published": "2026-11-05T10:30:30Z",
-          "summary": "We consider the limit $δ\\to1^+$ for the one-dimensional compressible Navier-Stokes equations with viscosity $μ(ρ)=ρ^δ$ and far field vacuum. To the best of our knowledge, this is the first result on the viscosity-exponent limit $δ\\to1^+$ for strong solutions with far field vacuum. With far field vacuum, the diffusion c",
+          "title": "On the optimal mass threshold for the two-dimensional Keller-Segel system coupled to the Navier-Stokes equations",
+          "url": "https://arxiv.org/abs/2611.09160v1",
+          "published": "2026-11-06T08:42:07Z",
+          "summary": "We investigate the mass threshold for the two-dimensional Keller-Segel system coupled with the incompressible Navier-Stokes equations. In the absence of fluid interaction, the classical Keller-Segel system admits a well-known $4π$-critical-mass dichotomy: for every suitably regular initial datum of total mass \\(m 4π\\),",
           "authors": [
-            "Xingyang Zhang"
+            "Lili Du",
+            "Yulan Wang",
+            "Yichen Zhang"
           ],
           "tags": [
             "math.AP"
@@ -296,12 +292,12 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Nonvanishing of 2-primary Kolyvagin classes via simultaneous quadratic twists",
-          "url": "https://arxiv.org/abs/2610.31631v1",
-          "published": "2026-10-22T17:48:19Z",
-          "summary": "Let $E/\\mathbf{Q}$ be an elliptic curve, let $K=\\mathbf{Q}(\\sqrt{D})$ satisfy the Heegner hypothesis with $D<-4$, and fix a modular parametrization $\\varphi$ with $\\varphi(\\infty)=O$. Under surjectivity modulo $2^L$, with $L\\ge 2$, and a cohomological exclusion condition at level $4$, we construct a finite set of prime",
+          "title": "Elliptic units, derived Heegner classes and the p-adic Birch and Swinnerton-Dyer quotient of CM elliptic curves of rank two",
+          "url": "https://arxiv.org/abs/2611.09192v1",
+          "published": "2026-11-06T09:14:37Z",
+          "summary": "Let $E\\colon y^2=x^3-Dx$ have rank two and let $p\\equiv1\\pmod4$ be a prime of good reduction. We study the conjecture that the $p$-adic quotient $q_p$, the leading coefficient of the cyclotomic $p$-adic $L$-function divided by the Euler factor and the $p$-adic regulator, equals the complex quotient $q_\\infty=L''(E,1)/(",
           "authors": [
-            "Zhiqi Sun"
+            "Miquel Calonge Fabregat"
           ],
           "tags": [
             "math.NT"
@@ -310,12 +306,12 @@
         },
         {
           "source": "arxiv",
-          "title": "On the algebraic and analytic ranks of the twin-prime elliptic curve $y^2=x(x-2)(x-p)$",
-          "url": "https://arxiv.org/abs/2610.09370v1",
-          "published": "2026-10-07T03:24:10Z",
-          "summary": "Let $p\\ge 7$ and suppose that $p$ and $p-2$ are prime. We study $E_p:y^2=x(x-2)(x-p)$ using the classical $2$-Selmer calculation of Qiu-Zhang and the Cassels-Tate pairing. These give $2^\\infty$-Selmer corank one for $p\\equiv 3,5\\pmod{8}$ and corank zero for $p\\equiv 7\\pmod{8}$. Assuming the low-corank Birch-Swinnerton-",
+          "title": "Nonvanishing of 2-primary Kolyvagin classes via simultaneous quadratic twists",
+          "url": "https://arxiv.org/abs/2610.31631v1",
+          "published": "2026-10-22T17:48:19Z",
+          "summary": "Let $E/\\mathbf{Q}$ be an elliptic curve, let $K=\\mathbf{Q}(\\sqrt{D})$ satisfy the Heegner hypothesis with $D<-4$, and fix a modular parametrization $\\varphi$ with $\\varphi(\\infty)=O$. Under surjectivity modulo $2^L$, with $L\\ge 2$, and a cohomological exclusion condition at level $4$, we construct a finite set of prime",
           "authors": [
-            "Ruihan Chen"
+            "Zhiqi Sun"
           ],
           "tags": [
             "math.NT"
