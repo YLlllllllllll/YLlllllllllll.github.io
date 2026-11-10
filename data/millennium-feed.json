@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-09T22:26:09Z",
+  "generated_at": "2026-11-10T07:25:05Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
@@ -60,14 +60,14 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Beyond the $n/2$ Threshold: Quantum Query Complexity for Computing Hamming Weight and Symmetric Functions",
-          "url": "https://arxiv.org/abs/2611.09809v1",
-          "published": "2026-11-06T17:58:16Z",
-          "summary": "The oracle-interrogation algorithm [van Dam, FOCS '98] computes every $n$-bit Boolean function with bounded error using $n/2+O(\\sqrt n)$ quantum queries. In contrast, parity can be computed exactly using $\\lceil n/2\\rceil$ queries, but whether an additive overhead beyond $n/2$ is necessary for a single Boolean output h",
+          "title": "A short proof of the Aaronson-Ambainis Conjecture via the completion framework",
+          "url": "https://arxiv.org/abs/2611.12795v1",
+          "published": "2026-11-09T18:01:58Z",
+          "summary": "We give a short proof of the Aaronson-Ambainis conjecture. If a partial Boolean function $f$ is defined on a $δ$-fraction of all $n$-bit strings and have quantum query complexity $Q(f)$, then, for every $0<ε<1$, a deterministic algorithm computes $f$ correctly on at least a $1-ε$ fraction of its domain using $O( Q(f)^6",
           "authors": [
-            "Yuan Deng",
-            "Zihan Hao",
-            "Honghao Lin"
+            "Thomas Huffstutler",
+            "David Miloschewsky",
+            "Supartha Podder"
           ],
           "tags": [
             "quant-ph",
@@ -77,16 +77,19 @@
         },
         {
           "source": "arxiv",
-          "title": "A proof of the Aaronson-Ambainis conjecture",
-          "url": "https://arxiv.org/abs/2611.09773v1",
-          "published": "2026-11-06T17:36:58Z",
-          "summary": "Aaronson and Ambainis conjectured that every bounded polynomial of low degree on the discrete cube has an influential variable. They showed that the conjecture implies that the acceptance probability of every quantum algorithm making $T$ queries can be approximated on most inputs by a classical algorithm making $\\mathr",
+          "title": "Succinct Infinite-Horizon Lyapunov and LQR Value Problems Are BQP-Complete",
+          "url": "https://arxiv.org/abs/2611.12757v1",
+          "published": "2026-11-09T17:36:55Z",
+          "summary": "Fundamental tasks in linear systems analysis and control require evaluating infinite-horizon output energies for autonomous systems and optimal value functions for controlled systems. These quantities are characterized by Lyapunov and algebraic Riccati equations, respectively. In this work, we study promise problems fo",
           "authors": [
-            "David Turturean"
+            "Mohamed Serry",
+            "Jun Liu"
           ],
           "tags": [
+            "quant-ph",
             "cs.CC",
-            "quant-ph"
+            "eess.SY",
+            "math.OC"
           ],
           "kind": "paper"
         }
@@ -103,13 +106,14 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "The existence of small defining polynomials for number fields, II",
-          "url": "https://arxiv.org/abs/2611.09031v1",
-          "published": "2026-11-06T06:05:18Z",
-          "summary": "We prove that every number field of odd degree $n\\geq 3$ and absolute discriminant $D$ has an integral defining polynomial whose coefficients are $O_n(D^{(n-1)/(2n-1)})$ in size. This strengthens, in odd-degree cases, the recently established bound of $O_n(D^{1/2})$ for all degrees $n$, which was conjectured in 1998 by",
+          "title": "Nontrivial Zeros of the Riemann Zeta Function and Its Derivative",
+          "url": "https://arxiv.org/abs/2611.12438v1",
+          "published": "2026-11-09T13:59:52Z",
+          "summary": "The nontrivial zeros of the Riemann zeta function lie at the heart of analytic number theory. Through the explicit formulas, they govern the distribution of prime numbers: the closer all nontrivial zeros lie to the critical line $\\Re(s)=\\frac12$, the more uniformly the primes are distributed. The Riemann Hypothesis-ass",
           "authors": [
-            "Manjul Bhargava",
-            "Sameera Vemulapalli"
+            "Chuancun Yin",
+            "Xianghua Zhao",
+            "Zuolu Hao"
           ],
           "tags": [
             "math.NT"
@@ -118,16 +122,18 @@
         },
         {
           "source": "arxiv",
-          "title": "3-manifold decision problems and Riemann hypotheses",
-          "url": "https://arxiv.org/abs/2611.06705v1",
-          "published": "2026-11-04T16:05:16Z",
-          "summary": "Beginning with Kuperberg's work on unknot recognition, several fundamental decision problems in 3-manifold topology have been shown to be in coNP assuming the generalized Riemann hypothesis. In this note, we explain how recent developments around the quasi-Riemann hypothesis yield unconditional versions of these result",
+          "title": "Real quadratic fields and finite quantum dilogarithms II: traces of quantum modular cocycles",
+          "url": "https://arxiv.org/abs/2611.12257v1",
+          "published": "2026-11-09T11:48:29Z",
+          "summary": "We study traces of quantum modular cocycles at fixed points of hyperbolic elements $γ\\in\\operatorname{SL}_2(\\mathbb{Z})$, formulate an algebraicity conjecture for these traces, and prove it for the cocycles associated to 1-dimensional state-integrals. In addition, we analyse a finite TQFT associated with $γ$ and conjec",
           "authors": [
-            "John A. Baldwin",
-            "Steven Sivek"
+            "Stavros Garoufalidis",
+            "Danylo Radchenko",
+            "Campbell Wheeler"
           ],
           "tags": [
-            "math.GT"
+            "math.GT",
+            "math.NT"
           ],
           "kind": "paper"
         }
@@ -144,6 +150,20 @@
       "items": [
         {
           "source": "arxiv",
+          "title": "SU(2) Yang-Mills: Spectral Bounds, Vacuum Concentration, and Criteria for the Continuum Limit",
+          "url": "https://arxiv.org/abs/2611.11534v1",
+          "published": "2026-11-08T18:20:16Z",
+          "summary": "A continuum mass-gap argument must preserve nonzero renormalized states and a positive spectral estimate while the spatial cutoff is removed and physical volume grows. We develop quantitative results that separate these requirements. Gauge reduction, reflection positivity and attributed strong-coupling estimates give p",
+          "authors": [
+            "Aleksandar Mihajlovic"
+          ],
+          "tags": [
+            "math-ph"
+          ],
+          "kind": "paper"
+        },
+        {
+          "source": "arxiv",
           "title": "Cornering the Heterotic String",
           "url": "https://arxiv.org/abs/2610.12318v1",
           "published": "2026-10-08T17:01:59Z",
@@ -155,23 +175,6 @@
           ],
           "tags": [
             "hep-th"
-          ],
-          "kind": "paper"
-        },
-        {
-          "source": "arxiv",
-          "title": "Nonlinear electroweak sphaleron clouds around Kerr black holes",
-          "url": "https://arxiv.org/abs/2609.31845v1",
-          "published": "2026-09-25T18:00:12Z",
-          "summary": "Kerr black holes and electroweak sphalerons are remarkable solutions of two pillars of modern physics: General Relativity and the Standard Model of particle physics, respectively. In this work, we investigate their interplay by constructing nonlinear sphaleron clouds around Schwarzschild and Kerr black holes in the pro",
-          "authors": [
-            "Carlos Herdeiro",
-            "Jutta Kunz",
-            "Hendrik Mennenga"
-          ],
-          "tags": [
-            "hep-th",
-            "gr-qc"
           ],
           "kind": "paper"
         }
@@ -188,29 +191,31 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Single-scale regularity from Dirichlet energy for the five-dimensional stationary Navier--Stokes equations",
-          "url": "https://arxiv.org/abs/2611.09289v1",
-          "published": "2026-11-06T10:42:31Z",
-          "summary": "We establish an interior $\\varepsilon$-regularity criterion for suitable weak solutions of the unforced stationary Navier--Stokes equations in an open set $Ω\\subset\\mathbb R^5$. There exists a universal constant $\\varepsilon_\\ast>0$ such that $x_0$ is regular if, for some ball $B_R(x_0)\\subsetΩ$ with $R>0$, \\[ \\frac1R\\",
+          "title": "Quantitative global regularity for Navier--Stokes equations with odd viscosity on the cubic three-torus",
+          "url": "https://arxiv.org/abs/2611.12862v1",
+          "published": "2026-11-09T18:50:49Z",
+          "summary": "We study the three-dimensional incompressible Navier--Stokes equation on the cubic torus with a constant odd-viscosity operator given by the vertical derivative of the curl. Arbitrary real, mean-zero, divergence-free initial data and an independent steady force, both in the second-order Sobolev space, admit a unique gl",
           "authors": [
-            "Shuai Li",
-            "Jianbo Yu"
+            "Jinzheng Li",
+            "Yuqi Li",
+            "Hao-Yu Sun"
           ],
           "tags": [
-            "math.AP"
+            "math.AP",
+            "math-ph",
+            "physics.flu-dyn"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "On the optimal mass threshold for the two-dimensional Keller-Segel system coupled to the Navier-Stokes equations",
-          "url": "https://arxiv.org/abs/2611.09160v1",
-          "published": "2026-11-06T08:42:07Z",
-          "summary": "We investigate the mass threshold for the two-dimensional Keller-Segel system coupled with the incompressible Navier-Stokes equations. In the absence of fluid interaction, the classical Keller-Segel system admits a well-known $4π$-critical-mass dichotomy: for every suitably regular initial datum of total mass \\(m 4π\\),",
+          "title": "On regularity and stability results of global weak solutions to two-dimensional Navier-Stokes equations with density-dependent viscosity and vacuum",
+          "url": "https://arxiv.org/abs/2611.12759v1",
+          "published": "2026-11-09T17:37:34Z",
+          "summary": "For the initial and initial-boundary value problems of the two-dimensional (2D) incompressible Navier-Stokes equations with density-dependent viscosity and vacuum, Lions' global weak solutions are shown to possess additional regularity, via establishing some key a priori decay-in-time rates for the approximate problem,",
           "authors": [
-            "Lili Du",
-            "Yulan Wang",
-            "Yichen Zhang"
+            "Yanfang Peng",
+            "Hongyu Wang"
           ],
           "tags": [
             "math.AP"
