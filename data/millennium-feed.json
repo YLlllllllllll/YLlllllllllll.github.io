@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-10T19:47:36Z",
+  "generated_at": "2026-11-11T06:34:10Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
       "ok": true,
-      "count": 1376
+      "count": 1379
     },
     "clay": {
       "ok": true,
@@ -60,36 +60,30 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "A short proof of the Aaronson-Ambainis Conjecture via the completion framework",
-          "url": "https://arxiv.org/abs/2611.12795v1",
-          "published": "2026-11-09T18:01:58Z",
-          "summary": "We give a short proof of the Aaronson-Ambainis conjecture. If a partial Boolean function $f$ is defined on a $δ$-fraction of all $n$-bit strings and have quantum query complexity $Q(f)$, then, for every $0<ε<1$, a deterministic algorithm computes $f$ correctly on at least a $1-ε$ fraction of its domain using $O( Q(f)^6",
+          "title": "Solomonoff Induction with Reflective Oracles",
+          "url": "https://arxiv.org/abs/2611.14454v1",
+          "published": "2026-11-10T18:22:27Z",
+          "summary": "We study predictive properties of a reflective variant of Solomonoff induction formulated using reflective oracles (Fallenstein et al. 2015, Wyeth et al. 2025). We show that the resulting optimal predictor succeeds against computable predictive strategies that specify only part of the data-generating process. The argum",
           "authors": [
-            "Thomas Huffstutler",
-            "David Miloschewsky",
-            "Supartha Podder"
+            "Damini Kusum"
           ],
           "tags": [
-            "quant-ph",
             "cs.CC"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Succinct Infinite-Horizon Lyapunov and LQR Value Problems Are BQP-Complete",
-          "url": "https://arxiv.org/abs/2611.12757v1",
-          "published": "2026-11-09T17:36:55Z",
-          "summary": "Fundamental tasks in linear systems analysis and control require evaluating infinite-horizon output energies for autonomous systems and optimal value functions for controlled systems. These quantities are characterized by Lyapunov and algebraic Riccati equations, respectively. In this work, we study promise problems fo",
+          "title": "Uniform Quantum Average-Case Fine-Grained Hardness of Arithmetized $k$-Orthogonal Vectors",
+          "url": "https://arxiv.org/abs/2611.14411v1",
+          "published": "2026-11-10T17:52:42Z",
+          "summary": "We study exact evaluation of the arithmetized $k$-Orthogonal Vectors polynomial $FOV^k$ of Ball et al. (2017, 2018). For every fixed integer $k \\geq 3$, set $d(n) = \\left \\lceil \\log^2 n \\right \\rceil$. Assuming the basic decision version of Quantum Strong Exponential-Time Hypothesis (QSETH), for every constant $\\varep",
           "authors": [
-            "Mohamed Serry",
-            "Jun Liu"
+            "Dhruv Prasad Deshpande",
+            "Abhishek Mishra"
           ],
           "tags": [
-            "quant-ph",
-            "cs.CC",
-            "eess.SY",
-            "math.OC"
+            "cs.CC"
           ],
           "kind": "paper"
         }
@@ -106,6 +100,20 @@
       "items": [
         {
           "source": "arxiv",
+          "title": "The distribution of small gaps between zeros of the Riemann zeta function",
+          "url": "https://arxiv.org/abs/2611.14486v1",
+          "published": "2026-11-10T18:46:37Z",
+          "summary": "Let $0<γ_1\\leq γ_2\\leq \\cdots$ be the ordinates of the non-trivial zeros $ρ_n$ of the Riemann zeta function in the upper half-plane, counted with multiplicity. Selberg proved unconditionally that there exists $λ_0<1$ such that a positive proportion of the zeros $ρ_n$ satisfy $γ_{n+1}-γ_n\\leq 2πλ_0/\\log γ_n$. Simonič, T",
+          "authors": [
+            "Youness Lamzouri"
+          ],
+          "tags": [
+            "math.NT"
+          ],
+          "kind": "paper"
+        },
+        {
+          "source": "arxiv",
           "title": "Nontrivial Zeros of the Riemann Zeta Function and Its Derivative",
           "url": "https://arxiv.org/abs/2611.12438v1",
           "published": "2026-11-09T13:59:52Z",
@@ -116,23 +124,6 @@
             "Zuolu Hao"
           ],
           "tags": [
-            "math.NT"
-          ],
-          "kind": "paper"
-        },
-        {
-          "source": "arxiv",
-          "title": "Real quadratic fields and finite quantum dilogarithms II: traces of quantum modular cocycles",
-          "url": "https://arxiv.org/abs/2611.12257v1",
-          "published": "2026-11-09T11:48:29Z",
-          "summary": "We study traces of quantum modular cocycles at fixed points of hyperbolic elements $γ\\in\\operatorname{SL}_2(\\mathbb{Z})$, formulate an algebraicity conjecture for these traces, and prove it for the cocycles associated to 1-dimensional state-integrals. In addition, we analyse a finite TQFT associated with $γ$ and conjec",
-          "authors": [
-            "Stavros Garoufalidis",
-            "Danylo Radchenko",
-            "Campbell Wheeler"
-          ],
-          "tags": [
-            "math.GT",
             "math.NT"
           ],
           "kind": "paper"
@@ -191,6 +182,20 @@
       "items": [
         {
           "source": "arxiv",
+          "title": "Global regularity of axisymmetric Navier--Stokes equations under total slip and critical smallness",
+          "url": "https://arxiv.org/abs/2611.13263v1",
+          "published": "2026-11-09T21:32:14Z",
+          "summary": "We study the axisymmetric incompressible Navier--Stokes equations in a finite cylinder subject to the Navier--total--slip boundary condition, that is, the Navier slip condition with zero friction. We prove that the solution remains smooth for all time provided that the initial swirl $Γ_0 = r v_{θ,0}$ has zero mean and",
+          "authors": [
+            "Tsz-Lik Chan"
+          ],
+          "tags": [
+            "math.AP"
+          ],
+          "kind": "paper"
+        },
+        {
+          "source": "arxiv",
           "title": "Quantitative global regularity for Navier--Stokes equations with odd viscosity on the cubic three-torus",
           "url": "https://arxiv.org/abs/2611.12862v1",
           "published": "2026-11-09T18:50:49Z",
@@ -204,21 +209,6 @@
             "math.AP",
             "math-ph",
             "physics.flu-dyn"
-          ],
-          "kind": "paper"
-        },
-        {
-          "source": "arxiv",
-          "title": "On regularity and stability results of global weak solutions to two-dimensional Navier-Stokes equations with density-dependent viscosity and vacuum",
-          "url": "https://arxiv.org/abs/2611.12759v1",
-          "published": "2026-11-09T17:37:34Z",
-          "summary": "For the initial and initial-boundary value problems of the two-dimensional (2D) incompressible Navier-Stokes equations with density-dependent viscosity and vacuum, Lions' global weak solutions are shown to possess additional regularity, via establishing some key a priori decay-in-time rates for the approximate problem,",
-          "authors": [
-            "Yanfang Peng",
-            "Hongyu Wang"
-          ],
-          "tags": [
-            "math.AP"
           ],
           "kind": "paper"
         },
