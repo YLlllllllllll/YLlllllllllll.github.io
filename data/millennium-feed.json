@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-12T19:59:12Z",
+  "generated_at": "2026-11-13T06:51:32Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
       "ok": true,
-      "count": 1383
+      "count": 1385
     },
     "clay": {
       "ok": true,
@@ -60,30 +60,33 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Solomonoff Induction with Reflective Oracles",
-          "url": "https://arxiv.org/abs/2611.14454v1",
-          "published": "2026-11-10T18:22:27Z",
-          "summary": "We study predictive properties of a reflective variant of Solomonoff induction formulated using reflective oracles (Fallenstein et al. 2015, Wyeth et al. 2025). We show that the resulting optimal predictor succeeds against computable predictive strategies that specify only part of the data-generating process. The argum",
+          "title": "The Tournament Equilibrium Set Is PSPACE-Complete, Even under Hereditary Uniqueness",
+          "url": "https://arxiv.org/abs/2611.17312v1",
+          "published": "2026-11-12T18:57:05Z",
+          "summary": "The tournament equilibrium set (TEQ), proposed by Schwartz in 1990, is a classical voting rule based on pairwise majority comparisons. Its definition is recursive: an alternative is judged by the alternatives that beat it, called its dominators, and by which of those dominators TEQ itself selects. Deciding whether a gi",
           "authors": [
-            "Damini Kusum"
+            "Ethan Dickey",
+            "Athina Terzoglou"
           ],
           "tags": [
+            "cs.GT",
             "cs.CC"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Uniform Quantum Average-Case Fine-Grained Hardness of Arithmetized $k$-Orthogonal Vectors",
-          "url": "https://arxiv.org/abs/2611.14411v1",
-          "published": "2026-11-10T17:52:42Z",
-          "summary": "We study exact evaluation of the arithmetized $k$-Orthogonal Vectors polynomial $FOV^k$ of Ball et al. (2017, 2018). For every fixed integer $k \\geq 3$, set $d(n) = \\left \\lceil \\log^2 n \\right \\rceil$. Assuming the basic decision version of Quantum Strong Exponential-Time Hypothesis (QSETH), for every constant $\\varep",
+          "title": "Towards a Theory of Learnability via Debate",
+          "url": "https://arxiv.org/abs/2611.17303v1",
+          "published": "2026-11-12T18:55:58Z",
+          "summary": "Debate has been recently proposed as a training protocol that is hoped to produce more aligned models even as model capabilities scale. The idea is that the human, instead of providing supervision in the form of labels, judges a debate between two models that compete to prove the correctness of opposite labels. It can",
           "authors": [
-            "Dhruv Prasad Deshpande",
-            "Abhishek Mishra"
+            "Tosca Lechner",
+            "Vinayak Pathak",
+            "Sivan Sabato"
           ],
           "tags": [
-            "cs.CC"
+            "cs.LG"
           ],
           "kind": "paper"
         }
@@ -100,12 +103,12 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "The distribution of small gaps between zeros of the Riemann zeta function",
-          "url": "https://arxiv.org/abs/2611.14486v1",
-          "published": "2026-11-10T18:46:37Z",
-          "summary": "Let $0<γ_1\\leq γ_2\\leq \\cdots$ be the ordinates of the non-trivial zeros $ρ_n$ of the Riemann zeta function in the upper half-plane, counted with multiplicity. Selberg proved unconditionally that there exists $λ_0<1$ such that a positive proportion of the zeros $ρ_n$ satisfy $γ_{n+1}-γ_n\\leq 2πλ_0/\\log γ_n$. Simonič, T",
+          "title": "Proof of the Quasi Riemann Hypothesis using $\\mathbb Q[i]$",
+          "url": "https://arxiv.org/abs/2611.16665v1",
+          "published": "2026-11-12T11:41:03Z",
+          "summary": "Using quartic Gauss sums in place of the cubic Gauss sums in OpenAI's original proof, we prove that the Dedekind $ζ$-function $ζ_{\\mathbb Q(i)}(s)$ of $\\mathbb Q(i)$ has no zeros in the half-plane $\\Re s>599/600$, thereby obtaining the same zero-free half-plane for the Riemann $ζ$-function.We obtain the upper bound for",
           "authors": [
-            "Youness Lamzouri"
+            "Xin Hang Ji"
           ],
           "tags": [
             "math.NT"
@@ -114,14 +117,14 @@
         },
         {
           "source": "arxiv",
-          "title": "Nontrivial Zeros of the Riemann Zeta Function and Its Derivative",
-          "url": "https://arxiv.org/abs/2611.12438v1",
-          "published": "2026-11-09T13:59:52Z",
-          "summary": "The nontrivial zeros of the Riemann zeta function lie at the heart of analytic number theory. Through the explicit formulas, they govern the distribution of prime numbers: the closer all nontrivial zeros lie to the critical line $\\Re(s)=\\frac12$, the more uniformly the primes are distributed. The Riemann Hypothesis-ass",
+          "title": "Central limit theorems for Frobenius, Hecke and Kloosterman angles",
+          "url": "https://arxiv.org/abs/2611.16550v1",
+          "published": "2026-11-12T09:41:09Z",
+          "summary": "The Frobenius angles of non-CM elliptic curves and the Hecke angles of non-CM newforms are equidistributed with respect to the Sato--Tate measure, while for Kloosterman angles, this is known on average over natural families. We study the fluctuations around these laws in large families, for smooth test functions. We pr",
           "authors": [
-            "Chuancun Yin",
-            "Xianghua Zhao",
-            "Zuolu Hao"
+            "Shreyas Pai",
+            "Kaneenika Sinha",
+            "Naman Thakkar"
           ],
           "tags": [
             "math.NT"
@@ -182,12 +185,13 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Global regularity of axisymmetric Navier--Stokes equations under total slip and critical smallness",
-          "url": "https://arxiv.org/abs/2611.13263v1",
-          "published": "2026-11-09T21:32:14Z",
-          "summary": "We study the axisymmetric incompressible Navier--Stokes equations in a finite cylinder subject to the Navier--total--slip boundary condition, that is, the Navier slip condition with zero friction. We prove that the solution remains smooth for all time provided that the initial swirl $Γ_0 = r v_{θ,0}$ has zero mean and",
+          "title": "Energy rigidity and weak--strong uniqueness for the anisotropic Navier--Stokes equations in $\\mathbb{R}^2_+$",
+          "url": "https://arxiv.org/abs/2611.15703v1",
+          "published": "2026-11-11T16:41:28Z",
+          "summary": "In this paper, we study the two-dimensional incompressible Navier--Stokes equations with only horizontal dissipation in the upper half-plane $\\mathbb{R}^2_+$. The combination of the missing directional regularity and the influence of the boundary presents an essential difficulty for the pressure estimates. We circumven",
           "authors": [
-            "Tsz-Lik Chan"
+            "Wenke Tan",
+            "Fan Wu"
           ],
           "tags": [
             "math.AP"
@@ -196,19 +200,17 @@
         },
         {
           "source": "arxiv",
-          "title": "Quantitative global regularity for Navier--Stokes equations with odd viscosity on the cubic three-torus",
-          "url": "https://arxiv.org/abs/2611.12862v1",
-          "published": "2026-11-09T18:50:49Z",
-          "summary": "We study the three-dimensional incompressible Navier--Stokes equation on the cubic torus with a constant odd-viscosity operator given by the vertical derivative of the curl. Arbitrary real, mean-zero, divergence-free initial data and an independent steady force, both in the second-order Sobolev space, admit a unique gl",
+          "title": "Boundary-layer detachment and infinite-Reynolds limit of two-dimensional wall-bounded flows",
+          "url": "https://arxiv.org/abs/2611.15239v1",
+          "published": "2026-11-11T09:30:44Z",
+          "summary": "Understanding boundary-layer detachment and its consequences for the infinite-Reynolds-number limit remains a major challenge in fluid mechanics. Here, direct numerical simulations of incompressible flow in a two-dimensional periodic channel with no-slip walls are used to investigate this problem. Reynolds-number-depen",
           "authors": [
-            "Jinzheng Li",
-            "Yuqi Li",
-            "Hao-Yu Sun"
+            "Ciro S. Campolina",
+            "Jérémie Bec"
           ],
           "tags": [
-            "math.AP",
-            "math-ph",
-            "physics.flu-dyn"
+            "physics.flu-dyn",
+            "math.AP"
           ],
           "kind": "paper"
         },
