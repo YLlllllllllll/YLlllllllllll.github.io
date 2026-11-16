@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-15T18:54:51Z",
+  "generated_at": "2026-11-16T06:39:03Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
       "ok": true,
-      "count": 1387
+      "count": 1389
     },
     "clay": {
       "ok": true,
@@ -60,33 +60,34 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "The Tournament Equilibrium Set Is PSPACE-Complete, Even under Hereditary Uniqueness",
-          "url": "https://arxiv.org/abs/2611.17312v1",
-          "published": "2026-11-12T18:57:05Z",
-          "summary": "The tournament equilibrium set (TEQ), proposed by Schwartz in 1990, is a classical voting rule based on pairwise majority comparisons. Its definition is recursive: an alternative is judged by the alternatives that beat it, called its dominators, and by which of those dominators TEQ itself selects. Deciding whether a gi",
+          "title": "Nesting in additive manufacturing using quantum annealing",
+          "url": "https://arxiv.org/abs/2611.18447v1",
+          "published": "2026-11-13T17:22:19Z",
+          "summary": "Nesting in powder bed fusion (PBF), an additive manufacturing (AM) process, determines the positions and orientations of parts within the build space and influences build height and build time. As the number of parts and feasible placements increases, the nesting problem becomes computationally demanding. Exact approac",
           "authors": [
-            "Ethan Dickey",
-            "Athina Terzoglou"
+            "Xiangqian Wua",
+            "Jannik Gayer",
+            "Marcel Wagner"
           ],
           "tags": [
-            "cs.GT",
-            "cs.CC"
+            "quant-ph",
+            "math.OC"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Towards a Theory of Learnability via Debate",
-          "url": "https://arxiv.org/abs/2611.17303v1",
-          "published": "2026-11-12T18:55:58Z",
-          "summary": "Debate has been recently proposed as a training protocol that is hoped to produce more aligned models even as model capabilities scale. The idea is that the human, instead of providing supervision in the form of labels, judges a debate between two models that compete to prove the correctness of opposite labels. It can",
+          "title": "Go under Chinese Rules with a Succinct Game History is Complete for Exponential Space",
+          "url": "https://arxiv.org/abs/2611.18201v1",
+          "published": "2026-11-13T14:07:41Z",
+          "summary": "The complexity of games is a central topic in combinatorics, algorithms, and computational complexity theory. It asks how difficult it is to determine the winner of a combinatorial game under optimal play. Many games, such as Hex or Othello, are PSPACE-complete: the game tree has polynomial depth, so the game can be de",
           "authors": [
-            "Tosca Lechner",
-            "Vinayak Pathak",
-            "Sivan Sabato"
+            "Markus Bläser",
+            "Felix Czerner"
           ],
           "tags": [
-            "cs.LG"
+            "cs.GT",
+            "cs.CC"
           ],
           "kind": "paper"
         }
@@ -185,6 +186,20 @@
       "items": [
         {
           "source": "arxiv",
+          "title": "Sharp nonuniqueness for the Vlasov--Navier--Stokes system",
+          "url": "https://arxiv.org/abs/2611.18554v1",
+          "published": "2026-11-13T18:58:24Z",
+          "summary": "We consider the Vlasov--Navier--Stokes system on $\\mathbb T^d\\times\\mathbb R^d$, $d\\ge2$. For smooth data and every $p<2$, $q<\\infty$, we construct infinitely many weak solutions with velocity in $L^p_tL^\\infty\\cap L^1_tW^{1,q}$ and bounded, renormalized distribution function; infinitely many of them violate the energy",
+          "authors": [
+            "Xingyu Li"
+          ],
+          "tags": [
+            "math.AP"
+          ],
+          "kind": "paper"
+        },
+        {
+          "source": "arxiv",
           "title": "Energy rigidity and weak--strong uniqueness for the anisotropic Navier--Stokes equations in $\\mathbb{R}^2_+$",
           "url": "https://arxiv.org/abs/2611.15703v1",
           "published": "2026-11-11T16:41:28Z",
@@ -194,22 +209,6 @@
             "Fan Wu"
           ],
           "tags": [
-            "math.AP"
-          ],
-          "kind": "paper"
-        },
-        {
-          "source": "arxiv",
-          "title": "Boundary-layer detachment and infinite-Reynolds limit of two-dimensional wall-bounded flows",
-          "url": "https://arxiv.org/abs/2611.15239v1",
-          "published": "2026-11-11T09:30:44Z",
-          "summary": "Understanding boundary-layer detachment and its consequences for the infinite-Reynolds-number limit remains a major challenge in fluid mechanics. Here, direct numerical simulations of incompressible flow in a two-dimensional periodic channel with no-slip walls are used to investigate this problem. Reynolds-number-depen",
-          "authors": [
-            "Ciro S. Campolina",
-            "Jérémie Bec"
-          ],
-          "tags": [
-            "physics.flu-dyn",
             "math.AP"
           ],
           "kind": "paper"
@@ -289,12 +288,12 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Elliptic units, derived Heegner classes and the p-adic Birch and Swinnerton-Dyer quotient of CM elliptic curves of rank two",
-          "url": "https://arxiv.org/abs/2611.09192v1",
-          "published": "2026-11-06T09:14:37Z",
-          "summary": "Let $E\\colon y^2=x^3-Dx$ have rank two and let $p\\equiv1\\pmod4$ be a prime of good reduction. We study the conjecture that the $p$-adic quotient $q_p$, the leading coefficient of the cyclotomic $p$-adic $L$-function divided by the Euler factor and the $p$-adic regulator, equals the complex quotient $q_\\infty=L''(E,1)/(",
+          "title": "Extreme central $L$-values of almost prime quadratic twists of elliptic curves II",
+          "url": "https://arxiv.org/abs/2611.17848v1",
+          "published": "2026-11-13T07:30:32Z",
+          "summary": "We prove lower bounds for central $L$-values of quadratic twists of an elliptic curve by discriminants with at most five prime factors. Under the rank-zero Birch--Swinnerton-Dyer formula, these bounds give large Tate--Shafarevich groups.",
           "authors": [
-            "Miquel Calonge Fabregat"
+            "Shenghao Hua"
           ],
           "tags": [
             "math.NT"
@@ -303,12 +302,12 @@
         },
         {
           "source": "arxiv",
-          "title": "Nonvanishing of 2-primary Kolyvagin classes via simultaneous quadratic twists",
-          "url": "https://arxiv.org/abs/2610.31631v1",
-          "published": "2026-10-22T17:48:19Z",
-          "summary": "Let $E/\\mathbf{Q}$ be an elliptic curve, let $K=\\mathbf{Q}(\\sqrt{D})$ satisfy the Heegner hypothesis with $D<-4$, and fix a modular parametrization $\\varphi$ with $\\varphi(\\infty)=O$. Under surjectivity modulo $2^L$, with $L\\ge 2$, and a cohomological exclusion condition at level $4$, we construct a finite set of prime",
+          "title": "Elliptic units, derived Heegner classes and the p-adic Birch and Swinnerton-Dyer quotient of CM elliptic curves of rank two",
+          "url": "https://arxiv.org/abs/2611.09192v1",
+          "published": "2026-11-06T09:14:37Z",
+          "summary": "Let $E\\colon y^2=x^3-Dx$ have rank two and let $p\\equiv1\\pmod4$ be a prime of good reduction. We study the conjecture that the $p$-adic quotient $q_p$, the leading coefficient of the cyclotomic $p$-adic $L$-function divided by the Euler factor and the $p$-adic regulator, equals the complex quotient $q_\\infty=L''(E,1)/(",
           "authors": [
-            "Zhiqi Sun"
+            "Miquel Calonge Fabregat"
           ],
           "tags": [
             "math.NT"
