@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-16T06:39:03Z",
+  "generated_at": "2026-11-16T22:11:51Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
       "ok": true,
-      "count": 1389
+      "count": 1398
     },
     "clay": {
       "ok": true,
@@ -65,7 +65,7 @@
           "published": "2026-11-13T17:22:19Z",
           "summary": "Nesting in powder bed fusion (PBF), an additive manufacturing (AM) process, determines the positions and orientations of parts within the build space and influences build height and build time. As the number of parts and feasible placements increases, the nesting problem becomes computationally demanding. Exact approac",
           "authors": [
-            "Xiangqian Wua",
+            "Xiangqian Wu",
             "Jannik Gayer",
             "Marcel Wagner"
           ],
