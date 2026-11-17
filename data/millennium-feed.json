@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-16T22:11:51Z",
+  "generated_at": "2026-11-17T07:59:50Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
       "ok": true,
-      "count": 1398
+      "count": 1400
     },
     "clay": {
       "ok": true,
@@ -60,34 +60,36 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Nesting in additive manufacturing using quantum annealing",
-          "url": "https://arxiv.org/abs/2611.18447v1",
-          "published": "2026-11-13T17:22:19Z",
-          "summary": "Nesting in powder bed fusion (PBF), an additive manufacturing (AM) process, determines the positions and orientations of parts within the build space and influences build height and build time. As the number of parts and feasible placements increases, the nesting problem becomes computationally demanding. Exact approac",
+          "title": "Hyperlyve: Parallelized Enumeration and Exact Lyapunov Stability Certification for Deep ReLU Networks",
+          "url": "https://arxiv.org/abs/2611.21599v1",
+          "published": "2026-11-16T18:58:29Z",
+          "summary": "We introduce Hyperlyve (Hyperplane Partitioned Lyapunov Verification and Enumeration), a framework for proving the asymptotic stability of nonlinear dynamical systems, including those with neural network controllers. Hyperlyve learns and formally certifies continuous piecewise-affine (CPA) neural Lyapunov functions wit",
           "authors": [
-            "Xiangqian Wu",
-            "Jannik Gayer",
-            "Marcel Wagner"
+            "Brian Yarbrough",
+            "Jesse Wayment",
+            "Jingbo Wang"
           ],
           "tags": [
-            "quant-ph",
-            "math.OC"
+            "eess.SY",
+            "cs.CG",
+            "cs.LG",
+            "cs.LO"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Go under Chinese Rules with a Succinct Game History is Complete for Exponential Space",
-          "url": "https://arxiv.org/abs/2611.18201v1",
-          "published": "2026-11-13T14:07:41Z",
-          "summary": "The complexity of games is a central topic in combinatorics, algorithms, and computational complexity theory. It asks how difficult it is to determine the winner of a combinatorial game under optimal play. Many games, such as Hex or Othello, are PSPACE-complete: the game tree has polynomial depth, so the game can be de",
+          "title": "Projection-Based Partitioned MiLAC Architecture for MU-MIMO Precoding",
+          "url": "https://arxiv.org/abs/2611.21561v1",
+          "published": "2026-11-16T18:40:02Z",
+          "summary": "This work proposes a partitioned Microwave Linear Analog Computer (MiLAC) architecture for user-specific MU-MIMO precoding based on independently configured analog subnetworks. The proposed method reformulates user-level interference suppression as an invertible projection-based transformation, which is computed from t",
           "authors": [
-            "Markus Bläser",
-            "Felix Czerner"
+            "Israel Coelho Cunha",
+            "Francisco L. F. Martins",
+            "Giovanni G. R. Milan"
           ],
           "tags": [
-            "cs.GT",
-            "cs.CC"
+            "eess.SP"
           ],
           "kind": "paper"
         }
@@ -104,28 +106,28 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Proof of the Quasi Riemann Hypothesis using $\\mathbb Q[i]$",
-          "url": "https://arxiv.org/abs/2611.16665v1",
-          "published": "2026-11-12T11:41:03Z",
-          "summary": "Using quartic Gauss sums in place of the cubic Gauss sums in OpenAI's original proof, we prove that the Dedekind $ζ$-function $ζ_{\\mathbb Q(i)}(s)$ of $\\mathbb Q(i)$ has no zeros in the half-plane $\\Re s>599/600$, thereby obtaining the same zero-free half-plane for the Riemann $ζ$-function.We obtain the upper bound for",
+          "title": "Complex Moments of the Derivative of the Riemann Zeta Function",
+          "url": "https://arxiv.org/abs/2611.21551v1",
+          "published": "2026-11-16T18:32:03Z",
+          "summary": "We investigate the complex moments of the derivative of the Riemann zeta function through a random Euler product model. For each fixed $σ>1/2$ and every $s\\in\\mathbb{C}$ with $\\operatorname{Re}(s)>0$, we show, under the Lindelöf hypothesis, that the $2s$-th moment of $|ζ'(σ+\\mathrm{i}t)|$ over $t\\in[1,T]$ converges, as",
           "authors": [
-            "Xin Hang Ji"
+            "Joseph Najnudel",
+            "Fei Wei"
           ],
           "tags": [
-            "math.NT"
+            "math.NT",
+            "math.PR"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Central limit theorems for Frobenius, Hecke and Kloosterman angles",
-          "url": "https://arxiv.org/abs/2611.16550v1",
-          "published": "2026-11-12T09:41:09Z",
-          "summary": "The Frobenius angles of non-CM elliptic curves and the Hecke angles of non-CM newforms are equidistributed with respect to the Sato--Tate measure, while for Kloosterman angles, this is known on average over natural families. We study the fluctuations around these laws in large families, for smooth test functions. We pr",
+          "title": "Distribution of Primes in Galois Extensions of Global Fields with Explicit Constant Terms",
+          "url": "https://arxiv.org/abs/2611.20592v1",
+          "published": "2026-11-16T06:14:00Z",
+          "summary": "We study the distribution of primes among Frobenius conjugacy classes in finite Galois extensions of global fields. In earlier work, the author and Koyama proved that the existence and nonvanishing of the limit of partial Euler products on the critical line for Artin $L$-functions (the Deep Riemann Hypothesis (A), or D",
           "authors": [
-            "Shreyas Pai",
-            "Kaneenika Sinha",
-            "Naman Thakkar"
+            "Miho Aoki"
           ],
           "tags": [
             "math.NT"
@@ -186,30 +188,32 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Sharp nonuniqueness for the Vlasov--Navier--Stokes system",
-          "url": "https://arxiv.org/abs/2611.18554v1",
-          "published": "2026-11-13T18:58:24Z",
-          "summary": "We consider the Vlasov--Navier--Stokes system on $\\mathbb T^d\\times\\mathbb R^d$, $d\\ge2$. For smooth data and every $p<2$, $q<\\infty$, we construct infinitely many weak solutions with velocity in $L^p_tL^\\infty\\cap L^1_tW^{1,q}$ and bounded, renormalized distribution function; infinitely many of them violate the energy",
+          "title": "Direct Numerical Simulation of Vortex-Induced Instability Over a Semi-Infinite Flat Plate with Discrete Roughness",
+          "url": "https://arxiv.org/abs/2611.21409v1",
+          "published": "2026-11-16T17:00:59Z",
+          "summary": "The receptivity of flow over a semi-infinite flat plate to a combination of deterministic free stream excitation and surface roughness, is investigated by solving the incompressible Navier-Stokes equation (NSE). The free stream excitation is in the form of a convecting vortex with fixed strength and sign, while the rou",
           "authors": [
-            "Xingyu Li"
+            "Aditi Sengupta",
+            "Tapan K. Sengupta",
+            "Vajjala K. Suman"
           ],
           "tags": [
-            "math.AP"
+            "physics.flu-dyn"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Energy rigidity and weak--strong uniqueness for the anisotropic Navier--Stokes equations in $\\mathbb{R}^2_+$",
-          "url": "https://arxiv.org/abs/2611.15703v1",
-          "published": "2026-11-11T16:41:28Z",
-          "summary": "In this paper, we study the two-dimensional incompressible Navier--Stokes equations with only horizontal dissipation in the upper half-plane $\\mathbb{R}^2_+$. The combination of the missing directional regularity and the influence of the boundary presents an essential difficulty for the pressure estimates. We circumven",
+          "title": "Resolvent-based modeling of turbulent flow over multilayer compliant surfaces",
+          "url": "https://arxiv.org/abs/2611.20281v1",
+          "published": "2026-11-15T22:24:11Z",
+          "summary": "Compliant coatings offer a passive approach to modifying near-wall turbulence and potentially reducing skin-friction drag, but high-fidelity exploration of the coupled parameter space is costly. We develop a two-way coupled resolvent-Galerkin framework for turbulent channel flow over finite-thickness, layered viscoelas",
           "authors": [
-            "Wenke Tan",
-            "Fan Wu"
+            "Rutvij Bhagwat",
+            "Kourosh Shoele"
           ],
           "tags": [
-            "math.AP"
+            "physics.flu-dyn"
           ],
           "kind": "paper"
         },
