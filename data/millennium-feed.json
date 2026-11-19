@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-18T20:37:18Z",
+  "generated_at": "2026-11-19T07:31:16Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
       "ok": true,
-      "count": 1411
+      "count": 1413
     },
     "clay": {
       "ok": true,
@@ -60,32 +60,32 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Local interference algorithms for observables in large random circuits",
-          "url": "https://arxiv.org/abs/2611.23207v1",
-          "published": "2026-11-17T18:48:27Z",
-          "summary": "In quantum dynamics, it is generally believed that interference effects lead to a sign problem for classical Monte Carlo sampling methods, rendering sampling ineffective. In this paper we show that this is generically not the case for the task of simulating the evolution of observables in random instances of circuit dy",
+          "title": "Sharp Complexity Thresholds for Network Cournot Competition",
+          "url": "https://arxiv.org/abs/2611.24931v1",
+          "published": "2026-11-18T18:55:00Z",
+          "summary": "We determine the approximation complexity of network Cournot equilibrium as a function of demand degree and the number of firms sharing a market. For common, nonincreasing concave polynomial inverse demands, convex quadratic costs of firms' allocation vectors, and rational total capacities, high-precision approximation",
           "authors": [
-            "Philippe Suchsland",
-            "Brayden Ware",
-            "Vladislav D. Kurilovich"
+            "Mohammad Hajiaghayi",
+            "Mohammad Mahdavi"
           ],
           "tags": [
-            "quant-ph",
-            "cond-mat.str-el"
+            "cs.GT",
+            "cs.CC"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Integral Tensor Isomorphism via Cubic Rings and Lattice Methods",
-          "url": "https://arxiv.org/abs/2611.23186v1",
-          "published": "2026-11-17T18:30:53Z",
-          "summary": "We prove that isomorphism of integral $2\\times3\\times3$ tensors under $\\mathrm{GL}_2(\\mathbb{Z})\\times\\mathrm{GL}_3(\\mathbb{Z})\\times\\mathrm{GL}_3(\\mathbb{Z})$ is decidable in bounded-error quantum polynomial time. For a tensor $T=(A,B)$ with nonzero determinant form $\\det(xA-yB)$, we use the parametrization of Wood by",
+          "title": "Hardness of \"Infinite Energy\" Puzzles",
+          "url": "https://arxiv.org/abs/2611.24918v1",
+          "published": "2026-11-18T18:49:27Z",
+          "summary": "Infinite Energy (by Light Potato, 2025) is a single-player puzzle in which one wires a network of sockets so that, after every power source is unplugged, energy keeps circulating and leaves every board energized. We study several variants of the game and the complexity of deciding whether an instance can be won. The va",
           "authors": [
-            "Thomas Huffstutler"
+            "Utkarsh Tiwari",
+            "Utkarsh Thanvi",
+            "Armaan Sethi"
           ],
           "tags": [
-            "quant-ph",
             "cs.CC"
           ],
           "kind": "paper"
@@ -118,17 +118,15 @@
         },
         {
           "source": "arxiv",
-          "title": "Complex Moments of the Derivative of the Riemann Zeta Function",
-          "url": "https://arxiv.org/abs/2611.21551v1",
-          "published": "2026-11-16T18:32:03Z",
-          "summary": "We investigate the complex moments of the derivative of the Riemann zeta function through a random Euler product model. For each fixed $σ>1/2$ and every $s\\in\\mathbb{C}$ with $\\operatorname{Re}(s)>0$, we show, under the Lindelöf hypothesis, that the $2s$-th moment of $|ζ'(σ+\\mathrm{i}t)|$ over $t\\in[1,T]$ converges, as",
+          "title": "Gram's law for moving targets of the Riemann zeta-function",
+          "url": "https://arxiv.org/abs/2611.23332v1",
+          "published": "2026-11-16T20:33:33Z",
+          "summary": "We study the solutions of $ζ(s)=f(s)$ for targets $f$ that grow with $|s|$, and Gram's law for them: the statement that each shifted Gram interval contains exactly one solution. The deviation from Gram's law is an integer phase-slip counter, equal up to rounding to $-\\frac{1}{2}S(t;x_c)$, where $S(t;x)=π^{-1}\\argζ(x+it",
           "authors": [
-            "Joseph Najnudel",
-            "Fei Wei"
+            "Ryan Goulden"
           ],
           "tags": [
-            "math.NT",
-            "math.PR"
+            "math.GM"
           ],
           "kind": "paper"
         }
@@ -186,6 +184,22 @@
       "items": [
         {
           "source": "arxiv",
+          "title": "Global stability and nonlinear asymptotics for the three-dimensional compressible Navier--Stokes--Fourier system with horizontal shear viscosity",
+          "url": "https://arxiv.org/abs/2611.24332v1",
+          "published": "2026-11-18T12:33:20Z",
+          "summary": "We study the three-dimensional compressible Navier--Stokes--Fourier system with horizontal shear viscosity, a positive coefficient $λ+μ>0$ in the divergence term, and full heat conduction. Horizontal viscosity does not dissipate vertical shear derivatives, while thermal diffusion is coupled to the compressible variable",
+          "authors": [
+            "Zefu Feng",
+            "Guangyi Hong",
+            "Yinghui Wang"
+          ],
+          "tags": [
+            "math.AP"
+          ],
+          "kind": "paper"
+        },
+        {
+          "source": "arxiv",
           "title": "Stochastic Representation-Inspired Physics-Informed Neural Networks for Incompressible Fluid Flows",
           "url": "https://arxiv.org/abs/2611.22624v1",
           "published": "2026-11-17T11:41:23Z",
@@ -198,21 +212,6 @@
             "physics.flu-dyn",
             "math.AP",
             "math.PR"
-          ],
-          "kind": "paper"
-        },
-        {
-          "source": "arxiv",
-          "title": "Global Well-Posedness of Two-Dimensional Compressible Navier--Stokes Equations with Vacuum under a Scaling-Invariant Smallness Condition",
-          "url": "https://arxiv.org/abs/2611.22325v1",
-          "published": "2026-11-17T07:23:14Z",
-          "summary": "In this paper, we consider the Cauchy problem for the two-dimensional isentropic compressible Navier--Stokes equations with vacuum as far-field density. For the initial data that satisfy suitable regularity conditions, we establish the global well-posedness of strong solutions, provided that the scaling-invariant initi",
-          "authors": [
-            "Boqiang Lü",
-            "Xin Song"
-          ],
-          "tags": [
-            "math.AP"
           ],
           "kind": "paper"
         },
