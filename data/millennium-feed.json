@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-19T20:42:42Z",
+  "generated_at": "2026-11-20T07:23:56Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
       "ok": true,
-      "count": 1414
+      "count": 1418
     },
     "clay": {
       "ok": true,
@@ -60,33 +60,33 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Sharp Complexity Thresholds for Network Cournot Competition",
-          "url": "https://arxiv.org/abs/2611.24931v1",
-          "published": "2026-11-18T18:55:00Z",
-          "summary": "We determine the approximation complexity of network Cournot equilibrium as a function of demand degree and the number of firms sharing a market. For common, nonincreasing concave polynomial inverse demands, convex quadratic costs of firms' allocation vectors, and rational total capacities, high-precision approximation",
+          "title": "Degree Lower Bounds for Symmetric Boolean Functions: Breaking the Prime-Gap Barrier",
+          "url": "https://arxiv.org/abs/2611.26446v1",
+          "published": "2026-11-19T17:15:45Z",
+          "summary": "We prove that every nonconstant symmetric Boolean function on $n$ variables has exact real polynomial degree at least $n-O(n^{1/3}(\\log n)^{2/3})$. This makes progress toward the conjecture of von zur Gathen and Roche that the degree is always at least $n-3$. The original prime-gap argument of von zur Gathen and Roche",
           "authors": [
-            "Mohammad Hajiaghayi",
-            "Mohammad Mahdavi"
+            "Xiaoming Sun",
+            "Chengu Wang"
           ],
           "tags": [
-            "cs.GT",
-            "cs.CC"
+            "cs.CC",
+            "math.CO"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Hardness of \"Infinite Energy\" Puzzles",
-          "url": "https://arxiv.org/abs/2611.24918v1",
-          "published": "2026-11-18T18:49:27Z",
-          "summary": "Infinite Energy (by Light Potato, 2025) is a single-player puzzle in which one wires a network of sockets so that, after every power source is unplugged, energy keeps circulating and leaves every board energized. We study several variants of the game and the complexity of deciding whether an instance can be won. The va",
+          "title": "Decision Fusion in Wireless Networks: A Tutorial and Survey of Classical and Learning-Based Methods",
+          "url": "https://arxiv.org/abs/2611.26442v1",
+          "published": "2026-11-19T17:14:43Z",
+          "summary": "Decision fusion combines local decisions from distributed sensors to support reliable detection of phenomena in wireless networks. The effectiveness of decision fusion depends on sensing accuracy, reporting-channel reliability, and available communications and computation resources. This article surveys decision-fusion",
           "authors": [
-            "Utkarsh Tiwari",
-            "Utkarsh Thanvi",
-            "Armaan Sethi"
+            "Mohamed Abdelkader",
+            "Arafat Al-Dweik",
+            "Sobia Jangsher"
           ],
           "tags": [
-            "cs.CC"
+            "eess.SP"
           ],
           "kind": "paper"
         }
@@ -103,30 +103,31 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "A Little Advice Suffices: Diffie-Hellman Is as Hard as Discrete Logarithm",
-          "url": "https://arxiv.org/abs/2611.22290v1",
-          "published": "2026-11-17T06:45:38Z",
-          "summary": "Is computing a Diffie-Hellman key as hard as computing a discrete logarithm? Maurer showed that it is, given a few bits of advice, provided that short intervals contain enough integers with only small prime factors; that proviso has stood for thirty years. We remove it. For every prime $p$ there is an advice string of",
+          "title": "Degree Lower Bounds for Symmetric Boolean Functions: Breaking the Prime-Gap Barrier",
+          "url": "https://arxiv.org/abs/2611.26446v1",
+          "published": "2026-11-19T17:15:45Z",
+          "summary": "We prove that every nonconstant symmetric Boolean function on $n$ variables has exact real polynomial degree at least $n-O(n^{1/3}(\\log n)^{2/3})$. This makes progress toward the conjecture of von zur Gathen and Roche that the degree is always at least $n-3$. The original prime-gap argument of von zur Gathen and Roche",
           "authors": [
-            "Yuwen Zhou"
+            "Xiaoming Sun",
+            "Chengu Wang"
           ],
           "tags": [
-            "math.NT",
-            "cs.CR"
+            "cs.CC",
+            "math.CO"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Gram's law for moving targets of the Riemann zeta-function",
-          "url": "https://arxiv.org/abs/2611.23332v1",
-          "published": "2026-11-16T20:33:33Z",
-          "summary": "We study the solutions of $ζ(s)=f(s)$ for targets $f$ that grow with $|s|$, and Gram's law for them: the statement that each shifted Gram interval contains exactly one solution. The deviation from Gram's law is an integer phase-slip counter, equal up to rounding to $-\\frac{1}{2}S(t;x_c)$, where $S(t;x)=π^{-1}\\argζ(x+it",
+          "title": "Prime-Power Expansions and Boundary Corrections for the Secular Coefficients of Riemann-Zero Windows",
+          "url": "https://arxiv.org/abs/2611.26149v1",
+          "published": "2026-11-19T14:06:15Z",
+          "summary": "We study the secular coefficients of characteristic polynomials attached to finite windows of zeros of the Riemann zeta function, mapped onto the unit circle. Starting from the Riemann-von Mangoldt formula and Newton's identities, we derive a symmetric prime-power model for their generating function. The model carries",
           "authors": [
-            "Ryan Goulden"
+            "Francesco Cordella"
           ],
           "tags": [
-            "math.GM"
+            "math.NT"
           ],
           "kind": "paper"
         }
@@ -184,6 +185,22 @@
       "items": [
         {
           "source": "arxiv",
+          "title": "Nonlinear stability of viscous shock waves for the one--dimensional Navier--Stokes equations with singular viscosity",
+          "url": "https://arxiv.org/abs/2611.25645v1",
+          "published": "2026-11-19T07:28:27Z",
+          "summary": "We study the nonlinear stability of viscous shock waves for the one--dimensional isentropic Navier--Stokes system with fast diffusion and singular viscosity. The waves connect a positive left state to zero specific volume at the right far field, where the density becomes unbounded and the viscous coefficient is singula",
+          "authors": [
+            "Guanghan Zhao",
+            "Jingyu Li",
+            "Xiaowen Li"
+          ],
+          "tags": [
+            "math.AP"
+          ],
+          "kind": "paper"
+        },
+        {
+          "source": "arxiv",
           "title": "Global stability and nonlinear asymptotics for the three-dimensional compressible Navier--Stokes--Fourier system with horizontal shear viscosity",
           "url": "https://arxiv.org/abs/2611.24332v1",
           "published": "2026-11-18T12:33:20Z",
@@ -195,23 +212,6 @@
           ],
           "tags": [
             "math.AP"
-          ],
-          "kind": "paper"
-        },
-        {
-          "source": "arxiv",
-          "title": "Stochastic Representation-Inspired Physics-Informed Neural Networks for Incompressible Fluid Flows",
-          "url": "https://arxiv.org/abs/2611.22624v1",
-          "published": "2026-11-17T11:41:23Z",
-          "summary": "The effectiveness of neural networks in solving partial differential equations depends not only on their approximation capability but also on the suitability of their representations for the underlying solutions. Motivated by stochastic integral representations of incompressible fluid flows and the associated Biot--Sav",
-          "authors": [
-            "Zihao Guo",
-            "Zhongmin Qian"
-          ],
-          "tags": [
-            "physics.flu-dyn",
-            "math.AP",
-            "math.PR"
           ],
           "kind": "paper"
         },
