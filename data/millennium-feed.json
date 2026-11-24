@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-23T23:58:03Z",
+  "generated_at": "2026-11-24T09:59:22Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
@@ -60,34 +60,32 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "No Polynomial-Time Algorithm For Tarski Fixed Points Unless Cryptographic Assumptions Fail",
-          "url": "https://arxiv.org/abs/2611.27977v1",
-          "published": "2026-11-20T18:56:26Z",
-          "summary": "We study the time complexity of finding a Tarski fixed point. We provide a subexponential-time reduction from the Unique End of Potential Line (UEOPL) problem to the problem of finding a Tarski fixed point. Using a range of known cryptographic lower bounds for UEOPL, our reduction implies a range of conditional lower b",
+          "title": "Two messages suffice for quantum interactive proof systems",
+          "url": "https://arxiv.org/abs/2611.31236v1",
+          "published": "2026-11-23T18:59:31Z",
+          "summary": "Quantum interactive proof systems can be parallelized to three messages, as shown by Kitaev and Watrous (STOC 2000), perhaps their most striking distinction from classical counterparts. In this work, we establish that any quantum interactive proof system can further be parallelized to two messages, with the verifier se",
           "authors": [
-            "Eleni Batziou",
-            "John Fearnley",
-            "Alexandros Hollender"
+            "Yupan Liu"
           ],
           "tags": [
-            "cs.CC",
-            "cs.GT"
+            "quant-ph",
+            "cs.CC"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "MemOnce: A Scalable Memory Architecture for Large Language Models",
-          "url": "https://arxiv.org/abs/2611.27973v1",
-          "published": "2026-11-20T18:51:29Z",
-          "summary": "Deploying large language models (LLMs) in long-horizon and continual interactions requires maintaining reusable memory states for future inference, posing challenges for existing architectures. Standard Transformers accumulate layer-wise, token-level KV caches, incurring linear GPU memory growth and quadratic computati",
+          "title": "Connecting \\textsc{$k$-Dimensional Matching} and \\textsc{Exact Cover by $k$-Sets}: A complete complexity classification of \\textsc{$k$-Partitioned 1-in-3-SAT} for planar, linear and $3$-connected instances",
+          "url": "https://arxiv.org/abs/2611.31145v1",
+          "published": "2026-11-23T18:15:43Z",
+          "summary": "In \\textsc{$k$-Partitioned 1-in-3-Sat}, the clauses of a positive \\textsc{1-in-3-Sat} formula are partitioned into~$k$ classes such that every variable occurs exactly once in each class. This problem corresponds to \\textsc{$k$-Dimensional Matching} restricted to instances in which every element lies in exactly three tu",
           "authors": [
-            "Chang Nie",
-            "Chaoyou Fu",
-            "Songlin Liu"
+            "Janosch Döcker",
+            "Britta Dorn",
+            "Hannah Van Santvliet"
           ],
           "tags": [
-            "cs.CL"
+            "cs.CC"
           ],
           "kind": "paper"
         }
@@ -104,32 +102,32 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Regular quadratic lattices are rare over real quadratic fields",
-          "url": "https://arxiv.org/abs/2611.27574v1",
-          "published": "2026-11-20T13:11:28Z",
-          "summary": "We show that a positive definite regular quadratic lattice of rank at least 4 over a totally real number field contains a regular sublattice that represents precisely the totally positive integers lying in an ideal. Under the generalized Riemann hypothesis and a conjecture on class numbers, it follows that, for each $m",
+          "title": "Notes on an elementary proof of Weil II from Hexagon",
+          "url": "https://arxiv.org/abs/2611.30749v1",
+          "published": "2026-11-23T14:24:22Z",
+          "summary": "Recently, L. Alpöge sketched an elementary proof of Deligne's weight bound in footnote 3 of his remark on joint work with Claude on the Riemann hypothesis. An expanded, AI-generated account appeared on Hexagon, where it was posted by F. Alderliefste. This note gives an exposition of the proof presented there.",
           "authors": [
-            "Vitezslav Kala",
-            "Dayoon Park"
+            "Dingxin Zhang"
           ],
           "tags": [
-            "math.NT"
+            "math.NT",
+            "math.AG",
+            "math.HO"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Degree Lower Bounds for Symmetric Boolean Functions: Breaking the Prime-Gap Barrier",
-          "url": "https://arxiv.org/abs/2611.26446v1",
-          "published": "2026-11-19T17:15:45Z",
-          "summary": "We prove that every nonconstant symmetric Boolean function on $n$ variables has exact real polynomial degree at least $n-O(n^{1/3}(\\log n)^{2/3})$. This makes progress toward the conjecture of von zur Gathen and Roche that the degree is always at least $n-3$. The original prime-gap argument of von zur Gathen and Roche",
+          "title": "The Riemann Hypothesis for L-Functions of Linearly Constrained Kloosterman Families: Frobenius Polynomials and Intersection Cohomology",
+          "url": "https://arxiv.org/abs/2611.30138v1",
+          "published": "2026-11-23T06:45:59Z",
+          "summary": "We study Frobenius polynomials attached to linearly constrained Kloosterman families, taking the rank-$r(n)=2^n-\\binom{n}{\\lfloor n/2\\rfloor}$, weight-$(n+1)$ sheaf of the author's companion papers as an explicit input. The present contribution is the passage from that sheaf to local characteristic polynomials and the",
           "authors": [
-            "Xiaoming Sun",
-            "Chengu Wang"
+            "Hamed Ebadi"
           ],
           "tags": [
-            "cs.CC",
-            "math.CO"
+            "math.NT",
+            "math.AG"
           ],
           "kind": "paper"
         }
@@ -187,14 +185,12 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "On the non-uniqueness of solutions of the axi-symmetric swirl-free Navier-Stokes equations, II",
-          "url": "https://arxiv.org/abs/2611.27984v1",
-          "published": "2026-11-20T18:59:53Z",
-          "summary": "We prove optimal non-uniqueness of Leray solutions of the unforced incompressible Navier-Stokes equations in 3D within the class of axially symmetric swirl-free flows. More precisely, we construct two solutions $u_1,u_2$ that have the same initial data $u_1(0)=u_2(0)$, are smooth for every positive time, satisfy the en",
+          "title": "Leray's Problem for the Stationary Navier-Stokes Equations with Low-Regularity Data in Planar and Three-Dimensional Axisymmetric Lipschitz Domains",
+          "url": "https://arxiv.org/abs/2611.29707v1",
+          "published": "2026-11-22T19:15:33Z",
+          "summary": "In this paper, we study the steady Navier-Stokes Dirichlet problem in bounded planar and three-dimensional axisymmetric domains with finitely many disjoint Lipschitz boundary components. For prescribed velocities in $H^{1/2}(\\partialΩ)$ and forces in the dual of the solenoidal energy space $V=H_0^1(\\operatorname{div}0,",
           "authors": [
-            "Matthieu Cadiot",
-            "Alexandru Ionescu",
-            "Hao Jia"
+            "Zhibing Zhang"
           ],
           "tags": [
             "math.AP"
@@ -203,17 +199,19 @@
         },
         {
           "source": "arxiv",
-          "title": "Convergence of a finite element Chorin projection method for the stochastic Navier--Stokes equations",
-          "url": "https://arxiv.org/abs/2611.27969v1",
-          "published": "2026-11-20T18:48:13Z",
-          "summary": "We analyze a fully discrete finite element projection method for the stochastic incompressible Navier--Stokes equations with homogeneous Dirichlet boundary conditions and multiplicative noise. We show solvability and uniform moment estimates for the intermediate and the corrected velocity approximations under the assum",
+          "title": "Stable eigenmodes of the Large-scale circulation in Turbulent Convection",
+          "url": "https://arxiv.org/abs/2611.29636v1",
+          "published": "2026-11-22T17:35:04Z",
+          "summary": "Turbulent Rayleigh-Bénard convection (RBC) is a canonical system for studying buoyancy-driven turbulence. Its defining feature is a system-size large-scale circulation (LSC), whose dynamics reflect the coupling between coherent motion and turbulent fluctuations. Starting from the Boussinesq Navier-Stokes and temperatur",
           "authors": [
-            "Franziska Weber"
+            "Yin Wang",
+            "Pik-Yin Lai",
+            "Penger Tong"
           ],
           "tags": [
-            "math.NA",
-            "math.AP",
-            "math.PR"
+            "physics.flu-dyn",
+            "cond-mat.stat-mech",
+            "nlin.CD"
           ],
           "kind": "paper"
         },
@@ -250,31 +248,31 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "On the Hodge conjecture for hyper-Kähler varieties of generalized Kummer type of dimension divisible by four",
-          "url": "https://arxiv.org/abs/2610.31740v1",
-          "published": "2026-10-22T17:11:57Z",
-          "summary": "We prove the Hodge conjecture for all hyper-Kähler varieties of generalized Kummer type of dimension $2n$ with $n+1$ a prime number, and all powers of these varieties. For any variety $X$ of generalized Kummer type of dimension divisible by 4, we show that the Lefschetz standard conjecture for $X$ implies the Hodge con",
+          "title": "The Tate conjecture for abelian fourfolds",
+          "url": "https://arxiv.org/abs/2611.30237v1",
+          "published": "2026-11-23T08:04:31Z",
+          "summary": "We prove the Tate conjecture for non-CM and non-ordinary abelian fourfolds over positive characteristic function fields. Combining our previous works (2512.00687 and 2608.28651), this establishes the Tate conjecture for abelian fourfolds over finitely generated fields. Along the way, we classify the $l$-adic monodromy",
           "authors": [
-            "Salvatore Floccari",
-            "Lie Fu"
+            "Matt Broe",
+            "Ruofan Jiang"
           ],
           "tags": [
-            "math.AG"
+            "math.AG",
+            "math.NT"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Rigidity, flexibility, and a sign error",
-          "url": "https://arxiv.org/abs/2610.30976v1",
-          "published": "2026-10-22T09:18:40Z",
-          "summary": "The documents [OAI26a, OAI26b, OAI26c] claimed to prove cases of the Hodge conjecture via homological mirror symmetry, before being withdrawn by OpenAI. We discuss the source of the error (but do not analyse the rest of the argument).",
+          "title": "Hodge cycles of Klein hypersurfaces",
+          "url": "https://arxiv.org/abs/2611.29763v1",
+          "published": "2026-11-22T20:52:29Z",
+          "summary": "We study the space of Hodge cycles on Klein varieties. Relating it to the Hodge characters in a covering Fermat variety, we decompose the space of Hodge characters into a part generated by classes of rational subvarieties, and a non-trivial part which we call exceptional. Using Dirichlet characters we show that the exc",
           "authors": [
-            "Yanki Lekili",
-            "Nick Sheridan"
+            "Mario Pastrana",
+            "Roberto Villaflor"
           ],
           "tags": [
-            "math.SG",
             "math.AG"
           ],
           "kind": "paper"
@@ -292,12 +290,14 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Extreme central $L$-values of almost prime quadratic twists of elliptic curves II",
-          "url": "https://arxiv.org/abs/2611.17848v1",
-          "published": "2026-11-13T07:30:32Z",
-          "summary": "We prove lower bounds for central $L$-values of quadratic twists of an elliptic curve by discriminants with at most five prime factors. Under the rank-zero Birch--Swinnerton-Dyer formula, these bounds give large Tate--Shafarevich groups.",
+          "title": "The Birch and Swinnerton-Dyer formula for CM elliptic curves of analytic rank one",
+          "url": "https://arxiv.org/abs/2611.29641v1",
+          "published": "2026-11-22T17:40:30Z",
+          "summary": "In this article, we prove the Birch and Swinnerton-Dyer formula for elliptic curves over the field of rational numbers with complex multiplication and analytic rank one.",
           "authors": [
-            "Shenghao Hua"
+            "Xin Wan",
+            "Zerui Xiang",
+            "Ruichen Xu"
           ],
           "tags": [
             "math.NT"
@@ -306,12 +306,12 @@
         },
         {
           "source": "arxiv",
-          "title": "Elliptic units, derived Heegner classes and the p-adic Birch and Swinnerton-Dyer quotient of CM elliptic curves of rank two",
-          "url": "https://arxiv.org/abs/2611.09192v1",
-          "published": "2026-11-06T09:14:37Z",
-          "summary": "Let $E\\colon y^2=x^3-Dx$ have rank two and let $p\\equiv1\\pmod4$ be a prime of good reduction. We study the conjecture that the $p$-adic quotient $q_p$, the leading coefficient of the cyclotomic $p$-adic $L$-function divided by the Euler factor and the $p$-adic regulator, equals the complex quotient $q_\\infty=L''(E,1)/(",
+          "title": "Extreme central $L$-values of almost prime quadratic twists of elliptic curves II",
+          "url": "https://arxiv.org/abs/2611.17848v1",
+          "published": "2026-11-13T07:30:32Z",
+          "summary": "We prove lower bounds for central $L$-values of quadratic twists of an elliptic curve by discriminants with at most five prime factors. Under the rank-zero Birch--Swinnerton-Dyer formula, these bounds give large Tate--Shafarevich groups.",
           "authors": [
-            "Miquel Calonge Fabregat"
+            "Shenghao Hua"
           ],
           "tags": [
             "math.NT"
