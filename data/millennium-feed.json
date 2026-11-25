@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-24T22:31:14Z",
+  "generated_at": "2026-11-25T08:43:19Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
       "ok": true,
-      "count": 1429
+      "count": 1430
     },
     "clay": {
       "ok": true,
@@ -60,29 +60,29 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Two messages suffice for quantum interactive proof systems",
-          "url": "https://arxiv.org/abs/2611.31236v1",
-          "published": "2026-11-23T18:59:31Z",
-          "summary": "Quantum interactive proof systems can be parallelized to three messages, as shown by Kitaev and Watrous (STOC 2000), perhaps their most striking distinction from classical counterparts. In this work, we establish that any quantum interactive proof system can further be parallelized to two messages, with the verifier se",
+          "title": "Envy-Free Cake-Cutting for Five Agents",
+          "url": "https://arxiv.org/abs/2611.33149v1",
+          "published": "2026-11-24T18:58:57Z",
+          "summary": "We study the envy-free cake-cutting problem, in which a divisible resource must be divided among a set of agents with heterogeneous preferences in a way that ensures that no agent envies the piece obtained by another. Remarkably, under some mild continuity assumptions on the agent valuations, it is known that an envy-f",
           "authors": [
-            "Yupan Liu"
+            "Aris Filos-Ratsikas",
+            "Alexandros Hollender",
+            "Mohamad Latifian"
           ],
           "tags": [
-            "quant-ph",
+            "cs.GT",
             "cs.CC"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Connecting \\textsc{$k$-Dimensional Matching} and \\textsc{Exact Cover by $k$-Sets}: A complete complexity classification of \\textsc{$k$-Partitioned 1-in-3-SAT} for planar, linear and $3$-connected instances",
-          "url": "https://arxiv.org/abs/2611.31145v1",
-          "published": "2026-11-23T18:15:43Z",
-          "summary": "In \\textsc{$k$-Partitioned 1-in-3-Sat}, the clauses of a positive \\textsc{1-in-3-Sat} formula are partitioned into~$k$ classes such that every variable occurs exactly once in each class. This problem corresponds to \\textsc{$k$-Dimensional Matching} restricted to instances in which every element lies in exactly three tu",
+          "title": "A note on input-oblivious unambiguous hierarchies",
+          "url": "https://arxiv.org/abs/2611.33126v1",
+          "published": "2026-11-24T18:51:53Z",
+          "summary": "Unambiguous hierarchies are defined similarly to the polynomial hierarchy; however, all witnesses must be unique. Their versions differ in the mode of using oracles. We consider input-oblivious unambiguous hierarchies built from the class OUP, in which all positive inputs of the same length have the same unique witness",
           "authors": [
-            "Janosch Döcker",
-            "Britta Dorn",
-            "Hannah Van Santvliet"
+            "Edward A. Hirsch"
           ],
           "tags": [
             "cs.CC"
@@ -102,32 +102,30 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Notes on an elementary proof of Weil II from Hexagon",
-          "url": "https://arxiv.org/abs/2611.30749v1",
-          "published": "2026-11-23T14:24:22Z",
-          "summary": "Recently, L. Alpöge sketched an elementary proof of Deligne's weight bound in footnote 3 of his remark on joint work with Claude on the Riemann hypothesis. An expanded, AI-generated account appeared on Hexagon, where it was posted by F. Alderliefste. This note gives an exposition of the proof presented there.",
+          "title": "The local Weil explicit formula and related structures",
+          "url": "https://arxiv.org/abs/2611.33001v1",
+          "published": "2026-11-24T17:27:21Z",
+          "summary": "We study the reproducing kernel Hilbert spaces constructed from the local Weil quadratic form associated with the Riemann zeta function. Wherever this form is positive definite, we prove a local explicit formula expressing the Weil distribution in terms of the discrete spectra of self-adjoint extensions of the differen",
           "authors": [
-            "Dingxin Zhang"
+            "Masatoshi Suzuki"
           ],
           "tags": [
             "math.NT",
-            "math.AG",
-            "math.HO"
+            "math.FA"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "The Riemann Hypothesis for L-Functions of Linearly Constrained Kloosterman Families: Frobenius Polynomials and Intersection Cohomology",
-          "url": "https://arxiv.org/abs/2611.30138v1",
-          "published": "2026-11-23T06:45:59Z",
-          "summary": "We study Frobenius polynomials attached to linearly constrained Kloosterman families, taking the rank-$r(n)=2^n-\\binom{n}{\\lfloor n/2\\rfloor}$, weight-$(n+1)$ sheaf of the author's companion papers as an explicit input. The present contribution is the passage from that sheaf to local characteristic polynomials and the",
+          "title": "On the Fujii conjectures",
+          "url": "https://arxiv.org/abs/2611.32862v1",
+          "published": "2026-11-24T16:01:34Z",
+          "summary": "Using the Riemann hypothesis for the nonprincipal character modulo four, we disprove Fujii's first conjecture on exponential weights and prove his second conjecture on iterated weights by Mellin convolution [Proc. Japan Acad. Ser. A Math. Sci. 64 (1988), 260--263]. Further, we unify the two conjectures through a two-pa",
           "authors": [
-            "Hamed Ebadi"
+            "Ziyu Neroli"
           ],
           "tags": [
-            "math.NT",
-            "math.AG"
+            "math.NT"
           ],
           "kind": "paper"
         }
@@ -144,31 +142,30 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "SU(2) Yang-Mills: Spectral Bounds, Vacuum Concentration, and Criteria for the Continuum Limit",
-          "url": "https://arxiv.org/abs/2611.11534v1",
-          "published": "2026-11-08T18:20:16Z",
-          "summary": "A continuum mass-gap argument must preserve nonzero renormalized states and a positive spectral estimate while the spatial cutoff is removed and physical volume grows. We develop quantitative results that separate these requirements. Gauge reduction, reflection positivity and attributed strong-coupling estimates give p",
+          "title": "The Wilson-loop formulation of Yang-Mills at finite mode truncation: a Level-Two structural bypass of the Gribov ambiguity",
+          "url": "https://arxiv.org/abs/2611.32690v1",
+          "published": "2026-11-24T14:26:09Z",
+          "summary": "The unfixed real-time Henstock-Kurzweil functional integral for truncated Yang-Mills removes the choice of a gauge surface, but gauge orbits remain objects of the formulation: that is a Level-One bypass of the Gribov ambiguity. This paper carries out a Level-Two bypass at finite mode truncation: the Wilson loops W(C) a",
           "authors": [
-            "Aleksandar Mihajlovic"
+            "Yu. N. Berdinsky"
           ],
           "tags": [
+            "hep-th",
             "math-ph"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "Cornering the Heterotic String",
-          "url": "https://arxiv.org/abs/2610.12318v1",
-          "published": "2026-10-08T17:01:59Z",
-          "summary": "We study tree-level completions of four-dimensional $\\mathcal N=4$ Yang--Mills theory coupled to $\\mathcal N=4$ supergravity. Six-point factorization and supersymmetry Ward identities, supplemented by a peculiar-parity restriction on scalar contact terms, impose nonlinear relations between the single- and double-trace",
+          "title": "Curvature-Orbit Quantization of Gauge-Related Connections and a Radon--Nikodym Route to Lattice Yang--Mills Theory",
+          "url": "https://arxiv.org/abs/2611.31309v1",
+          "published": "2026-11-22T13:40:59Z",
+          "summary": "We study a four-dimensional gauge construction in which two gauge-related non-abelian connections, $A=B^g$, interact only through the squared difference of their curvatures. Independent kinetic term is absent. The action is an ultralocal functional on a curvature orbit. Its Hessian is a pointwise positive-semidefinite",
           "authors": [
-            "Li-Yuan Chiang",
-            "Yu-tin Huang",
-            "He-Chen Weng"
+            "Victor Atanasov"
           ],
           "tags": [
-            "hep-th"
+            "physics.gen-ph"
           ],
           "kind": "paper"
         }
@@ -185,12 +182,12 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Leray's Problem for the Stationary Navier-Stokes Equations with Low-Regularity Data in Planar and Three-Dimensional Axisymmetric Lipschitz Domains",
-          "url": "https://arxiv.org/abs/2611.29707v1",
-          "published": "2026-11-22T19:15:33Z",
-          "summary": "In this paper, we study the steady Navier-Stokes Dirichlet problem in bounded planar and three-dimensional axisymmetric domains with finitely many disjoint Lipschitz boundary components. For prescribed velocities in $H^{1/2}(\\partialΩ)$ and forces in the dual of the solenoidal energy space $V=H_0^1(\\operatorname{div}0,",
+          "title": "Local Reynolds number criteria for the regularity of the three-dimensional Navier-Stokes equations, and their consistency with forced finite-time blow-up",
+          "url": "https://arxiv.org/abs/2611.31565v1",
+          "published": "2026-11-23T21:10:18Z",
+          "summary": "We give four regularity criteria for the forced Navier-Stokes equations in $\\mathbb{R}^3$. The first is an $\\dot H^1$ estimate: a strong solution cannot blow up while the local Reynolds number $|v|^2/(ν|ω|)$ stays below $4/(3\\sqrt3)$ wherever the vorticity exceeds a threshold $M(t)$ with $\\int M^{6/5}\\,dt<\\infty$. It r",
           "authors": [
-            "Zhibing Zhang"
+            "Ali Bouzekri"
           ],
           "tags": [
             "math.AP"
@@ -199,19 +196,18 @@
         },
         {
           "source": "arxiv",
-          "title": "Stable eigenmodes of the Large-scale circulation in Turbulent Convection",
-          "url": "https://arxiv.org/abs/2611.29636v1",
-          "published": "2026-11-22T17:35:04Z",
-          "summary": "Turbulent Rayleigh-Bénard convection (RBC) is a canonical system for studying buoyancy-driven turbulence. Its defining feature is a system-size large-scale circulation (LSC), whose dynamics reflect the coupling between coherent motion and turbulent fluctuations. Starting from the Boussinesq Navier-Stokes and temperatur",
+          "title": "Transferable, Time-Parallel Graph Dynamics via Space-Time Factorization",
+          "url": "https://arxiv.org/abs/2611.31479v1",
+          "published": "2026-11-23T19:50:40Z",
+          "summary": "Time-parallel neural operators (FNO and successors) have transformed PDE surrogates on regular grids. Mesh-based operators (MeshGraphNets, Transolver) extend operator learning to irregular geometries, but jointly learning across diverse topologies while retaining non-recurrent temporal evaluation remains challenging. W",
           "authors": [
-            "Yin Wang",
-            "Pik-Yin Lai",
-            "Penger Tong"
+            "Wencong Yang",
+            "Chaopeng Shen",
+            "Abdolmehdi Behroozi"
           ],
           "tags": [
-            "physics.flu-dyn",
-            "cond-mat.stat-mech",
-            "nlin.CD"
+            "cs.LG",
+            "physics.geo-ph"
           ],
           "kind": "paper"
         },
