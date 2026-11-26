@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-25T21:46:03Z",
+  "generated_at": "2026-11-26T08:28:15Z",
   "refresh_hours": 6,
   "sources": {
     "openai": {
@@ -60,31 +60,34 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "Envy-Free Cake-Cutting for Five Agents",
-          "url": "https://arxiv.org/abs/2611.33149v1",
-          "published": "2026-11-24T18:58:57Z",
-          "summary": "We study the envy-free cake-cutting problem, in which a divisible resource must be divided among a set of agents with heterogeneous preferences in a way that ensures that no agent envies the piece obtained by another. Remarkably, under some mild continuity assumptions on the agent valuations, it is known that an envy-f",
+          "title": "Bound Entanglement with Negative Partial Transpose Exists",
+          "url": "https://arxiv.org/abs/2611.34921v1",
+          "published": "2026-11-25T18:58:48Z",
+          "summary": "We show that the Werner state $ρ= (23 I - 3\\,\\mathrm{SWAP})/1448$ on $\\mathbb{C}^8 \\otimes \\mathbb{C}^8$ has a negative partial transpose and is bound entangled: no LOCC protocol can distill entanglement from any number of copies of $ρ$, and even with separable operations the fidelity of a two-qubit output with a Bell",
           "authors": [
-            "Aris Filos-Ratsikas",
-            "Alexandros Hollender",
-            "Mohamad Latifian"
+            "Islam Faisal"
           ],
           "tags": [
-            "cs.GT",
-            "cs.CC"
+            "quant-ph",
+            "cond-mat.other",
+            "cs.CC",
+            "cs.IT"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "A note on input-oblivious unambiguous hierarchies",
-          "url": "https://arxiv.org/abs/2611.33126v1",
-          "published": "2026-11-24T18:51:53Z",
-          "summary": "Unambiguous hierarchies are defined similarly to the polynomial hierarchy; however, all witnesses must be unique. Their versions differ in the mode of using oracles. We consider input-oblivious unambiguous hierarchies built from the class OUP, in which all positive inputs of the same length have the same unique witness",
+          "title": "Computing Normal-Form Correlated Equilibria in Extensive-Form Games is in PPAD",
+          "url": "https://arxiv.org/abs/2611.34897v1",
+          "published": "2026-11-25T18:48:36Z",
+          "summary": "We study the computational complexity of finding any normal-form correlated equilibria (NFCE for short) in the succinct games of extensive-form with perfect recall, which is considered as a major open problem in algorithmic game theory. Our main results place this problem in PPAD for an arbitrary numbers of players. Ou",
           "authors": [
-            "Edward A. Hirsch"
+            "Vincent Cheval",
+            "Florian Horn",
+            "Soumyajit Paul"
           ],
           "tags": [
+            "cs.GT",
             "cs.CC"
           ],
           "kind": "paper"
@@ -102,27 +105,26 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "The local Weil explicit formula and related structures",
-          "url": "https://arxiv.org/abs/2611.33001v1",
-          "published": "2026-11-24T17:27:21Z",
-          "summary": "We study the reproducing kernel Hilbert spaces constructed from the local Weil quadratic form associated with the Riemann zeta function. Wherever this form is positive definite, we prove a local explicit formula expressing the Weil distribution in terms of the discrete spectra of self-adjoint extensions of the differen",
+          "title": "A consequence of the classical Lindelöf Hypothesis for the density of zeros of general Dirichlet series",
+          "url": "https://arxiv.org/abs/2611.34587v1",
+          "published": "2026-11-25T15:46:50Z",
+          "summary": "Supposing the Lindelöf Hypothesis for the Riemann zeta function we prove that the density hypothesis holds for Res>3/4 for a large class of Dirichlet series. The first result of similar type was reached by Gábor Halász and Paul Turán in 1969.",
           "authors": [
-            "Masatoshi Suzuki"
+            "János Pintz"
           ],
           "tags": [
-            "math.NT",
-            "math.FA"
+            "math.NT"
           ],
           "kind": "paper"
         },
         {
           "source": "arxiv",
-          "title": "On the Fujii conjectures",
-          "url": "https://arxiv.org/abs/2611.32862v1",
-          "published": "2026-11-24T16:01:34Z",
-          "summary": "Using the Riemann hypothesis for the nonprincipal character modulo four, we disprove Fujii's first conjecture on exponential weights and prove his second conjecture on iterated weights by Mellin convolution [Proc. Japan Acad. Ser. A Math. Sci. 64 (1988), 260--263]. Further, we unify the two conjectures through a two-pa",
+          "title": "Simple zeros of the Riemann zeta-function: a local multiplicity test and long mixed moments",
+          "url": "https://arxiv.org/abs/2611.34546v1",
+          "published": "2026-11-25T15:24:28Z",
+          "summary": "Assuming the Riemann Hypothesis, we show that at least 71.274066\\% of the nontrivial zeros of $ζ(s)$ are simple, and at least 85.368230% are distinct. The previous bounds were 19/27 $\\approx$ 70.37%, due to Conrey, Ghosh and Gonek and to Bui and Heath-Brown (2013), and 84.77\\%, due to Chirre, Gonçalves and de Laat (202",
           "authors": [
-            "Ziyu Neroli"
+            "Yuanda Xu"
           ],
           "tags": [
             "math.NT"
@@ -286,14 +288,13 @@
       "items": [
         {
           "source": "arxiv",
-          "title": "The Birch and Swinnerton-Dyer formula for CM elliptic curves of analytic rank one",
-          "url": "https://arxiv.org/abs/2611.29641v1",
-          "published": "2026-11-22T17:40:30Z",
-          "summary": "In this article, we prove the Birch and Swinnerton-Dyer formula for elliptic curves over the field of rational numbers with complex multiplication and analytic rank one.",
+          "title": "On the equivariant Heegner point main conjecture and refined conjectures of Birch-Swinnerton-Dyer type",
+          "url": "https://arxiv.org/abs/2611.34704v1",
+          "published": "2026-11-25T17:00:02Z",
+          "summary": "In 1992, Darmon formulated refined conjectures of Birch and Swinnerton-Dyer type for Heegner points, and proved the ``order of vanishing'' part of his conjectures by a development of Kolyvagin's Euler system arguments. In this paper, for good ordinary primes split in the underlying imaginary quadratic field, we prove t",
           "authors": [
-            "Xin Wan",
-            "Zerui Xiang",
-            "Ruichen Xu"
+            "Francesc Castella",
+            "Takamichi Sano"
           ],
           "tags": [
             "math.NT"
@@ -302,12 +303,14 @@
         },
         {
           "source": "arxiv",
-          "title": "Extreme central $L$-values of almost prime quadratic twists of elliptic curves II",
-          "url": "https://arxiv.org/abs/2611.17848v1",
-          "published": "2026-11-13T07:30:32Z",
-          "summary": "We prove lower bounds for central $L$-values of quadratic twists of an elliptic curve by discriminants with at most five prime factors. Under the rank-zero Birch--Swinnerton-Dyer formula, these bounds give large Tate--Shafarevich groups.",
+          "title": "The Birch and Swinnerton-Dyer formula for CM elliptic curves of analytic rank one",
+          "url": "https://arxiv.org/abs/2611.29641v1",
+          "published": "2026-11-22T17:40:30Z",
+          "summary": "In this article, we prove the Birch and Swinnerton-Dyer formula for elliptic curves over the field of rational numbers with complex multiplication and analytic rank one.",
           "authors": [
-            "Shenghao Hua"
+            "Xin Wan",
+            "Zerui Xiang",
+            "Ruichen Xu"
           ],
           "tags": [
             "math.NT"
